@@ -1,3 +1,9 @@
+/**
+ * Signature Configuration Constants
+ *
+ * Domain: factory/components/signature
+ * Responsibility: Default signature field configuration by field key.
+ */
 import type { SignatureFieldConfig } from './types';
 
 export const SIGNATURE_FIELD_CONFIG: Record<string, SignatureFieldConfig> = {

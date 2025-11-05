@@ -1,3 +1,9 @@
+/**
+ * Header Rendering Helpers
+ *
+ * Domain: factory/components/header
+ * Responsibility: Render patient/facility/encounter header cards.
+ */
 import type { Component } from '../../../derivation/types';
 import type { RenderPayload } from '../../../types/payloads';
 import { escapeAttr, escapeHtml } from '../../utils/html-escape';
@@ -6,11 +12,17 @@ import {
   deriveLabel,
   resolveItemText,
 } from '../shared/content-utils';
-import type { HeaderCardConfig } from './config';
-import { getHeaderCardConfig } from './config';
+import type { HeaderCardConfig } from './types';
+import { getHeaderCardConfig } from './constants';
 
 /**
  * Render the top header section using template-defined patient/facility cards.
+ *
+ * @param out - Mutable HTML chunk accumulator.
+ * @param comp - Header component definition.
+ * @param payload - Fully-resolved render payload.
+ * @param idPrefix - Optional prefix applied to DOM ids for uniqueness.
+ * @param collectedRefs - Accumulator for provenance references.
  */
 export function renderHeaderSection(
   out: string[],
@@ -33,6 +45,13 @@ export function renderHeaderSection(
 
 /**
  * Render an individual header card (patient/facility/encounter blocks).
+ *
+ * @param out - Mutable HTML chunk accumulator.
+ * @param comp - Header card component definition.
+ * @param payload - Fully-resolved render payload.
+ * @param idPrefix - Optional prefix applied to DOM ids for uniqueness.
+ * @param collectedRefs - Accumulator for provenance references.
+ * @param wrapTag - Tag used to wrap the card (section or div depending on context).
  */
 export function renderHeaderCard(
   out: string[],

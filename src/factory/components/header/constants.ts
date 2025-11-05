@@ -1,14 +1,10 @@
-export type HeaderDisplayMode = 'label-value' | 'text';
-
-export interface HeaderFieldConfig {
-  label?: string;
-  mode?: HeaderDisplayMode;
-}
-
-export interface HeaderCardConfig {
-  defaultMode: HeaderDisplayMode;
-  fields?: Record<string, HeaderFieldConfig>;
-}
+/**
+ * Header Configuration Constants
+ *
+ * Domain: factory/components/header
+ * Responsibility: Default header card configuration by component id.
+ */
+import type { HeaderCardConfig } from './types';
 
 export const DEFAULT_HEADER_CARD_CONFIG: HeaderCardConfig = {
   defaultMode: 'label-value',
@@ -39,6 +35,12 @@ export const HEADER_CARD_CONFIG: Record<string, HeaderCardConfig> = {
   },
 };
 
+/**
+ * Retrieve the header card configuration for a template component.
+ *
+ * @param componentId - Template component identifier.
+ * @returns Header card configuration with defaults applied.
+ */
 export function getHeaderCardConfig(componentId: string | undefined): HeaderCardConfig {
   if (!componentId) {
     return DEFAULT_HEADER_CARD_CONFIG;

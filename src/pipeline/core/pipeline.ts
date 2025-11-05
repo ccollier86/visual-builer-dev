@@ -391,7 +391,12 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 }
 
 /**
- * Create a structured pipeline error
+ * Create a structured pipeline error for consistent error handling.
+ *
+ * @param message - Human-readable description of the failure.
+ * @param step - Pipeline step identifier where the error originated.
+ * @param cause - Optional underlying error that triggered this failure.
+ * @returns PipelineError with contextual metadata for upstream callers.
  */
 function createError(message: string, step: string, cause?: unknown): PipelineError {
   const error = new Error(message) as PipelineError;

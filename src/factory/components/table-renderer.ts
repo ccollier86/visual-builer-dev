@@ -1,5 +1,9 @@
-// Table rendering component
-// Generates semantic HTML tables with colgroup, thead, tbody
+/**
+ * Table Rendering Component
+ *
+ * Domain: factory/components/table-renderer
+ * Responsibility: Generate semantic HTML tables from template definitions.
+ */
 
 import type { Component, ContentItem } from '../../derivation/types';
 import type { RenderPayload } from '../../types/payloads';
@@ -93,7 +97,15 @@ function renderTableHeaders(columns: string[]): string {
 }
 
 /**
- * Renders table body (tbody) with data rows
+ * Render table body rows using grouped column definitions.
+ *
+ * @param rows - Array of row source data values.
+ * @param columnGroups - Columns grouped by template mapping order.
+ * @param columnCount - Expected number of visible columns.
+ * @param rowPath - Normalized row path for lookup.
+ * @param payload - Fully-resolved render payload.
+ * @param collectedRefs - Accumulator for provenance references.
+ * @returns HTML string representing the table body.
  */
 function renderTableRows(
   rows: unknown[],
@@ -130,6 +142,17 @@ function renderTableRows(
   return chunks.join("");
 }
 
+/**
+ * Render a collection of table cell items as a single column.
+ *
+ * @param colItems - Content items mapped to this column.
+ * @param columnIndex - Index of the column being rendered.
+ * @param payload - Fully-resolved render payload.
+ * @param rowPath - Normalized row path for lookup.
+ * @param rowIndex - Current row index in the source array.
+ * @param collectedRefs - Accumulator for provenance references.
+ * @returns HTML string for the column cell or null when empty.
+ */
 function renderTableCellGroup(
   colItems: ContentItem[],
   columnIndex: number,
@@ -166,7 +189,14 @@ function renderTableCellGroup(
 }
 
 /**
- * Renders a single table cell
+ * Render a single table cell from a content item definition.
+ *
+ * @param colDef - Content item definition for this cell.
+ * @param payload - Fully-resolved render payload.
+ * @param rowPath - Normalized row path for lookup.
+ * @param rowIndex - Current row index in the source array.
+ * @param collectedRefs - Accumulator for provenance references.
+ * @returns Escaped HTML string for the cell or null when blank.
  */
 function renderTableCell(
   colDef: ContentItem,
@@ -195,7 +225,11 @@ function renderTableCell(
 }
 
 /**
- * Renders a verbatim value with optional ref footnote
+ * Render a verbatim value with optional reference footnote.
+ *
+ * @param value - Verbatim or primitive value for the cell.
+ * @param collectedRefs - Accumulator for provenance references.
+ * @returns Escaped HTML string or null when value is empty.
  */
 function renderVerbatimValue(
   value: unknown,

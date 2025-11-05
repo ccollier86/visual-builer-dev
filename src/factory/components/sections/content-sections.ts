@@ -1,3 +1,9 @@
+/**
+ * Section Rendering Helpers
+ *
+ * Domain: factory/components/sections
+ * Responsibility: Render top-level sections, alerts, and provenance blocks within the note.
+ */
 import type { Component } from '../../../derivation/types';
 import type { DesignTokens } from '../../../tokens/types';
 import type { RenderPayload } from '../../../types/payloads';
@@ -10,6 +16,17 @@ import { renderHeaderCard } from '../header/renderer';
 import { renderSignatureSection } from '../signature/renderer';
 import { renderHeaderSection } from '../header/renderer';
 
+/**
+ * Render a template component and recursively process its children.
+ *
+ * @param out - Mutable HTML chunk accumulator.
+ * @param comp - Template component definition.
+ * @param payload - Fully-resolved render payload.
+ * @param tokens - Active design tokens for styling decisions.
+ * @param idPrefix - Optional prefix applied to DOM ids for uniqueness.
+ * @param depth - Current section depth used for heading semantics.
+ * @param collectedRefs - Accumulator for provenance references.
+ */
 export function renderComponent(
   out: string[],
   comp: Component,
@@ -72,6 +89,14 @@ export function renderComponent(
   out.push('</section>');
 }
 
+/**
+ * Render paragraph content items within a component.
+ *
+ * @param out - Mutable HTML chunk accumulator.
+ * @param comp - Template component containing content items.
+ * @param payload - Fully-resolved render payload.
+ * @param collectedRefs - Accumulator for provenance references.
+ */
 export function renderContentItems(
   out: string[],
   comp: Component,
@@ -90,6 +115,15 @@ export function renderContentItems(
   }
 }
 
+/**
+ * Render an alert panel with optional heading and variant styling.
+ *
+ * @param out - Mutable HTML chunk accumulator.
+ * @param comp - Alert panel component definition.
+ * @param payload - Fully-resolved render payload.
+ * @param collectedRefs - Accumulator for provenance references.
+ * @param headingHtml - Optional heading HTML previously generated for the section.
+ */
 export function renderAlertPanel(
   out: string[],
   comp: Component,
@@ -116,6 +150,12 @@ export function renderAlertPanel(
   out.push(chunks.join(''));
 }
 
+/**
+ * Render provenance appendix listing verbatim references.
+ *
+ * @param collectedRefs - Ordered set of provenance references.
+ * @returns HTML string containing the provenance list.
+ */
 export function renderProvenance(collectedRefs: Set<string>): string {
   const chunks: string[] = ['<aside class="note-provenance">', '<h3>Sources</h3>', '<ol>'];
 

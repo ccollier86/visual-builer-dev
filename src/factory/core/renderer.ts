@@ -1,5 +1,9 @@
-// Main factory renderer
-// Orchestrates HTML generation from template + validated RPS payload
+/**
+ * Factory Renderer - Main Orchestrator
+ *
+ * Domain: factory/core
+ * Responsibility: Orchestrate template-driven HTML rendering for validated payloads.
+ */
 
 import { escapeHtml, escapeAttr } from "../utils/html-escape";
 import type { FactoryInputs } from "../types";

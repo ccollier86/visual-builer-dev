@@ -1,3 +1,9 @@
+/**
+ * Content Rendering Utilities
+ *
+ * Domain: factory/components/shared
+ * Responsibility: Reusable helpers for resolving template content into HTML-safe strings.
+ */
 import type { ContentItem } from '../../../derivation/types';
 import type { RenderPayload } from '../../../types/payloads';
 import { getByPath } from '../../utils/path-resolver';
@@ -5,7 +11,12 @@ import { escapeHtml } from '../../utils/html-escape';
 import type { VerbatimValue } from '../../types';
 
 /**
- * Resolve text content for a component item by following its configured slot.
+ * Resolve text for a template content item using its configured slot strategy.
+ *
+ * @param item - Template content item definition.
+ * @param payload - Fully-resolved render payload.
+ * @param collectedRefs - Accumulator for provenance references.
+ * @returns Escaped HTML string or null when no value is available.
  */
 export function resolveItemText(
   item: ContentItem,
@@ -45,7 +56,11 @@ export function resolveItemText(
 }
 
 /**
- * Convert verbatim values into escaped HTML with provenance references.
+ * Convert verbatim values into escaped HTML with provenance footnotes.
+ *
+ * @param value - Verbatim value or primitive.
+ * @param collectedRefs - Accumulator for provenance references.
+ * @returns Escaped HTML string or null when value is empty.
  */
 export function renderVerbatimText(
   value: unknown,
@@ -71,6 +86,9 @@ export function renderVerbatimText(
 
 /**
  * Derive a stable key for a content item using its target path or id.
+ *
+ * @param item - Template content item definition.
+ * @returns Normalized key suitable for config lookups.
  */
 export function deriveFieldKey(item: ContentItem): string {
   if (item.targetPath) {
@@ -82,6 +100,9 @@ export function deriveFieldKey(item: ContentItem): string {
 
 /**
  * Convert a slot key into a human-readable label.
+ *
+ * @param key - Raw field key (camelCase, snake_case, etc.).
+ * @returns Uppercase label appropriate for display.
  */
 export function deriveLabel(key: string): string {
   const normalized = key.replace(/([A-Z])/g, ' $1').replace(/[_.-]+/g, ' ').trim();
@@ -89,6 +110,12 @@ export function deriveLabel(key: string): string {
   return upper.length > 0 ? upper : key.toUpperCase();
 }
 
+/**
+ * Safely coerce a value to string when it is already a string.
+ *
+ * @param value - Unknown value retrieved from payload.
+ * @returns String value or null when not a string.
+ */
 export function extractString(value: unknown): string | null {
   if (typeof value === 'string') {
     return value;
@@ -96,6 +123,12 @@ export function extractString(value: unknown): string | null {
   return null;
 }
 
+/**
+ * Type guard that verifies whether a value is a VerbatimValue object.
+ *
+ * @param value - Unknown value retrieved from payload.
+ * @returns True when the object matches the VerbatimValue contract.
+ */
 export function isVerbatimValue(value: unknown): value is VerbatimValue {
   return (
     typeof value === 'object' &&
