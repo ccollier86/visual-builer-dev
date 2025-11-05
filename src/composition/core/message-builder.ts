@@ -6,7 +6,7 @@
  */
 
 import type { NoteTemplate } from '../../derivation/types';
-import type { FactPack, Message, FieldGuideEntry, NasSnapshot } from '../types';
+import type { FactPack, Message, FieldGuideEntry, NasSnapshot, FieldConstraints } from '../types';
 
 /**
  * Build messages array for prompt bundle
@@ -116,7 +116,7 @@ function buildUserMessage(
   sections.push('CONTEXT');
 
   if (factPack) {
-    sections.push('FACT PACK:');
+    sections.push('SOURCE DATA:');
     sections.push(stringifyDeterministic(factPack));
     sections.push('');
   }
@@ -177,11 +177,18 @@ function formatFieldGuideEntry(entry: FieldGuideEntry): string {
   }
 
   if (entry.constraints && Object.keys(entry.constraints).length > 0) {
-    lines.push(`  constraints: ${stringifyDeterministic(entry.constraints)}`);
+    const constraintLines = formatConstraintLines(entry.constraints);
+    if (constraintLines.length > 0) {
+      lines.push('  constraints:');
+      for (const constraint of constraintLines) {
+        lines.push(`    - ${constraint}`);
+      }
+    }
   }
 
   if (entry.style && Object.keys(entry.style).length > 0) {
-    lines.push(`  style: ${stringifyDeterministic(entry.style)}`);
+    lines.push('  style:');
+    appendObjectLines(lines, entry.style, '    ');
   }
 
   return lines.join('\n');
@@ -215,6 +222,55 @@ function stringifyDeterministic(input: unknown): string {
   };
 
   return JSON.stringify(normalise(input), null, 2);
+}
+
+function formatConstraintLines(constraints: FieldConstraints): string[] {
+  const lines: string[] = [];
+
+  if (constraints.enum && constraints.enum.length > 0) {
+    lines.push(`Allowed values: ${constraints.enum.join(', ')}`);
+  }
+
+  if (constraints.pattern) {
+    lines.push(`Must match pattern: ${constraints.pattern}`);
+  }
+
+  if (constraints['x-minWords'] !== undefined) {
+    lines.push(`Minimum words: ${constraints['x-minWords']}`);
+  }
+
+  if (constraints['x-maxWords'] !== undefined) {
+    lines.push(`Maximum words: ${constraints['x-maxWords']}`);
+  }
+
+  if (constraints['x-minSentences'] !== undefined) {
+    lines.push(`Minimum sentences: ${constraints['x-minSentences']}`);
+  }
+
+  if (constraints['x-maxSentences'] !== undefined) {
+    lines.push(`Maximum sentences: ${constraints['x-maxSentences']}`);
+  }
+
+  return lines;
+}
+
+function appendObjectLines(lines: string[], value: Record<string, unknown>, indent: string): void {
+  const entries = Object.entries(value);
+
+  for (const [key, raw] of entries) {
+    if (isPlainObject(raw)) {
+      lines.push(`${indent}${key}:`);
+      appendObjectLines(lines, raw as Record<string, unknown>, `${indent}  `);
+      continue;
+    }
+
+    if (Array.isArray(raw)) {
+      lines.push(`${indent}${key}: [${raw.join(', ')}]`);
+      continue;
+    }
+
+    lines.push(`${indent}${key}: ${String(raw)}`);
+  }
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

@@ -43,23 +43,24 @@ interface BaseComponent {
   order: number;
 }
 
-// ===== SECTION COMPONENT =====
+// ===== SECTION BLOCK (Flat - just a divider/header) =====
 
-export interface SectionComponent extends BaseComponent {
+export interface SectionBlock extends BaseComponent {
   type: 'section';
   title: string;
-  fields: FieldComponent[];
 
+  // Layout applies to fields AFTER this section (until next section)
   layout: LayoutType;
-  columns?: number;
+  columns?: number; // Only if layout is 'grid'
 
   showTitle: boolean;
   titleStyle: {
-    fontSize: 'small' | 'medium' | 'large';
-    fontWeight: 'normal' | 'bold';
+    fontSize: number;
+    fontWeight: number;
+    color: string;
     textTransform: 'none' | 'uppercase' | 'capitalize';
     borderBottom: boolean;
-    color?: string;
+    marginBottom: number;
   };
 
   spacing: {

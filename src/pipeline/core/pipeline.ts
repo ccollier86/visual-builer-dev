@@ -19,6 +19,7 @@ import { mergePayloads, findMergeConflicts } from './merger';
 import type { PipelineInput, PipelineOutput, PipelineOptions, PipelineError, PipelineWarnings } from '../types';
 import type { DesignTokens, Layout } from '../../tokens';
 import type { TemplateStyle } from '../../derivation/types';
+import type { FactPack } from '../../types/payloads';
 import defaultTokensRaw from '../../tokens/defaults/default-tokens.json';
 
 function cloneTokens(tokens: DesignTokens): DesignTokens {
@@ -230,6 +231,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       template: input.template,
       aiSchema: ais,
       nasSnapshot: resolvedNasData,
+      factPack: input.sourceData as FactPack,
     });
     const promptBundle = promptResult.bundle;
 
