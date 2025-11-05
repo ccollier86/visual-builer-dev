@@ -9,6 +9,8 @@
  * DI: No dependencies, pure data transformation
  */
 
+import type { AIPayload, NasSnapshot, RenderPayload } from '../../types/payloads';
+
 /**
  * Deep merge AI output and NAS data into final render payload
  *
@@ -22,24 +24,34 @@
  * @param nasData - Non-AI snapshot data (matches NAS schema)
  * @returns Merged payload conforming to RPS schema
  */
-export function mergePayloads(aiOutput: any, nasData: any): any {
+export function mergePayloads(aiOutput: AIPayload, nasData: NasSnapshot): RenderPayload {
   // Handle null/undefined cases
   if (!nasData) return aiOutput ?? {};
   if (!aiOutput) return nasData ?? {};
 
   // Deep merge objects
   if (isPlainObject(aiOutput) && isPlainObject(nasData)) {
-    const result: any = { ...nasData };
+    const result: RenderPayload = { ...nasData };
 
     for (const key in aiOutput) {
       if (Object.prototype.hasOwnProperty.call(aiOutput, key)) {
-        if (key in result) {
-          // Recursively merge nested structures
-          result[key] = mergePayloads(aiOutput[key], result[key]);
-        } else {
-          // AI field not in NAS, just add it
-          result[key] = aiOutput[key];
+      if (key in result) {
+        const existing = result[key];
+        const incoming = aiOutput[key];
+
+        if (isPlainObject(incoming) && isPlainObject(existing)) {
+          result[key] = mergePayloads(incoming as AIPayload, existing as NasSnapshot);
+          continue;
         }
+
+        if (Array.isArray(incoming) && Array.isArray(existing)) {
+          result[key] = incoming;
+          continue;
+        }
+      }
+
+      // AI field not in NAS or overwrite with incoming value
+      result[key] = aiOutput[key];
       }
     }
 
@@ -60,7 +72,7 @@ export function mergePayloads(aiOutput: any, nasData: any): any {
 /**
  * Check if value is a plain object (not array, not null, not class instance)
  */
-function isPlainObject(value: unknown): value is Record<string, any> {
+function isPlainObject(value: unknown): value is Record<string, unknown> {
   if (typeof value !== 'object' || value === null) {
     return false;
   }
@@ -87,8 +99,8 @@ function isPlainObject(value: unknown): value is Record<string, any> {
  * @returns Array of conflict paths (empty if no conflicts)
  */
 export function findMergeConflicts(
-  aiOutput: any,
-  nasData: any,
+  aiOutput: AIPayload,
+  nasData: NasSnapshot,
   pathPrefix = ''
 ): string[] {
   const conflicts: string[] = [];
@@ -115,10 +127,16 @@ export function findMergeConflicts(
           `${currentPath} (AI: ${aiType}, NAS: ${nasType})`
         );
       } else if (aiType === 'object' && nasType === 'object') {
-        // Recurse into nested objects
-        conflicts.push(
-          ...findMergeConflicts(aiValue, nasValue, currentPath)
-        );
+        if (isPlainObject(aiValue) && isPlainObject(nasValue)) {
+          // Recurse into nested objects
+          conflicts.push(
+            ...findMergeConflicts(
+              aiValue as AIPayload,
+              nasValue as NasSnapshot,
+              currentPath
+            )
+          );
+        }
       }
     }
   }

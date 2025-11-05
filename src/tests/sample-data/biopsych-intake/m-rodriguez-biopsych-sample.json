@@ -7,7 +7,13 @@
     "dob": "1989-07-15",
     "age": 35,
     "gender": "male",
-    "pronouns": "he/him",
+  "pronouns": {
+    "subject": "he",
+    "object": "him",
+    "possessive": "his",
+    "reflexive": "himself",
+    "display": "he/him"
+  },
     "mrn": "MRN-78945"
   },
   "facility": {
@@ -39,7 +45,14 @@
   },
   "patient_intake": {
     "narrative": "Virtual Consult MD\nIntake Document\n\nNovember 4, 2025 • Owensboro\n\nDEMOGRAPHICS\nWhat is your first name?\nMichael\n\nWhat is your last name?\nRodriguez\n\nWhat is your date of birth?\n1989-07-15\n\nSocial Security Number?\n***-**-4521\n\nWhat is your gender identity?\nmale\n\nWhat are your pronouns?\nhe/him\n\nWhat is your race?\nhispanic\n\nWhat is your ethnicity?\nhispanic\n\nWhat is your primary language?\nenglish\n\nNeed interpreter services?\nNo\n\nPRIMARY CONCERNS\nTop concerns?\nDepression/Sadness, Trauma/PTSD symptoms, Substance use concerns, Anger/Irritability, Sleep problems\n\nWhen did these concerns start?\npast-year\n\nTriggers?\nDivorce or relationship breakup, Loss of loved one, Childhood trauma, Substance use\n\nCONTACT INFORMATION\nWhat is your phone number?\n(502) 555-7823\n\nWhat is your email address?\nmrodriguez89@email.com\n\nWhat is your street address?\n2847 Maple Ridge Drive\n\nCity?\nOwensboro\n\nState?\nKY\n\nZIP Code?\n42301\n\nEmergency Contact Name?\nMaria Rodriguez\n\nRelationship?\nSister\n\nEmergency Contact Phone?\n(502) 555-9104\n\nINSURANCE\nWhat type of insurance do you have?\nmedicaid\n\nMedicaid ID?\nKY-8745231\n\nInsurance provider?\nKentucky Medicaid (Anthem)\n\nMEDICATION ALLERGIES\nDo you have any medication allergies?\nYes\n\nMedication allergies?\nPenicillin (hives), Codeine (nausea)\n\nCURRENT MEDICATIONS\nMedication name?\nLisinopril\n\nDosage?\n10mg daily\n\nPrescribed for?\nHigh blood pressure\n\nMedication name?\nIbuprofen\n\nDosage?\n800mg as needed\n\nPrescribed for?\nChronic back pain from work injury\n\nPAST PSYCHIATRIC MEDICATIONS\nMedication name?\nZoloft (sertraline)\n\nDuration?\n6 months\n\nReason discontinued?\nDidn't feel like it was working, stopped on my own\n\nMedication name?\nTrazodone\n\nDuration?\n3 months\n\nReason discontinued?\nMade me too groggy in the morning, couldn't function at work\n\nMEDICAL CONDITIONS\nConditions you have?\nHypertension, Chronic back pain (work-related injury 2018), Type 2 Diabetes (pre-diabetic, diet controlled)\n\nSAFETY ASSESSMENT\nCurrent suicidal thoughts?\nNo, but have had thoughts in the past (6 months ago during worst of divorce)\n\nThoughts of harming others?\nNo, but struggle with anger sometimes\n\nSpecific plan for self-harm?\nNo\n\nCurrently safe?\nYes\n\nEmergency contact available?\nYes - sister Maria is very supportive\n\nCurrently in treatment?\nNo, this is first time seeking help since divorce\n\nHEALTHCARE PROVIDERS\nDo you have a primary care provider?\nYes\n\nPCP Name?\nDr. Sarah Chen\n\nPCP Practice?\nOwensboro Family Medicine\n\nPCP Phone?\n(270) 555-3200\n\nDo you have a therapist/counselor?\nNo, never been to therapy before\n\nDo you have a psychiatrist?\nNo\n\nDo you have a substance use disorder provider?\nNo, but know I need help with drinking\n\nSOCIAL & LIFESTYLE\nCurrent living arrangement?\nLiving alone in apartment\n\nHousing stability?\nStable for now, but rent is expensive and finances are tight\n\nRelationship status?\nDivorced (finalized 8 months ago)\n\nChildren?\nTwo daughters, ages 8 and 11, see them every other weekend\n\nSocial support network?\nLimited - sister is main support, lost most friends during marriage/divorce\n\nEmployment status?\nFull-time warehouse supervisor\n\nEmployer?\nAmazon Fulfillment Center\n\nHighest education completed?\nHigh school diploma, some college (didn't finish)\n\nFinancial stress level?\nVery high - child support, legal fees from divorce, medical bills from back injury\n\nMilitary service?\nNo\n\nLegal issues?\nDUI 14 months ago (during separation), completed probation\n\nSUBSTANCE USE\nDo you smoke or use tobacco?\nYes, about half pack per day (trying to cut back)\n\nHow often do you drink alcohol?\nDaily, especially on weekends\n\nDrinks per occasion?\n4-6 beers on weeknights, 8-10 on weekends\n\nConcerns about drinking?\nYes - know it's gotten worse since divorce, using it to cope with stress and loneliness\n\nHave you used recreational drugs in the past year?\nMarijuana occasionally (2-3 times per month), used cocaine during marriage but stopped after DUI\n\nSubstance use history?\nStarted drinking heavily in early 20s, was worse during marriage (wife also drank heavily), got DUI during separation, trying to cut back but struggling\n\nFAMILY HISTORY\nFamily mental health history?\nFather had depression and alcoholism (died age 58 from liver disease), mother has anxiety, brother has PTSD from military service\n\nFamily substance use history?\nFather was alcoholic, uncle on mother's side had drug problems\n\nTRAUMA HISTORY\nChildhood trauma?\nWitnessed significant domestic violence between parents (father would get drunk and violent), felt responsible for protecting younger siblings, moved around a lot due to financial instability\n\nAdult trauma?\nWork injury in 2018 (fell from forklift, chronic back pain since), emotionally abusive marriage, contentious divorce, lost custody battle for primary placement of daughters\n\nWORK/DAILY FUNCTIONING\nHow is work affected by symptoms?\nCalling in sick more often (used 8 sick days in past 3 months), trouble concentrating on tasks, irritable with coworkers, worried about losing job\n\nHow are relationships affected?\nDivorced, limited contact with daughters (hurts deeply), pushed away friends, arguing with sister more, isolated and lonely\n\nHow is self-care affected?\nNot eating regularly, sleep is terrible (3-4 hours per night), apartment is messy, not exercising, drinking too much, smoking more\n\nHOBBIES & INTERESTS (BEFORE SYMPTOMS)\nUsed to enjoy:\n- Coaching daughters' soccer team\n- Working on cars (had old Mustang project car, had to sell during divorce)\n- Fishing with friends\n- Playing guitar\n\nNow:\nDon't do any of these anymore, no motivation, just work and drink\n\nGOALS FOR TREATMENT\n1. Stop feeling so angry and depressed all the time\n2. Get my drinking under control before I lose my job or get another DUI\n3. Be a better father - want my daughters to see me as stable and healthy\n4. Deal with what happened in my childhood and marriage\n5. Sleep better and have energy again\n\nSTRENGTHS\n- Hard worker, good work ethic despite current struggles\n- Love my daughters deeply, want to be better for them\n- Sister is supportive\n- Recognizing I need help (took courage to come here)\n- Physically strong despite back pain\n- Good at problem-solving when not overwhelmed",
-    "structured": {
+  "providers": {
+    "pcp": {
+      "name": "Dr. Sarah Chen",
+      "practice": "Owensboro Family Medicine",
+      "phone": "(270) 555-3200"
+    }
+  },
+  "structured": {
       "demographics": {
         "firstName": "Michael",
         "lastName": "Rodriguez",
@@ -506,5 +519,6 @@
       ],
       "interpretation": "Score of 3 indicates low to moderate substance use concerns. Patient reports past cocaine use (discontinued after DUI), current occasional marijuana use (2-3x/month). While current drug use is less problematic than alcohol, history suggests polysubstance use pattern during periods of high stress. Patient demonstrates ability to discontinue substances (cocaine), which is protective factor. Primary substance use concern is severe alcohol use disorder."
     }
-  }
+  },
+  "plan": {}
 }

@@ -5,7 +5,8 @@
  * Reduces token usage by including only referenced data.
  */
 
-import type { FieldGuideEntry } from '../types';
+import type { PathSegment } from '../../derivation/types';
+import type { FieldGuideEntry, NasSnapshot } from '../types';
 
 /**
  * Slice NAS snapshot to only dependency paths
@@ -21,9 +22,9 @@ import type { FieldGuideEntry } from '../types';
  * @returns Slimmed NAS object with only referenced paths
  */
 export function sliceContext(
-  nasSnapshot: any,
+  nasSnapshot: NasSnapshot | undefined,
   fieldGuide: FieldGuideEntry[]
-): any {
+): NasSnapshot {
   if (!nasSnapshot) {
     return {};
   }
@@ -44,7 +45,7 @@ export function sliceContext(
   }
 
   // Build sliced object
-  const sliced: any = {};
+  const sliced: NasSnapshot = {};
 
   for (const path of paths) {
     const value = getValueAtPath(nasSnapshot, path);
@@ -66,22 +67,36 @@ export function sliceContext(
  * @param path - Dot-notation path
  * @returns Value at path or undefined
  */
-function getValueAtPath(obj: any, path: string): any {
+function getValueAtPath(obj: NasSnapshot, path: string): unknown {
   const segments = parsePath(path);
-  let current = obj;
+  let current: unknown = obj;
 
   for (const segment of segments) {
-    if (current === undefined || current === null) {
+    const key = stripArrayNotation(segment.name);
+
+    if (Array.isArray(current)) {
+      const nextValues = current
+        .map((entry) => (isObjectLike(entry) ? (entry as Record<string, unknown>)[key] : undefined))
+        .filter((entry) => entry !== undefined);
+
+      if (nextValues.length === 0) {
+        return undefined;
+      }
+
+      current = nextValues[0];
+      continue;
+    }
+
+    if (!isObjectLike(current)) {
       return undefined;
     }
 
-    if (segment.isArray) {
-      // For array paths, return the whole array
-      const key = segment.name.replace('[]', '');
-      current = current[key];
-    } else {
-      current = current[segment.name];
+    const next = (current as Record<string, unknown>)[key];
+    if (next === undefined) {
+      return undefined;
     }
+
+    current = next;
   }
 
   return current;
@@ -97,28 +112,37 @@ function getValueAtPath(obj: any, path: string): any {
  * @param path - Dot-notation path
  * @param value - Value to set
  */
-function setValueAtPath(obj: any, path: string, value: any): void {
+function setValueAtPath(obj: NasSnapshot, path: string, value: unknown): void {
   const segments = parsePath(path);
-  let current = obj;
+  if (segments.length === 0) {
+    return;
+  }
+
+  let current: Record<string, unknown> = obj;
 
   for (let i = 0; i < segments.length - 1; i++) {
     const segment = segments[i];
-    const key = segment.isArray ? segment.name.replace('[]', '') : segment.name;
+    const key = stripArrayNotation(segment.name);
 
-    if (!current[key]) {
-      // Determine if next level should be array or object
-      const nextSegment = segments[i + 1];
-      current[key] = nextSegment.isArray ? [] : {};
+    if (segment.isArray) {
+      current = ensureArrayContainer(current, key);
+      continue;
     }
 
-    current = current[key];
+    current = ensureChildObject(current, key);
   }
 
-  // Set final value
   const lastSegment = segments[segments.length - 1];
-  const lastKey = lastSegment.isArray
-    ? lastSegment.name.replace('[]', '')
-    : lastSegment.name;
+  const lastKey = stripArrayNotation(lastSegment.name);
+
+  if (lastSegment.isArray) {
+    const array = Array.isArray(current[lastKey]) ? (current[lastKey] as unknown[]) : [];
+    if (!Array.isArray(current[lastKey])) {
+      current[lastKey] = array;
+    }
+    array.splice(0, array.length, ...(Array.isArray(value) ? value : [value]));
+    return;
+  }
 
   current[lastKey] = value;
 }
@@ -140,7 +164,44 @@ function parsePath(path: string): PathSegment[] {
   }));
 }
 
-interface PathSegment {
-  name: string;
-  isArray: boolean;
+function stripArrayNotation(segment: string): string {
+  return segment.replace(/\[\]$/, '');
+}
+
+function ensureChildObject(container: Record<string, unknown>, key: string): Record<string, unknown> {
+  const existing = container[key];
+  if (isPlainObject(existing)) {
+    return existing;
+  }
+
+  const created: Record<string, unknown> = {};
+  container[key] = created;
+  return created;
+}
+
+function ensureArrayContainer(container: Record<string, unknown>, key: string): Record<string, unknown> {
+  let existing = container[key];
+
+  if (!Array.isArray(existing)) {
+    existing = [];
+    container[key] = existing;
+  }
+
+  const array = existing as unknown[];
+
+  if (array.length === 0 || !isPlainObject(array[0])) {
+    const element: Record<string, unknown> = {};
+    array[0] = element;
+    return element;
+  }
+
+  return array[0] as Record<string, unknown>;
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isObjectLike(value: unknown): value is Record<string, unknown> | unknown[] {
+  return typeof value === 'object' && value !== null;
 }

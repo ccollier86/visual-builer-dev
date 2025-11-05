@@ -1,3 +1,4 @@
+import type { ContentItem } from '../../derivation/types';
 import type { ISlotResolver, ResolutionContext, ResolvedField, IFormulaEvaluator } from '../contracts/types';
 
 /**
@@ -13,7 +14,7 @@ export class ComputedResolver implements ISlotResolver {
     return slotType === 'computed';
   }
 
-  resolve(item: any, context: ResolutionContext): ResolvedField | null {
+  resolve(item: ContentItem, context: ResolutionContext): ResolvedField | null {
     if (!item.formula || !item.targetPath) {
       return null;
     }
@@ -35,7 +36,7 @@ export class ComputedResolver implements ISlotResolver {
         value,
         slotType: 'computed'
       };
-    } catch (error) {
+    } catch (_error: unknown) {
       // Formula evaluation failed - return null, caller will log warning
       return null;
     }

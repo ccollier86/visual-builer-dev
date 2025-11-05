@@ -27,4 +27,4 @@ export { validateRPS } from './validators/rps-validator';
 export { validateDesignTokens } from './validators/tokens-validator';
 
 // Types
-export type { ValidationResult } from './types';
+export type { ValidationResult, ValidationIssue } from './types';

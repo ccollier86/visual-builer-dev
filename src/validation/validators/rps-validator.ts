@@ -25,6 +25,7 @@ export function validateRPS(doc: unknown): ValidationResult {
 
   return {
     ok,
-    errors: validate.errors ?? []
+    errors: validate.errors ?? [],
+    warnings: []
   };
 }

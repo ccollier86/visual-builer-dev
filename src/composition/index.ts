@@ -18,6 +18,8 @@ export type {
   FieldConstraints,
   CompositionInput,
   CompositionResult,
+  FactPack,
+  NasSnapshot,
   LintResult,
   LintIssue
 } from './types';

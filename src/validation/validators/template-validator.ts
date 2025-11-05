@@ -21,6 +21,7 @@ export function validateNoteTemplate(doc: unknown): ValidationResult {
 
   return {
     ok,
-    errors: validate.errors ?? []
+    errors: validate.errors ?? [],
+    warnings: []
   };
 }

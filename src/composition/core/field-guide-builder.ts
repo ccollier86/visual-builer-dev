@@ -5,6 +5,11 @@
  * Walks template.layout and builds a guide entry for each slot:"ai" item.
  */
 
+import type {
+  Component,
+  ContentConstraints,
+  ContentItem,
+} from '../../derivation/types';
 import type { FieldGuideEntry, FieldConstraints } from '../types';
 
 /**
@@ -22,10 +27,10 @@ import type { FieldGuideEntry, FieldConstraints } from '../types';
  * @param layout - Template layout array
  * @returns Array of field guide entries in layout order
  */
-export function buildFieldGuide(layout: any[]): FieldGuideEntry[] {
+export function buildFieldGuide(layout: Component[]): FieldGuideEntry[] {
   const entries: FieldGuideEntry[] = [];
 
-  function walkComponent(component: any): void {
+  function walkComponent(component: Component): void {
     // Process content items
     if (component.content) {
       for (const item of component.content) {
@@ -41,9 +46,13 @@ export function buildFieldGuide(layout: any[]): FieldGuideEntry[] {
     }
   }
 
-  function processContentItem(item: any): void {
+  function processContentItem(item: ContentItem): void {
     // Only process AI slots
     if (item.slot !== 'ai') {
+      return;
+    }
+
+    if (!item.outputPath) {
       return;
     }
 
@@ -111,7 +120,7 @@ export function buildFieldGuide(layout: any[]): FieldGuideEntry[] {
  * @param constraints - Template constraints object
  * @returns Field constraints object
  */
-function mapConstraints(constraints: any): FieldConstraints {
+function mapConstraints(constraints: ContentConstraints): FieldConstraints {
   const mapped: FieldConstraints = {};
 
   if (constraints.enum) {

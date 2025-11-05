@@ -6,9 +6,11 @@
  */
 
 import type OpenAI from 'openai';
+import type { Response, ResponseCreateParams } from 'openai/resources/responses/responses';
 import type { PromptBundle } from '../../composition/types';
 import type { GenerationOptions, GenerationResult } from '../types';
 import type { SchemaValidator } from '../../validation/types';
+import type { AIPayload } from '../../types/payloads';
 import { withRetry } from '../utils/retry-handler';
 import { DEFAULT_OPTIONS } from '../types';
 
@@ -36,47 +38,56 @@ export async function generateWithSchema(
   // Prepare response_format for OpenAI structured outputs
   const responseFormat = {
     type: 'json_schema' as const,
-    json_schema: {
-      name: 'clinical_note',
-      strict: true,
-      schema: bundle.jsonSchema,
-    },
+    name: 'clinical_note',
+    strict: true,
+    schema: bundle.jsonSchema as unknown as Record<string, unknown>,
   };
 
+  const input: ResponseCreateParams['input'] = bundle.messages.map(message => ({
+    role: message.role,
+    content: [{ type: 'input_text' as const, text: message.content }],
+  }));
+
   // Call OpenAI API with retry logic
-  const completion = await withRetry(
+  const requestBody: ResponseCreateParams = {
+    model: finalOptions.model,
+    input,
+    text: { format: responseFormat },
+    max_output_tokens: finalOptions.maxTokens,
+  };
+
+  if (shouldSendTemperature(finalOptions.model, finalOptions.temperature)) {
+    requestBody.temperature = finalOptions.temperature;
+  }
+
+  const completion = await withRetry<Response>(
     async () => {
-      return await client.chat.completions.create({
-        model: finalOptions.model,
-        messages: bundle.messages,
-        response_format: responseFormat,
-        temperature: finalOptions.temperature,
-        max_tokens: finalOptions.maxTokens,
-      });
+      return (await client.responses.create(requestBody)) as Response;
     },
     { maxRetries: finalOptions.retries }
   );
 
   // Extract AI output
-  const messageContent = completion.choices[0]?.message?.content;
+  const messageContent = extractFirstTextOutput(completion);
   if (!messageContent) {
     throw new Error('OpenAI response missing message content');
   }
 
   // Parse JSON output
-  let aiOutput: any;
+  let aiOutput: AIPayload;
   try {
-    aiOutput = JSON.parse(messageContent);
-  } catch (error: any) {
+    aiOutput = JSON.parse(messageContent) as AIPayload;
+  } catch (error: unknown) {
+    const reason = error instanceof Error ? error.message : 'Unknown error';
     throw new Error(
-      `Failed to parse OpenAI response as JSON: ${error.message}`,
+      `Failed to parse OpenAI response as JSON: ${reason}`,
       { cause: error }
     );
   }
 
   // Validate against AIS schema
   const validationResult = validator(aiOutput);
-  if (!validationResult.ok) {
+  if (validationResult.errors.length > 0) {
     const errorMessages = validationResult.errors
       .map(err => `${err.instancePath}: ${err.message}`)
       .join(', ');
@@ -87,6 +98,8 @@ export async function generateWithSchema(
     );
   }
 
+  const validationWarnings = validationResult.warnings;
+
   // Build result with usage metrics
   const usage = completion.usage;
   if (!usage) {
@@ -96,10 +109,79 @@ export async function generateWithSchema(
   return {
     output: aiOutput,
     usage: {
-      promptTokens: usage.prompt_tokens,
-      completionTokens: usage.completion_tokens,
+      promptTokens: usage.input_tokens,
+      completionTokens: usage.output_tokens,
       totalTokens: usage.total_tokens,
     },
     model: completion.model,
+    warnings: validationWarnings.length > 0 ? validationWarnings : undefined,
   };
+}
+
+function extractFirstTextOutput(response: Response): string | null {
+  if (typeof response.output_text === 'string' && response.output_text.trim().length > 0) {
+    return response.output_text;
+  }
+
+  if (Array.isArray(response.output)) {
+    for (const item of response.output) {
+      if (!item || typeof item !== 'object') continue;
+
+      // Direct text output item
+      if ('type' in item && (item as { type?: string }).type === 'output_text' && 'text' in item) {
+        const text = (item as { text?: string }).text;
+        if (typeof text === 'string' && text.trim().length > 0) {
+          return text;
+        }
+      }
+
+      const contentList = (item as { content?: Array<Record<string, unknown>> }).content;
+      if (Array.isArray(contentList)) {
+        for (const content of contentList) {
+          if (!content) continue;
+          const type = typeof content.type === 'string' ? content.type : undefined;
+          const text = typeof content.text === 'string' ? content.text : undefined;
+
+          if (type === 'output_text' || type === 'text') {
+            if (text && text.trim().length > 0) {
+              return text;
+            }
+          }
+
+          if (type && type.startsWith('json')) {
+            // Structured outputs may surface as JSON payloads
+            if (typeof content.json === 'string') {
+              return content.json;
+            }
+            if (content.json && typeof content.json === 'object') {
+              return JSON.stringify(content.json);
+            }
+            if (typeof content.output === 'string') {
+              return content.output;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+function shouldSendTemperature(model?: string, temperature?: number): boolean {
+  if (temperature === undefined || temperature === null) {
+    return false;
+  }
+
+  if (!model) {
+    return true;
+  }
+
+  const normalized = model.toLowerCase();
+
+  if (normalized.startsWith('gpt-5')) {
+    return false;
+  }
+
+  return true;
 }

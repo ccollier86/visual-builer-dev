@@ -1,3 +1,6 @@
+import type { ValidationIssue } from '../validation';
+import type { AIPayload } from '../types/payloads';
+
 /**
  * Integration Domain Types
  *
@@ -18,13 +21,14 @@ export interface GenerationOptions {
  * Result from AI generation with usage metrics
  */
 export interface GenerationResult {
-  output: any; // AI-generated JSON conforming to schema
+  output: AIPayload; // AI-generated JSON conforming to schema
   usage: {
     promptTokens: number;
     completionTokens: number;
     totalTokens: number;
   };
   model: string;
+  warnings?: ValidationIssue[];
 }
 
 /**
@@ -53,7 +57,7 @@ export const DEFAULT_RETRY_CONFIG: RetryConfig = {
  * Default generation options
  */
 export const DEFAULT_OPTIONS: Required<GenerationOptions> = {
-  model: 'gpt-5',
+  model: 'gpt-4-turbo',
   temperature: 0.7,
   maxTokens: 4000,
   retries: 3,

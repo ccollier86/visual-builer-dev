@@ -54,7 +54,7 @@ describe('duplicate path detection', () => {
     expect(() => deriveNAS(template)).toThrow(DuplicatePathError);
   });
 
-  it('detects duplicate NAS paths within listItems with explicit indices', () => {
+  it('allows listItems to target indexed array elements without conflict', () => {
     const template: NoteTemplate = {
       ...baseTemplate,
       layout: [
@@ -79,7 +79,7 @@ describe('duplicate path detection', () => {
       ],
     };
 
-    expect(() => deriveNAS(template)).toThrow(DuplicatePathError);
+    expect(() => deriveNAS(template)).not.toThrow();
   });
 
   it('detects duplicate NAS paths inside tableMap entries', () => {
@@ -108,5 +108,25 @@ describe('duplicate path detection', () => {
     };
 
     expect(() => deriveNAS(template)).toThrow(DuplicatePathError);
+  });
+
+  it('allows mixing wildcard arrays with indexed paths', () => {
+    const template: NoteTemplate = {
+      ...baseTemplate,
+      layout: [
+        {
+          id: 'hybrid-array',
+          type: 'group',
+          content: [
+            { id: 'ai-array', slot: 'ai', outputPath: 'plan.tasks[].summary' },
+            { id: 'lookup-index-0', slot: 'lookup', targetPath: 'plan.tasks[0].summary' },
+            { id: 'lookup-index-1', slot: 'lookup', targetPath: 'plan.tasks[1].summary' },
+          ],
+        },
+      ],
+    };
+
+    expect(() => deriveAIS(template)).not.toThrow();
+    expect(() => deriveNAS(template)).not.toThrow();
   });
 });

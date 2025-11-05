@@ -1,11 +1,12 @@
 import { createNASBuilder } from '../resolution';
 import sourceData from './fixtures/source-data.json';
+import type { DerivedSchema, NoteTemplate } from '../derivation/types';
 
 async function testResolution() {
   console.log('🧪 Testing NAS Resolution\n');
 
   // Simple template with all slot types
-  const template = {
+  const template: NoteTemplate = {
     id: 'test-resolution',
     name: 'Resolution Test',
     version: '1.0.0',
@@ -55,10 +56,19 @@ async function testResolution() {
   // Create builder and resolve
   const builder = createNASBuilder();
 
+  const nasSchema: DerivedSchema = {
+    $id: 'test-nas-schema',
+    $schema: 'https://json-schema.org/draft/2020-12/schema',
+    title: 'NAS Schema',
+    type: 'object',
+    properties: {},
+    additionalProperties: true,
+  };
+
   const result = await builder.build({
     template,
     sourceData,
-    nasSchema: {} // Simplified for test
+    nasSchema
   });
 
   // Verify results
@@ -68,22 +78,24 @@ async function testResolution() {
   console.log(JSON.stringify(result.nasData, null, 2));
 
   // Assertions
+  const nasData = result.nasData as Record<string, any>;
+
   const checks = [
     {
       name: 'Lookup: patient name',
-      pass: result.nasData.header?.patientName === 'Michael Rodriguez'
+      pass: nasData.header?.patientName === 'Michael Rodriguez'
     },
     {
       name: 'Static: header title',
-      pass: result.nasData.header?.title === 'Clinical Note'
+      pass: nasData.header?.title === 'Clinical Note'
     },
     {
       name: 'Computed: PHQ9 delta',
-      pass: result.nasData.assessments?.phq9Delta === '-6'
+      pass: nasData.assessments?.phq9Delta === '-6'
     },
     {
       name: 'Verbatim: quote with ref',
-      pass: result.nasData.subjective?.clientQuote?.text?.includes('feeling a lot better')
+      pass: nasData.subjective?.clientQuote?.text?.includes('feeling a lot better')
     }
   ];
 

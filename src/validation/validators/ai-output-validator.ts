@@ -1,6 +1,7 @@
 import { createHash } from 'crypto';
 import type { DerivedSchema } from '../../derivation/types';
 import { makeAjvWithTextKeywords } from '../core/ajv-setup';
+import { partitionValidationMessages } from '../utils/error-classifier';
 import type { SchemaValidator, ValidationResult } from '../types';
 
 const validatorCache = new Map<string, SchemaValidator>();
@@ -20,12 +21,14 @@ export function createAIOutputValidator(schema: DerivedSchema): SchemaValidator 
   const validate = ajv.compile(schema);
 
   return (doc: unknown): ValidationResult => {
-    const ok = validate(doc);
-    const errors = validate.errors ? [...validate.errors] : [];
+    validate(doc);
+    const rawErrors = validate.errors ? [...validate.errors] : [];
+    const { errors, warnings } = partitionValidationMessages(rawErrors);
 
     return {
-      ok,
+      ok: errors.length === 0,
       errors,
+      warnings,
     };
   };
 }

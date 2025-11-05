@@ -86,7 +86,7 @@ Main orchestration function. Takes template and raw source data, returns complet
 - `usage` - Token usage metrics
 - `model` - Model used for generation
 
-### `mergePayloads(aiOutput: any, nasData: any): any`
+### `mergePayloads(aiOutput: AIPayload, nasData: NasSnapshot): RenderPayload`
 
 Deep merges AI output and NAS data into final render payload.
 
@@ -98,7 +98,7 @@ Deep merges AI output and NAS data into final render payload.
 
 **Pure function:** No mutations, no side effects.
 
-### `findMergeConflicts(aiOutput: any, nasData: any): string[]`
+### `findMergeConflicts(aiOutput: AIPayload, nasData: NasSnapshot): string[]`
 
 Validates that two payloads can be merged without type conflicts.
 

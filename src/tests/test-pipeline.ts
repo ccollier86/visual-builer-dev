@@ -11,6 +11,7 @@
 import { runPipeline } from '../pipeline';
 import exampleTemplate from '../pipeline/examples/example-template.json';
 import defaultTokens from '../tokens/defaults/default-tokens.json';
+import type { NoteTemplate } from '../derivation/types';
 import type { DesignTokens } from '../tokens/types';
 
 async function main() {
@@ -66,7 +67,7 @@ async function main() {
     const startTime = Date.now();
 
     const result = await runPipeline({
-      template: exampleTemplate,
+      template: exampleTemplate as unknown as NoteTemplate,
       sourceData: exampleSourceData,
       tokens: defaultTokens as DesignTokens,
       options: {

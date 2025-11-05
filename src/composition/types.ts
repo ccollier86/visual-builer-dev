@@ -4,6 +4,9 @@
  * Types for building prompt bundles from templates and runtime data.
  */
 
+import type { DerivedSchema, NoteTemplate, StyleHints } from '../derivation/types';
+import type { FactPack, NasSnapshot } from '../types/payloads';
+
 /**
  * A complete prompt bundle ready for LLM call
  * Contains system/user messages, schema, field guide, and context
@@ -13,11 +16,11 @@ export interface PromptBundle {
   templateId: string;
   templateVersion: string;
   messages: Message[];
-  jsonSchema: any; // AIS schema for response_format
+  jsonSchema: DerivedSchema; // AIS schema for response_format
   fieldGuide: FieldGuideEntry[];
   context: {
-    factPack?: any;
-    nasSlices: any;
+    factPack?: FactPack;
+    nasSlices: NasSnapshot;
   };
 }
 
@@ -40,7 +43,7 @@ export interface FieldGuideEntry {
   guidance?: string[];
   dependencies?: string[];
   constraints?: FieldConstraints;
-  style?: any;
+  style?: StyleHints;
 }
 
 /**
@@ -69,10 +72,10 @@ export interface CompositionResult {
  * Everything needed to build a deterministic prompt bundle
  */
 export interface CompositionInput {
-  template: any; // NoteTemplate
-  aiSchema: any; // AIS (AI Structured Output Schema)
-  nasSnapshot: any; // NAS (Non-AI Snapshot) resolved runtime data
-  factPack?: any; // Optional LPC-derived compact facts
+  template: NoteTemplate;
+  aiSchema: DerivedSchema; // AIS (AI Structured Output Schema)
+  nasSnapshot: NasSnapshot; // NAS (Non-AI Snapshot) resolved runtime data
+  factPack?: FactPack; // Optional LPC-derived compact facts
 }
 
 /**
@@ -94,3 +97,5 @@ export interface LintResult {
   errors: LintIssue[];     // Just errors
   warnings: LintIssue[];   // Just warnings
 }
+
+export type { FactPack, NasSnapshot } from '../types/payloads';

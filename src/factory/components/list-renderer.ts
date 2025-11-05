@@ -1,6 +1,9 @@
 // List rendering component
 // Handles ordered (ol) and unordered (ul) list generation
 
+import type { Component, ContentItem } from '../../derivation/types';
+import type { RenderPayload } from '../../types/payloads';
+
 import { escapeHtml } from "../utils/html-escape";
 import {
   getByPath,
@@ -18,27 +21,39 @@ import type { VerbatimValue } from "../types";
  * @returns HTML string for the list
  */
 export function renderListComponent(
-  comp: any,
-  payload: any,
+  comp: Component,
+  payload: RenderPayload,
   collectedRefs: Set<string>
 ): string {
-  const ordered = !!comp?.props?.ordered;
+  const props = (comp.props as Record<string, unknown> | undefined) ?? {};
+  const ordered = Boolean(props.ordered);
   const tag = ordered ? "ol" : "ul";
 
-  const content = (comp.content || [])[0] || {};
-  const itemsDef = content.listItems || [];
+  const content = comp.content ?? [];
+  const listContainer = content[0];
+  const itemsDef = listContainer?.listItems ?? [];
 
   // Determine array root from item paths (e.g., "plan.homework[]")
   const rowPath = inferArrayRoot(itemsDef);
-  const rows = getByPath(payload, rowPath) || [];
+  const rowsValue = rowPath ? getByPath(payload, rowPath) : undefined;
+  const rows = Array.isArray(rowsValue) ? rowsValue : [];
 
   const chunks: string[] = [];
   chunks.push(`<${tag} class="list">`);
 
-  for (let i = 0; i < rows.length; i++) {
-    const itemContent = renderListItem(itemsDef, payload, rowPath, i, collectedRefs);
-    if (itemContent) {
-      chunks.push(`<li>${itemContent}</li>`);
+  if (rowPath && rows.length > 0) {
+    for (let i = 0; i < rows.length; i++) {
+      const itemContent = renderListItem(itemsDef, payload, rowPath, i, collectedRefs);
+      if (itemContent) {
+        chunks.push(`<li>${itemContent}</li>`);
+      }
+    }
+  } else {
+    for (const item of content) {
+      const rendered = renderExplicitListItem(item, payload, collectedRefs);
+      if (rendered) {
+        chunks.push(`<li>${rendered}</li>`);
+      }
     }
   }
 
@@ -57,8 +72,8 @@ export function renderListComponent(
  * @returns Rendered item content
  */
 function renderListItem(
-  itemsDef: any[],
-  payload: any,
+  itemsDef: ContentItem[],
+  payload: RenderPayload,
   rowPath: string,
   rowIndex: number,
   collectedRefs: Set<string>
@@ -66,11 +81,15 @@ function renderListItem(
   const parts: string[] = [];
 
   for (const def of itemsDef) {
-    const path = normalizeRowPath(
-      def.outputPath || def.targetPath,
-      rowPath,
-      rowIndex
-    );
+    const basePath = def.outputPath ?? def.targetPath;
+    if (!basePath) {
+      continue;
+    }
+
+    const path =
+      rowPath && rowPath.length > 0
+        ? normalizeRowPath(basePath, rowPath, rowIndex)
+        : basePath;
     const value = getByPath(payload, path);
 
     if (def.slot === "verbatim") {
@@ -84,6 +103,36 @@ function renderListItem(
   return parts.join(" ").trim();
 }
 
+function renderExplicitListItem(
+  def: ContentItem,
+  payload: RenderPayload,
+  collectedRefs: Set<string>
+): string | null {
+  if (def.slot === 'verbatim') {
+    return renderVerbatimValue(getValueForItem(def, payload), collectedRefs);
+  }
+
+  const value = getValueForItem(def, payload);
+
+  if (value != null) {
+    return escapeHtml(String(value));
+  }
+
+  if (def.slot === 'static' && typeof def.text === 'string') {
+    return escapeHtml(def.text);
+  }
+
+  return null;
+}
+
+function getValueForItem(def: ContentItem, payload: RenderPayload): unknown {
+  const path = def.outputPath ?? def.targetPath ?? def.lookup;
+  if (path) {
+    return getByPath(payload, path);
+  }
+  return undefined;
+}
+
 /**
  * Renders a verbatim value with optional ref footnote
  *
@@ -92,13 +141,13 @@ function renderListItem(
  * @returns Escaped HTML with optional footnote link
  */
 function renderVerbatimValue(
-  value: any,
+  value: unknown,
   collectedRefs: Set<string>
 ): string | null {
   if (!value) return null;
 
-  if (typeof value === "object" && "text" in value) {
-    const verbatim = value as VerbatimValue;
+  if (isVerbatimValue(value)) {
+    const verbatim = value;
     let html = escapeHtml(verbatim.text);
 
     if (verbatim.ref) {
@@ -112,4 +161,12 @@ function renderVerbatimValue(
   }
 
   return escapeHtml(String(value));
+}
+
+function isVerbatimValue(value: unknown): value is VerbatimValue {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as Record<string, unknown>).text === 'string'
+  );
 }

@@ -1,0 +1,16 @@
+{
+  "name": "simplegen",
+  "version": "0.1.0",
+  "description": "SimplGen MVP - Simplified Clinical Note Generation",
+  "type": "module",
+  "scripts": {
+    "generate": "bun run run.ts"
+  },
+  "dependencies": {
+    "openai": "^4.77.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

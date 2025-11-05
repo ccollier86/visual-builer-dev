@@ -2,49 +2,42 @@
 // Resolves dot notation paths in payload objects with array support
 
 /**
- * Gets value from object using dot notation path
- * Supports array indexing: "path[0]" and array wildcards: "path[]"
- *
- * Examples:
- * - "user.name" → obj.user.name
- * - "diagnoses[0].code" → obj.diagnoses[0].code
- * - "homework[]" → obj.homework (array)
+ * Gets value from object using dot notation path.
+ * Supports array indexing: "path[0]" and array wildcards: "path[]".
  */
-export function getByPath(obj: any, dotPath: string): any {
-  if (!dotPath) return undefined;
-  if (obj == null) return undefined;
+export function getByPath(obj: unknown, dotPath: string): unknown {
+  if (!dotPath || obj == null) {
+    return undefined;
+  }
 
-  const segments = dotPath.split(".");
-  let current = obj;
+  const segments = dotPath.split('.');
+  let current: unknown = obj;
 
   for (const segment of segments) {
-    if (current == null) return undefined;
+    if (current == null) {
+      return undefined;
+    }
 
-    // Check for array index: "key[0]"
-    const arrayIndexMatch = segment.match(/^(.+)\[(\d+)\]$/);
-    if (arrayIndexMatch) {
-      const key = arrayIndexMatch[1];
-      const index = Number(arrayIndexMatch[2]);
-      current = current[key];
+    const { key, index, isWildcard } = parseSegment(segment);
+    current = getProperty(current, key);
+
+    if (current === undefined) {
+      return undefined;
+    }
+
+    if (isWildcard) {
+      if (!Array.isArray(current)) {
+        return undefined;
+      }
+      continue;
+    }
+
+    if (index !== undefined) {
       if (!Array.isArray(current) || current[index] === undefined) {
         return undefined;
       }
       current = current[index];
-      continue;
     }
-
-    // Check for array wildcard: "key[]"
-    const isArrayWildcard = segment.endsWith("[]");
-    if (isArrayWildcard) {
-      const key = segment.slice(0, -2);
-      current = current[key];
-      if (!Array.isArray(current)) return undefined;
-      // Return the array itself (for iteration by caller)
-      continue;
-    }
-
-    // Regular property access
-    current = current[segment];
   }
 
   return current;
@@ -57,7 +50,7 @@ export function getByPath(obj: any, dotPath: string): any {
  * @param defs - Array of field definitions with outputPath or targetPath
  * @returns Array root path with [] marker, or empty string if none found
  */
-export function inferArrayRoot(defs: any[]): string {
+export function inferArrayRoot(defs: Array<{ outputPath?: string; targetPath?: string }>): string {
   for (const def of defs) {
     const path = (def.outputPath || def.targetPath || "") as string;
     const arrayMarkerIndex = path.indexOf("[]");
@@ -84,4 +77,27 @@ export function normalizeRowPath(
   if (!path) return "";
   const indexedRoot = arrayRoot.replace("[]", `[${index}]`);
   return path.replace(arrayRoot, indexedRoot);
+}
+
+function parseSegment(segment: string): { key: string; index?: number; isWildcard: boolean } {
+  const arrayIndexMatch = segment.match(/^(.+)\[(\d+)\]$/);
+  if (arrayIndexMatch) {
+    return { key: arrayIndexMatch[1], index: Number(arrayIndexMatch[2]), isWildcard: false };
+  }
+
+  const isWildcard = segment.endsWith('[]');
+  const key = isWildcard ? segment.slice(0, -2) : segment;
+  return { key, isWildcard };
+}
+
+function getProperty(container: unknown, key: string): unknown {
+  if (!isObjectLike(container)) {
+    return undefined;
+  }
+
+  return (container as Record<string, unknown>)[key];
+}
+
+function isObjectLike(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
 }

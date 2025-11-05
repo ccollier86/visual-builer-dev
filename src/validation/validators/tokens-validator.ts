@@ -25,5 +25,6 @@ export function validateDesignTokens(doc: unknown): ValidationResult {
 	return {
 		ok,
 		errors: validate.errors ?? [],
+		warnings: [],
 	};
 }

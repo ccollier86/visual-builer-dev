@@ -42,16 +42,22 @@ async function main() {
 		console.log('   5. Composing AI prompt with field guidance...');
 		console.log('   6. Calling AI model (this may take 30-60 seconds)...');
 
+		const model = 'gpt-4o-2024-08-06';
+
 		const result = await runPipeline({
 			template: biopsychTemplate as any,
 			sourceData: demoData,
 			options: {
 				generationOptions: {
-					model: 'gpt-5',
-					temperature: 0.2,
+					model,
+					maxTokens: 5000,
+					temperature: process.env.OPENAI_TEMPERATURE
+						? Number(process.env.OPENAI_TEMPERATURE)
+						: 0.7,
 				},
 			},
 		});
+		console.log(`   ✓ Model used: ${model}`);
 
 		console.log('✅ Pipeline completed successfully!\n');
 
@@ -75,11 +81,26 @@ async function main() {
 		}
 
 		const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-		const htmlPath = path.join(outputDir, `biopsych-${timestamp}.html`);
-		const jsonPath = path.join(outputDir, `biopsych-${timestamp}-data.json`);
+		const baseFileName = `biopsych-${timestamp}`;
+		const htmlPath = path.join(outputDir, `${baseFileName}.html`);
+		const jsonPath = path.join(outputDir, `${baseFileName}-data.json`);
+		const screenCssPath = path.join(outputDir, `${baseFileName}.screen.css`);
+		const printCssPath = path.join(outputDir, `${baseFileName}.print.css`);
+
+		// Write CSS assets
+		fs.writeFileSync(screenCssPath, result.css.screen, 'utf-8');
+		fs.writeFileSync(printCssPath, result.css.print, 'utf-8');
+		console.log('💾 Saved CSS (screen):', screenCssPath);
+		console.log('💾 Saved CSS (print):', printCssPath);
+
+		const linkedHtml = injectStylesheets(
+			result.html,
+			path.basename(screenCssPath),
+			path.basename(printCssPath)
+		);
 
 		// Write HTML
-		fs.writeFileSync(htmlPath, result.html, 'utf-8');
+		fs.writeFileSync(htmlPath, linkedHtml, 'utf-8');
 		console.log('💾 Saved HTML:', htmlPath);
 
 		// Write JSON data (for inspection)
@@ -111,3 +132,16 @@ async function main() {
 }
 
 main();
+
+function injectStylesheets(html: string, screenHref: string, printHref: string): string {
+	if (!html.includes('</head>')) {
+		return html;
+	}
+
+	const linkTags = [
+		`  <link rel="stylesheet" href="${screenHref}" media="screen">`,
+		`  <link rel="stylesheet" href="${printHref}" media="print">`,
+	].join('\n');
+
+	return html.replace('</head>', `${linkTags}\n</head>`);
+}

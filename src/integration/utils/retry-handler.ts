@@ -11,14 +11,19 @@ import { DEFAULT_RETRY_CONFIG } from '../types';
 /**
  * Determines if an error is retryable
  */
-function isRetryableError(error: any): boolean {
-  // Network errors
-  if (error.code === 'ECONNRESET' || error.code === 'ETIMEDOUT') {
+function isRetryableError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') {
+    return false;
+  }
+
+  const record = error as Record<string, unknown>;
+  const code = typeof record.code === 'string' ? record.code : undefined;
+  if (code === 'ECONNRESET' || code === 'ETIMEDOUT') {
     return true;
   }
 
-  // Rate limit or server errors
-  if (error.status && DEFAULT_RETRY_CONFIG.retryableStatusCodes.includes(error.status)) {
+  const status = typeof record.status === 'number' ? record.status : undefined;
+  if (status && DEFAULT_RETRY_CONFIG.retryableStatusCodes.includes(status)) {
     return true;
   }
 
@@ -53,17 +58,24 @@ export async function withRetry<T>(
   config: Partial<RetryConfig> = {}
 ): Promise<T> {
   const finalConfig = { ...DEFAULT_RETRY_CONFIG, ...config };
-  let lastError: any;
+  let lastError: unknown;
 
   for (let attempt = 0; attempt <= finalConfig.maxRetries; attempt++) {
     try {
       return await fn();
-    } catch (error: any) {
+    } catch (error: unknown) {
       lastError = error;
 
-      // Don't retry if not retryable or max retries reached
-      if (!isRetryableError(error) || attempt === finalConfig.maxRetries) {
-        break;
+      const retryable = isRetryableError(error);
+      if (!retryable) {
+        throw normalizeError(error);
+      }
+
+      if (attempt === finalConfig.maxRetries) {
+        throw new Error(
+          `Request failed after ${finalConfig.maxRetries} retries. Last error: ${extractErrorMessage(error) ?? 'Unknown error'}`,
+          { cause: normalizeError(error) }
+        );
       }
 
       // Calculate and wait for backoff delay
@@ -75,7 +87,23 @@ export async function withRetry<T>(
   // All retries exhausted
   throw new Error(
     `Request failed after ${finalConfig.maxRetries} retries. ` +
-    `Last error: ${lastError?.message || 'Unknown error'}`,
-    { cause: lastError }
+    `Last error: ${extractErrorMessage(lastError) ?? 'Unknown error'}`,
+    { cause: normalizeError(lastError) }
   );
+}
+
+function normalizeError(error: unknown): Error {
+  if (error instanceof Error) {
+    return error;
+  }
+  return new Error(typeof error === 'string' ? error : 'Unknown error', { cause: error });
+}
+
+function extractErrorMessage(error: unknown): string | undefined {
+  if (!error || typeof error !== 'object') {
+    return undefined;
+  }
+
+  const message = (error as Record<string, unknown>).message;
+  return typeof message === 'string' ? message : undefined;
 }

@@ -7,6 +7,7 @@ import type { ErrorObject } from 'ajv';
 export interface ValidationResult {
   ok: boolean;
   errors: ErrorObject[];
+  warnings: ErrorObject[];
 }
 
 /**
@@ -14,3 +15,9 @@ export interface ValidationResult {
  * Accepts arbitrary data and returns structured validation metadata.
  */
 export type SchemaValidator = (data: unknown) => ValidationResult;
+
+/**
+ * Common alias for AJV validation issues so downstream domains can
+ * depend on validation without importing AJV types directly.
+ */
+export type ValidationIssue = ErrorObject;

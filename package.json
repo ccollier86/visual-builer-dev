@@ -8,7 +8,12 @@
     "start": "bun src/index.ts",
     "build": "bun build src/index.ts --outdir ./dist --target bun",
     "test": "bun test",
-    "test:pipeline": "bun run src/test-pipeline.ts"
+    "test:integration": "bun test src/tests/integration",
+    "test:unit": "bun test src/derivation/__tests__ src/composition/__tests__ src/resolution/__tests__ src/validation/__tests__",
+    "test:all": "bun run lint && bun test",
+    "test:pipeline": "bun run src/test-pipeline.ts",
+    "lint": "eslint \"src/**/*.ts\"",
+    "test:structured-output": "bun run scripts/test-structured-output.ts"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.4.0",
@@ -23,7 +28,11 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/node": "^24.10.0",
+    "@typescript-eslint/eslint-plugin": "^7.16.1",
+    "@typescript-eslint/parser": "^7.16.1",
     "bun-types": "latest",
+    "eslint": "^9.10.0",
+    "eslint-plugin-jsdoc": "^48.2.3",
     "typescript": "^5.9.3"
   },
   "engines": {

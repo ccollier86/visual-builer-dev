@@ -129,13 +129,30 @@ function processContentItem(
       };
       if (segment.isArray) {
         // This leaf is an array of values
-        const arrayNode = createArrayNode(leafNode);
-        addProperty(
-          currentNode,
-          segment.name,
-          arrayNode,
-          propertyOptions
-        );
+        const arrayPath = `${segmentPath}[]`;
+        let arrayNode = schemaMap.get(arrayPath);
+
+        if (!arrayNode) {
+          arrayNode = createArrayNode(leafNode);
+          addProperty(
+            currentNode,
+            segment.name,
+            arrayNode,
+            propertyOptions
+          );
+          schemaMap.set(arrayPath, arrayNode);
+        } else if (!arrayNode.items) {
+          arrayNode.items = leafNode;
+        }
+
+        if (propertyOptions.isRequired) {
+          if (!currentNode.required) {
+            currentNode.required = [];
+          }
+          if (!currentNode.required.includes(segment.name)) {
+            currentNode.required.push(segment.name);
+          }
+        }
       } else {
         // Normal leaf
         addProperty(

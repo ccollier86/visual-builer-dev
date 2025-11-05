@@ -50,6 +50,12 @@ export function deriveAIS(template: NoteTemplate): DerivedSchema {
 		additionalProperties: false,
 	};
 
+	ensureRequiredCoverage(schema.properties);
+	const topLevelKeys = schema.properties ? Object.keys(schema.properties) : [];
+	const existingRootRequired = schema.required ?? [];
+	const mergedRootRequired = new Set<string>([...existingRootRequired, ...topLevelKeys]);
+	schema.required = Array.from(mergedRootRequired);
+
 	return schema;
 }
 
@@ -115,21 +121,54 @@ function processContentItem(
 		const propertyPath = segment.isArray ? `${segmentPath}[]` : segmentPath;
 
 		if (isLastSegment) {
-			// Leaf node - create the actual value schema
-			const leafNode = createStringNode(item.constraints);
 			const propertyOptions = {
 				isRequired: item.constraints?.required ?? false,
 				path: propertyPath,
 				sourceId: item.id,
 			};
 
-			// Add to parent
 			if (segment.isArray) {
-				// This leaf is an array of strings (uncommon but possible)
-				const arrayNode = createArrayNode(leafNode);
-				addProperty(currentNode, segment.name, arrayNode, propertyOptions);
+				const arrayPath = `${segmentPath}[]`;
+				const needsObjectItems =
+					(item.listItems && item.listItems.length > 0) ||
+					(item.tableMap && Object.keys(item.tableMap).length > 0);
+
+				let arrayNode = schemaMap.get(arrayPath);
+
+				if (!arrayNode) {
+					if (needsObjectItems) {
+						const itemsNode = createObjectNode(false);
+						arrayNode = createArrayNode(itemsNode);
+						addProperty(currentNode, segment.name, arrayNode, propertyOptions);
+						schemaMap.set(arrayPath, arrayNode);
+						schemaMap.set(segmentPath, itemsNode);
+					} else {
+						const leafNode = createStringNode(item.constraints);
+						arrayNode = createArrayNode(leafNode);
+						addProperty(currentNode, segment.name, arrayNode, propertyOptions);
+						schemaMap.set(arrayPath, arrayNode);
+					}
+					schemaMap.set(arrayPath, arrayNode);
+				} else {
+					if (needsObjectItems && arrayNode.items?.type !== 'object') {
+						const itemsNode = createObjectNode(false);
+						arrayNode.items = itemsNode;
+						schemaMap.set(segmentPath, itemsNode);
+					}
+
+					if (propertyOptions.isRequired) {
+						if (!currentNode.required) {
+							currentNode.required = [];
+						}
+						if (!currentNode.required.includes(segment.name)) {
+							currentNode.required.push(segment.name);
+						}
+					}
+					schemaMap.set(arrayPath, arrayNode);
+				}
 			} else {
-				// Normal leaf
+				// Leaf node - create the actual value schema
+				const leafNode = createStringNode(item.constraints);
 				addProperty(currentNode, segment.name, leafNode, propertyOptions);
 			}
 		} else {
@@ -197,6 +236,31 @@ function processContentItem(
 	if (item.tableMap) {
 		for (const tableItem of Object.values(item.tableMap)) {
 			processContentItem(tableItem, root, schemaMap);
+		}
+	}
+}
+
+function ensureRequiredCoverage(properties?: Record<string, SchemaNode>): void {
+	if (!properties) {
+		return;
+	}
+
+	for (const node of Object.values(properties)) {
+		if (node.type === 'object') {
+			const childProps = node.properties ?? {};
+			node.properties = childProps;
+			node.required = Object.keys(childProps);
+			ensureRequiredCoverage(childProps);
+		} else if (node.type === 'array' && node.items) {
+			const itemsNode = node.items;
+			if (itemsNode.type === 'object') {
+				const childProps = itemsNode.properties ?? {};
+				itemsNode.properties = childProps;
+				itemsNode.required = Object.keys(childProps);
+				ensureRequiredCoverage(childProps);
+			} else if (itemsNode.type === 'array') {
+				ensureRequiredCoverage(undefined);
+			}
 		}
 	}
 }

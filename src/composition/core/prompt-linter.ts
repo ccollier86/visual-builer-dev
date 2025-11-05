@@ -1,4 +1,5 @@
-import type { LintIssue, LintResult } from '../types';
+import type { DerivedSchema, Component, ContentItem, NoteTemplate, SchemaNode } from '../../derivation/types';
+import type { LintIssue, LintResult, NasSnapshot, PromptBundle } from '../types';
 
 /**
  * Lint a prompt bundle for issues beyond JSON Schema validation
@@ -13,9 +14,9 @@ import type { LintIssue, LintResult } from '../types';
  * 5. Message roles: system then user
  */
 export function lintPromptBundle(
-  bundle: any,
-  aiSchema: any,
-  template: any
+  bundle: PromptBundle,
+  aiSchema: DerivedSchema,
+  template: NoteTemplate
 ): LintResult {
   const issues: LintIssue[] = [];
 
@@ -126,10 +127,10 @@ export function lintPromptBundle(
 }
 
 // Helper: Count AI items in template
-function countAIItems(template: any): number {
+function countAIItems(template: NoteTemplate): number {
   let count = 0;
 
-  const walkLayout = (components: any[]) => {
+  const walkLayout = (components: Component[]): void => {
     for (const comp of components) {
       if (comp.content) {
         for (const item of comp.content) {
@@ -144,7 +145,7 @@ function countAIItems(template: any): number {
 
           // Check nested tableMap
           if (item.tableMap) {
-            for (const colItem of Object.values(item.tableMap) as any[]) {
+            for (const colItem of Object.values(item.tableMap) as ContentItem[]) {
               if (colItem.slot === 'ai') count++;
             }
           }
@@ -152,88 +153,96 @@ function countAIItems(template: any): number {
       }
 
       if (comp.children) {
-        walkLayout(comp.children);
+        walkLayout(comp.children ?? []);
       }
     }
   };
 
-  walkLayout(template.layout || []);
+  walkLayout(template.layout);
   return count;
 }
 
 // Helper: Check if path exists in schema
-function pathExistsInSchema(schema: any, path: string): boolean {
-  const segments = path.split('.');
-  let current = schema.properties || {};
-
-  for (const segment of segments) {
-    // Handle array notation: "field[]" or "field[].subfield"
-    const cleanSegment = segment.replace(/\[\]$/, '');
-
-    if (!current[cleanSegment]) {
-      return false;
-    }
-
-    current = current[cleanSegment];
-
-    // If array, descend into items
-    if (current.type === 'array' && current.items) {
-      current = current.items.properties || {};
-    } else {
-      current = current.properties || {};
-    }
-  }
-
-  return true;
+function pathExistsInSchema(schema: DerivedSchema, path: string): boolean {
+  return getSchemaNode(schema, path) !== null;
 }
 
 // Helper: Get schema node at path
-function getSchemaNode(schema: any, path: string): any {
+function getSchemaNode(schema: DerivedSchema, path: string): SchemaNode | null {
   const segments = path.split('.');
-  let current = schema.properties || {};
+  let properties = schema.properties as Record<string, unknown> | undefined;
+  let node: SchemaNode | null = null;
 
   for (let i = 0; i < segments.length; i++) {
-    const segment = segments[i];
-    const cleanSegment = segment.replace(/\[\]$/, '');
-
-    if (!current[cleanSegment]) {
+    if (!properties) {
       return null;
     }
 
-    current = current[cleanSegment];
+    const segment = segments[i];
+    const cleanSegment = segment.replace(/\[\]$/, '');
+    const candidate = properties[cleanSegment];
 
-    // Last segment - return the node
-    if (i === segments.length - 1) {
-      return current;
+    if (!isSchemaNode(candidate)) {
+      return null;
     }
 
-    // Navigate deeper
-    if (current.type === 'array' && current.items) {
-      current = current.items.properties || {};
+    node = candidate;
+
+    if (i === segments.length - 1) {
+      return node;
+    }
+
+    if (node.type === 'array' && node.items) {
+      properties = node.items.properties as Record<string, unknown> | undefined;
     } else {
-      current = current.properties || {};
+      properties = node.properties as Record<string, unknown> | undefined;
     }
   }
 
-  return current;
+  return node;
 }
 
 // Helper: Check if path is resolvable in context
-function pathResolvable(context: any, path: string): boolean {
+function pathResolvable(context: NasSnapshot | undefined, path: string): boolean {
   if (!context) return false;
 
   const segments = path.split('.');
-  let current = context;
+  let current: unknown = context;
 
   for (const segment of segments) {
     const cleanSegment = segment.replace(/\[\]$/, '');
 
-    if (current[cleanSegment] === undefined) {
+    if (Array.isArray(current)) {
+      const nextValues = current
+        .map((value) => (isObjectLike(value) ? (value as Record<string, unknown>)[cleanSegment] : undefined))
+        .filter((value) => value !== undefined);
+
+      if (nextValues.length === 0) {
+        return false;
+      }
+
+      current = nextValues[0];
+      continue;
+    }
+
+    if (!isObjectLike(current)) {
       return false;
     }
 
-    current = current[cleanSegment];
+    const next = (current as Record<string, unknown>)[cleanSegment];
+    if (next === undefined) {
+      return false;
+    }
+    current = next;
   }
 
   return true;
+}
+
+function isSchemaNode(value: unknown): value is SchemaNode {
+  return typeof value === 'object' && value !== null && 'type' in (value as Record<string, unknown>);
+}
+
+function isObjectLike(value: unknown): value is Record<string, unknown> | unknown[] {
+  return typeof value === 'object' && value !== null;
 }

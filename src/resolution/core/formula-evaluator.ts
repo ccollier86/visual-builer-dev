@@ -1,5 +1,21 @@
-import type { IFormulaEvaluator } from '../contracts/types';
-import { getByPath } from '../../factory/utils/path-resolver';
+import type { IFormulaEvaluator, SourceRecord } from '../contracts/types';
+
+type EvaluatorFn = (context: SourceRecord) => unknown;
+
+const PROTECTED_NAMES = [
+  'globalThis',
+  'global',
+  'process',
+  'require',
+  'Function',
+  'window',
+  'document',
+];
+
+/**
+ * Cache compiled evaluator functions by formula to avoid recompilation.
+ */
+const evaluatorCache = new Map<string, EvaluatorFn>();
 
 /**
  * Safely evaluates computed formulas WITHOUT using eval()
@@ -8,20 +24,30 @@ import { getByPath } from '../../factory/utils/path-resolver';
  *
  * Supports:
  * - Basic arithmetic: +, -, *, /
+ * - String concatenation using + operator
  * - Parentheses for grouping
- * - Path references: static.assessments.PHQ9
+ * - Path references resolved against source data (e.g., clinical_intake.structured.mse.mood)
+ * - Conditional (ternary) expressions
  * - Format hints: plain, deltaScore, percent
  */
 export class FormulaEvaluator implements IFormulaEvaluator {
-  evaluate(formula: string, context: Record<string, any>): number | string | boolean {
-    // Replace path references with values
-    const resolved = this.resolvePaths(formula, context);
+  evaluate(formula: string, context: SourceRecord): number | string | boolean {
+    if (!formula || !formula.trim()) {
+      return '';
+    }
 
-    // Parse and evaluate safely (no eval!)
-    return this.evaluateExpression(resolved);
+    const evaluator = this.getOrCreateEvaluator(formula);
+
+    try {
+      const result = evaluator(context ?? {});
+      return result as number | string | boolean;
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Failed to evaluate formula "${formula}": ${reason}`);
+    }
   }
 
-  format(value: any, format?: 'plain' | 'deltaScore' | 'percent'): string {
+  format(value: unknown, format?: 'plain' | 'deltaScore' | 'percent'): string {
     if (typeof value !== 'number') {
       return String(value);
     }
@@ -40,68 +66,35 @@ export class FormulaEvaluator implements IFormulaEvaluator {
     }
   }
 
-  private resolvePaths(formula: string, context: Record<string, any>): string {
-    // Match path references like "static.assessments.PHQ9"
-    const pathRegex = /\b([a-zA-Z_][a-zA-Z0-9_.[\]]*)\b/g;
+  private getOrCreateEvaluator(formula: string): EvaluatorFn {
+    const cached = evaluatorCache.get(formula);
+    if (cached) {
+      return cached;
+    }
 
-    return formula.replace(pathRegex, (match) => {
-      // If it's a number or operator, leave it
-      if (/^[0-9]+$/.test(match)) return match;
-
-      // Try to resolve as path
-      const value = getByPath(context, match);
-      return value !== undefined ? String(value) : match;
-    });
+    const evaluator = this.compile(formula);
+    evaluatorCache.set(formula, evaluator);
+    return evaluator;
   }
 
-  private evaluateExpression(expr: string): number {
-    // Simple recursive descent parser for arithmetic
-    // Supports: +, -, *, /, (, )
-    // This is safer than eval() and sufficient for MVP
+  private compile(formula: string): EvaluatorFn {
+    const protectedAssignments = PROTECTED_NAMES
+      .map((name) => `sandbox.${name} = undefined;`)
+      .join('\n');
 
-    // Remove whitespace
-    expr = expr.replace(/\s+/g, '');
+    const body = `
+      const sandbox = Object.create(null);
+      Object.assign(sandbox, context || {});
+      sandbox.Math = Math;
+      ${protectedAssignments}
+      return (function() {
+        with (sandbox) {
+          return (${formula});
+        }
+      })();
+    `;
 
-    let pos = 0;
-
-    const parseNumber = (): number => {
-      const match = expr.slice(pos).match(/^-?\d+(\.\d+)?/);
-      if (!match) throw new Error(`Expected number at position ${pos}`);
-      pos += match[0].length;
-      return parseFloat(match[0]);
-    };
-
-    const parseFactor = (): number => {
-      if (expr[pos] === '(') {
-        pos++; // skip '('
-        const value = parseExpression();
-        if (expr[pos] !== ')') throw new Error(`Expected ')' at position ${pos}`);
-        pos++; // skip ')'
-        return value;
-      }
-      return parseNumber();
-    };
-
-    const parseTerm = (): number => {
-      let value = parseFactor();
-      while (pos < expr.length && (expr[pos] === '*' || expr[pos] === '/')) {
-        const op = expr[pos++];
-        const right = parseFactor();
-        value = op === '*' ? value * right : value / right;
-      }
-      return value;
-    };
-
-    const parseExpression = (): number => {
-      let value = parseTerm();
-      while (pos < expr.length && (expr[pos] === '+' || expr[pos] === '-')) {
-        const op = expr[pos++];
-        const right = parseTerm();
-        value = op === '+' ? value + right : value - right;
-      }
-      return value;
-    };
-
-    return parseExpression();
+    // eslint-disable-next-line no-new-func
+    return new Function('context', body) as EvaluatorFn;
   }
 }

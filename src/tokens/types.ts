@@ -5,6 +5,7 @@
  * Responsibility: Define interfaces for design tokens and compiled CSS output
  */
 
+/** Core typography tokens controlling font family and sizing scale. */
 export interface Typography {
   fontFamily: string;
   baseSizePx: number;
@@ -13,6 +14,7 @@ export interface Typography {
   monospaceFamily?: string;
 }
 
+/** Brand colour palette used for text, accents, and surfaces. */
 export interface ColorPalette {
   text: string;
   muted: string;
@@ -21,28 +23,33 @@ export interface ColorPalette {
   background?: string;
 }
 
+/** Base spacing system used to compute layout gaps. */
 export interface Spacing {
   unitPx: number;
   scale: number;
 }
 
+/** Table styling configuration for density, borders, and striping. */
 export interface TableStyle {
   density?: 'compact' | 'normal' | 'spacious';
   borders?: 'none' | 'row' | 'cell';
   striped?: boolean;
 }
 
+/** Ordered/unordered list styling parameters. */
 export interface ListStyle {
   bulletStyle?: 'disc' | 'circle' | 'square';
   numberStyle?: 'decimal' | 'lower-alpha' | 'upper-roman';
 }
 
+/** Global layout spacing controls used across the document. */
 export interface Layout {
   sectionGap?: number;
   paragraphGap?: number;
   headerShowTitle?: boolean;
 }
 
+/** Print-specific overrides for page size and monochrome rendering. */
 export interface PrintOptions {
   pageSize?: 'Letter' | 'A4';
   margin?: string;
@@ -51,12 +58,14 @@ export interface PrintOptions {
   monochrome?: boolean;
 }
 
+/** Optional brand assets (logo/header/footer HTML) injected into output. */
 export interface BrandAssets {
   logoUrl?: string;
   headerHtml?: string;
   footerHtml?: string;
 }
 
+/** Complete design token bundle driving stylesheet generation. */
 export interface DesignTokens {
   id: string;
   version: string;
@@ -70,6 +79,7 @@ export interface DesignTokens {
   brand?: BrandAssets;
 }
 
+/** CSS artefacts generated from tokens with accompanying hash metadata. */
 export interface CompiledCSS {
   screen: string;
   print: string;

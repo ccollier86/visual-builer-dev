@@ -1,6 +1,9 @@
 // Main factory renderer
 // Orchestrates HTML generation from template + validated RPS payload
 
+import type { Component, ContentItem } from "../../derivation/types";
+import type { DesignTokens } from "../../tokens/types";
+import type { RenderPayload } from "../../types/payloads";
 import { escapeHtml, escapeAttr } from "../utils/html-escape";
 import { getByPath } from "../utils/path-resolver";
 import { renderListComponent } from "../components/list-renderer";
@@ -46,8 +49,7 @@ export function renderNoteHTML(inputs: FactoryInputs): string {
   }
 
   // Render layout components
-  const layout = template.layout || [];
-  for (const component of layout) {
+  for (const component of template.layout) {
     renderComponent(chunks, component, payload, tokens, idPrefix, 0, collectedRefs);
   }
 
@@ -72,9 +74,9 @@ export function renderNoteHTML(inputs: FactoryInputs): string {
  */
 function renderComponent(
   out: string[],
-  comp: any,
-  payload: any,
-  tokens: any,
+  comp: Component,
+  payload: RenderPayload,
+  tokens: DesignTokens,
   idPrefix: string,
   depth: number,
   collectedRefs: Set<string>
@@ -120,9 +122,10 @@ function renderComponent(
   }
 
   // Render children (subsections)
-  const children = comp.children || [];
-  for (const child of children) {
-    renderComponent(out, child, payload, tokens, idPrefix, depth + 1, collectedRefs);
+  if (comp.children) {
+    for (const child of comp.children) {
+      renderComponent(out, child, payload, tokens, idPrefix, depth + 1, collectedRefs);
+    }
   }
 
   out.push(`</${tag}>`);
@@ -133,11 +136,11 @@ function renderComponent(
  */
 function renderContentItems(
   out: string[],
-  comp: any,
-  payload: any,
+  comp: Component,
+  payload: RenderPayload,
   collectedRefs: Set<string>
 ): void {
-  const content = comp.content || [];
+  const content = comp.content ?? [];
 
   for (const item of content) {
     // Skip list/table items (handled by component-level renderers)
@@ -155,12 +158,13 @@ function renderContentItems(
  */
 function renderAlertPanel(
   out: string[],
-  comp: any,
-  payload: any,
+  comp: Component,
+  payload: RenderPayload,
   collectedRefs: Set<string>
 ): void {
-  const variant = comp?.props?.variant || "default";
-  const content = comp.content || [];
+  const rawVariant = (comp.props as Record<string, unknown> | undefined)?.variant;
+  const variant = typeof rawVariant === 'string' ? rawVariant : 'default';
+  const content = comp.content ?? [];
 
   for (const item of content) {
     const text = resolveItemText(item, payload, collectedRefs);
@@ -174,23 +178,40 @@ function renderAlertPanel(
  * Resolves text content from a content item
  */
 function resolveItemText(
-  item: any,
-  payload: any,
+  item: ContentItem,
+  payload: RenderPayload,
   collectedRefs: Set<string>
 ): string | null {
   switch (item.slot) {
-    case "ai":
-      return getByPath(payload, item.outputPath) ?? null;
+    case "ai": {
+      const path = item.outputPath;
+      if (!path) {
+        return null;
+      }
+      return extractString(getByPath(payload, path));
+    }
 
     case "lookup":
-    case "computed":
-      return getByPath(payload, item.targetPath) ?? null;
+    case "computed": {
+      const path = item.targetPath;
+      if (!path) {
+        return null;
+      }
+      return extractString(getByPath(payload, path));
+    }
 
-    case "static":
-      return getByPath(payload, item.targetPath) ?? item.text ?? null;
+    case "static": {
+      const path = item.targetPath;
+      const resolved = path ? extractString(getByPath(payload, path)) : null;
+      return resolved ?? item.text ?? null;
+    }
 
     case "verbatim": {
-      const value = getByPath(payload, item.targetPath);
+      const path = item.targetPath;
+      if (!path) {
+        return item.text ?? null;
+      }
+      const value = getByPath(payload, path);
       return renderVerbatimText(value, collectedRefs);
     }
 
@@ -203,13 +224,13 @@ function resolveItemText(
  * Renders verbatim value with optional ref footnote
  */
 function renderVerbatimText(
-  value: any,
+  value: unknown,
   collectedRefs: Set<string>
 ): string | null {
   if (!value) return null;
 
-  if (typeof value === "object" && "text" in value) {
-    const verbatim = value as VerbatimValue;
+  if (isVerbatimValue(value)) {
+    const verbatim = value;
     let html = escapeHtml(verbatim.text);
 
     if (verbatim.ref) {
@@ -222,6 +243,21 @@ function renderVerbatimText(
   }
 
   return escapeHtml(String(value));
+}
+
+function extractString(value: unknown): string | null {
+  if (typeof value === 'string') {
+    return value;
+  }
+  return null;
+}
+
+function isVerbatimValue(value: unknown): value is VerbatimValue {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as Record<string, unknown>).text === 'string'
+  );
 }
 
 /**

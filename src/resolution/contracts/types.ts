@@ -1,22 +1,30 @@
+import type { ContentItem, DerivedSchema, NoteTemplate } from '../../derivation/types';
+import type { NasSnapshot } from '../../types/payloads';
+
+/**
+ * Generic record representing structured source data objects.
+ */
+export type SourceRecord = Record<string, unknown>;
+
 /**
  * Raw source data provided at runtime (before resolution)
  */
 export interface SourceData {
-  patient?: Record<string, any>;
-  visit?: Record<string, any>;
-  assessments?: Record<string, any>;
-  diagnoses?: any[];
-  transcript?: Record<string, any>;
-  [key: string]: any;
+  patient?: SourceRecord;
+  visit?: SourceRecord;
+  assessments?: SourceRecord;
+  diagnoses?: SourceRecord[];
+  transcript?: SourceRecord;
+  [key: string]: unknown;
 }
 
 /**
  * Resolution context passed to all resolvers
  */
 export interface ResolutionContext {
-  template: any;           // Validated note template
+  template: NoteTemplate;  // Validated note template
   sourceData: SourceData;  // Raw input data
-  nasSchema: any;          // Target NAS schema
+  nasSchema: DerivedSchema;          // Target NAS schema
 }
 
 /**
@@ -24,7 +32,7 @@ export interface ResolutionContext {
  */
 export interface ResolvedField {
   path: string;            // Target path in NAS
-  value: any;              // Resolved value
+  value: unknown;          // Resolved value
   slotType: 'lookup' | 'computed' | 'static' | 'verbatim';
 }
 
@@ -32,7 +40,7 @@ export interface ResolvedField {
  * Resolution result with diagnostics
  */
 export interface ResolutionResult {
-  nasData: Record<string, any>;     // Complete NAS snapshot
+  nasData: NasSnapshot;             // Complete NAS snapshot
   resolved: ResolvedField[];         // Successfully resolved fields
   warnings: ResolutionWarning[];     // Missing sources, failed formulas, etc.
   unresolvedSlots: UnresolvedSlot[]; // Slots requiring attention after resolution
@@ -72,7 +80,7 @@ export interface ISlotResolver {
   /**
    * Resolve a single content item
    */
-  resolve(item: any, context: ResolutionContext): ResolvedField | null;
+  resolve(item: ContentItem, context: ResolutionContext): ResolvedField | null;
 
   /**
    * Check if this resolver can handle the given slot type
@@ -87,12 +95,12 @@ export interface IFormulaEvaluator {
   /**
    * Safely evaluate a formula expression
    */
-  evaluate(formula: string, context: Record<string, any>): number | string | boolean;
+  evaluate(formula: string, context: SourceRecord): number | string | boolean;
 
   /**
    * Format the result according to format hint
    */
-  format(value: any, format?: 'plain' | 'deltaScore' | 'percent'): string;
+  format(value: unknown, format?: 'plain' | 'deltaScore' | 'percent'): string;
 }
 
 /**

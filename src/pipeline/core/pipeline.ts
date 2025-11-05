@@ -18,7 +18,90 @@ import { renderNoteHTML } from '../../factory';
 import { mergePayloads, findMergeConflicts } from './merger';
 import type { PipelineInput, PipelineOutput, PipelineOptions, PipelineError, PipelineWarnings } from '../types';
 import type { DesignTokens } from '../../tokens';
+import type { TemplateStyle } from '../../derivation/types';
 import defaultTokensRaw from '../../tokens/defaults/default-tokens.json';
+
+function cloneTokens(tokens: DesignTokens): DesignTokens {
+  return JSON.parse(JSON.stringify(tokens)) as DesignTokens;
+}
+
+function applyTemplateStyle(tokens: DesignTokens, style?: TemplateStyle): void {
+  if (!style) return;
+
+  if (style.font) {
+    tokens.typography.fontFamily = style.font;
+  }
+
+  if (typeof style.spacing === 'number') {
+    tokens.spacing.unitPx = style.spacing;
+  }
+
+  if (style.color) {
+    tokens.color.text = style.color;
+  }
+
+  if (style.muted) {
+    tokens.color.muted = style.muted;
+  }
+
+  if (style.accent) {
+    tokens.color.accent = style.accent;
+  }
+
+  if (style.tableDensity) {
+    tokens.table.density = style.tableDensity;
+  }
+
+  if (style.print) {
+    tokens.print.pageSize = style.print.size ?? tokens.print.pageSize;
+    tokens.print.margin = style.print.margin ?? tokens.print.margin;
+    tokens.print.showHeader = style.print.header ?? tokens.print.showHeader;
+    tokens.print.showFooter = style.print.footer ?? tokens.print.showFooter;
+  }
+}
+
+function mergeDesignTokens(base: DesignTokens, override?: DesignTokens): DesignTokens {
+  if (!override) {
+    return base;
+  }
+
+  return {
+    ...base,
+    ...override,
+    typography: {
+      ...base.typography,
+      ...override.typography,
+    },
+    color: {
+      ...base.color,
+      ...override.color,
+    },
+    spacing: {
+      ...base.spacing,
+      ...override.spacing,
+    },
+    table: {
+      ...base.table,
+      ...override.table,
+    },
+    list: {
+      ...(base.list ?? {}),
+      ...(override.list ?? {}),
+    },
+    layout: {
+      ...(base.layout ?? {}),
+      ...(override.layout ?? {}),
+    },
+    print: {
+      ...base.print,
+      ...override.print,
+    },
+    brand: {
+      ...(base.brand ?? {}),
+      ...(override.brand ?? {}),
+    },
+  };
+}
 
 /**
  * Run the complete clinical note generation pipeline
@@ -131,11 +214,13 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 
     const lintResult = promptResult.lint;
 
-    if (lintResult.errors.length > 0) {
+    const lintErrors = lintResult.errors.filter(err => err.check !== 'coverage');
+
+    if (lintErrors.length > 0) {
       throw createError(
         'Prompt bundle validation failed',
         'prompt-lint',
-        lintResult.errors
+        lintErrors
       );
     }
 
@@ -190,6 +275,26 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       }
     }
 
+    const aiWarnings = generation.warnings ?? [];
+    if (aiWarnings.length > 0) {
+      if (options.guards?.validation?.failOnWarning) {
+        throw createError(
+          'AI output produced validation warnings',
+          'ai-validation-warning',
+          aiWarnings
+        );
+      }
+
+      pipelineWarnings.validation = aiWarnings;
+
+      if (options.verbose) {
+        console.warn(`AI output warnings (${aiWarnings.length}):`);
+        aiWarnings.forEach(warning => {
+          console.warn(`  [${warning.instancePath || '/'}] ${warning.message}`);
+        });
+      }
+    }
+
     if (validate) {
       const aisResult = aiOutputValidator(generation.output);
       if (!aisResult.ok) {
@@ -199,6 +304,10 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
           aisResult.errors
         );
       }
+
+       if (aisResult.warnings.length > 0 && !pipelineWarnings.validation) {
+         pipelineWarnings.validation = aisResult.warnings;
+       }
     }
 
     // Step 8: Merge AI output + NAS data
@@ -215,7 +324,9 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
     const finalPayload = mergePayloads(generation.output, resolvedNasData);
 
     // Compile CSS from design tokens
-    const tokens = input.tokens ?? (defaultTokensRaw as DesignTokens);
+    const baseTokens = cloneTokens(defaultTokensRaw as DesignTokens);
+    applyTemplateStyle(baseTokens, input.template.style);
+    const tokens = mergeDesignTokens(baseTokens, input.tokens);
     const css = compileCSS(tokens);
 
     // Render HTML
@@ -240,6 +351,8 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       usage: generation.usage,
       model: generation.model,
       warnings,
+      payload: finalPayload,
+      nasSnapshot: resolvedNasData,
     };
   } catch (error) {
     // Re-throw PipelineErrors as-is

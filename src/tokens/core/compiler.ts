@@ -32,8 +32,13 @@ function replacePlaceholders(template: string, tokens: DesignTokens): string {
  * @param path - Dot-notation path (e.g., "typography.fontFamily")
  * @returns Value at path or undefined
  */
-function getNestedValue(obj: any, path: string): any {
-  return path.split('.').reduce((current, key) => current?.[key], obj);
+function getNestedValue(obj: unknown, path: string): unknown {
+  return path.split('.').reduce<unknown>((current, key) => {
+    if (!isObjectLike(current)) {
+      return undefined;
+    }
+    return (current as Record<string, unknown>)[key];
+  }, obj);
 }
 
 /**
@@ -87,6 +92,10 @@ function getPrintHeaderCSS(showHeader?: boolean): string {
 function getPrintFooterCSS(showFooter?: boolean): string {
   if (showFooter !== false) return '';
   return 'footer, .print-footer { display: none !important; }';
+}
+
+function isObjectLike(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
 }
 
 /**

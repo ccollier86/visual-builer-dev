@@ -31,6 +31,7 @@ describe('createAIOutputValidator', () => {
 
     expect(result.ok).toBe(true);
     expect(result.errors).toHaveLength(0);
+    expect(result.warnings).toHaveLength(0);
   });
 
   it('rejects payloads that violate the schema', () => {
@@ -39,6 +40,33 @@ describe('createAIOutputValidator', () => {
 
     expect(result.ok).toBe(false);
     expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.warnings).toHaveLength(0);
+  });
+
+  it('downgrades sentence shortfalls to warnings', () => {
+    const softSchema: DerivedSchema = {
+      $id: 'https://example.com/test-schema#soft',
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      title: 'Soft Constraint Schema',
+      description: 'Schema with soft text constraints',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        summary: {
+          type: 'string',
+          'x-minSentences': 2,
+        },
+      },
+      required: ['summary'],
+    };
+
+    const validator = createAIOutputValidator(softSchema);
+    const result = validator({ summary: 'One sentence.' });
+
+    expect(result.ok).toBe(true);
+    expect(result.errors).toHaveLength(0);
+    expect(result.warnings.length).toBeGreaterThan(0);
+    expect(result.warnings[0]?.keyword).toBe('x-minSentences');
   });
 
   it('caches compiled validators by schema id', () => {

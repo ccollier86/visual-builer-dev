@@ -23,6 +23,7 @@ export function validatePromptBundle(doc: unknown): ValidationResult {
 
   return {
     ok,
-    errors: validate.errors ?? []
+    errors: validate.errors ?? [],
+    warnings: []
   };
 }

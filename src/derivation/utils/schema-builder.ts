@@ -126,18 +126,47 @@ export function addProperty(
 	}
 
 	if (Object.prototype.hasOwnProperty.call(objectNode.properties, propertyName)) {
-		const context = {
-			path: options.path ?? propertyName,
-			sourceId: options.sourceId,
-			propertyName,
-		};
-		throw new DuplicatePathError(
-			`Duplicate schema property encountered at path "${context.path}"`,
-			context
-		);
-	}
+		const existingSchema = objectNode.properties[propertyName]!;
+		const path = options.path ?? propertyName;
 
-	objectNode.properties[propertyName] = propertySchema;
+		if (
+			existingSchema.type === 'object' &&
+			propertySchema.type === 'object'
+		) {
+			objectNode.properties[propertyName] = mergeNodes(
+				existingSchema,
+				propertySchema,
+				path
+			);
+		} else if (
+			existingSchema.type === 'array' &&
+			propertySchema.type === 'array'
+		) {
+			objectNode.properties[propertyName] = mergeNodes(
+				existingSchema,
+				propertySchema,
+				`${path}[]`
+			);
+		} else if (
+			options.path?.includes('[]') &&
+			existingSchema.type === propertySchema.type
+		) {
+			// Multiple indexed entries contributing to the same array item schema.
+			// Schema is already defined, so nothing to merge.
+		} else {
+			const context = {
+				path,
+				sourceId: options.sourceId,
+				propertyName,
+			};
+			throw new DuplicatePathError(
+				`Duplicate schema property encountered at path "${context.path}"`,
+				context
+			);
+		}
+	} else {
+		objectNode.properties[propertyName] = propertySchema;
+	}
 
 	const isRequired = options.isRequired ?? false;
 

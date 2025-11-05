@@ -4,20 +4,23 @@
  * Types for end-to-end template → HTML pipeline orchestration.
  */
 
+import type { DerivedSchema, NoteTemplate } from '../derivation/types';
 import type { DesignTokens, CompiledCSS } from '../tokens';
 import type { GenerationOptions } from '../integration';
-import type { ResolutionWarning } from '../resolution';
+import type { ResolutionWarning, SourceData } from '../resolution';
 import type { LintIssue } from '../composition';
+import type { AIPayload, NasSnapshot, RenderPayload } from '../types/payloads';
+import type { ValidationIssue } from '../validation';
 
 /**
  * Input configuration for the complete pipeline
  */
 export interface PipelineInput {
   /** Note template (will be validated) */
-  template: any;
+  template: NoteTemplate;
 
   /** Raw source data to resolve into NAS */
-  sourceData: any;
+  sourceData: SourceData;
 
   /** Design tokens (optional, defaults to system tokens) */
   tokens?: DesignTokens;
@@ -55,6 +58,7 @@ export interface PipelineOptions {
 export interface PipelineGuardOptions {
   resolution?: WarningGuardOptions;
   promptLint?: WarningGuardOptions;
+  validation?: WarningGuardOptions;
 }
 
 /**
@@ -75,13 +79,13 @@ export interface PipelineOutput {
   css: CompiledCSS;
 
   /** AI-generated output (for debugging/audit) */
-  aiOutput: any;
+  aiOutput: AIPayload;
 
   /** Derived schemas (for debugging/audit) */
   schemas: {
-    ais: any; // AI Structured Output Schema
-    nas: any; // Non-AI Structured Output Schema
-    rps: any; // Render Payload Schema
+    ais: DerivedSchema; // AI Structured Output Schema
+    nas: DerivedSchema; // Non-AI Structured Output Schema
+    rps: DerivedSchema; // Render Payload Schema
   };
 
   /** Token usage metrics from OpenAI API */
@@ -96,6 +100,11 @@ export interface PipelineOutput {
 
   /** Collected non-fatal warnings surfaced during execution */
   warnings?: PipelineWarnings;
+
+  /** Optional snapshot of the merged render payload for downstream usage */
+  payload?: RenderPayload;
+  /** Optional NAS snapshot returned for debugging */
+  nasSnapshot?: NasSnapshot;
 }
 
 /**
@@ -104,6 +113,7 @@ export interface PipelineOutput {
 export interface PipelineWarnings {
   resolution?: ResolutionWarning[];
   prompt?: LintIssue[];
+  validation?: ValidationIssue[];
 }
 
 /**

@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'bun:test';
 import { composePrompt } from '../core/prompt-composer';
 import type { CompositionInput } from '../types';
+import type { DerivedSchema, NoteTemplate } from '../../derivation/types';
 
-const template = {
+const template: NoteTemplate = {
   id: 'prompt-test',
   name: 'Prompt Test',
   version: '1.0.0',
@@ -28,9 +29,11 @@ const template = {
   ],
 };
 
-const aiSchema = {
+const aiSchema: DerivedSchema = {
   $id: 'https://example.com/ai-schema',
   $schema: 'https://json-schema.org/draft/2020-12/schema',
+  title: 'Prompt Test AIS',
+  description: 'Schema for prompt-composer unit test',
   type: 'object',
   additionalProperties: false,
   properties: {
@@ -42,6 +45,7 @@ const aiSchema = {
       },
     },
   },
+  required: [],
 };
 
 describe('composePrompt', () => {

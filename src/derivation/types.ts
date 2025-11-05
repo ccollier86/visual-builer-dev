@@ -14,7 +14,7 @@ export interface DerivedSchema {
   title: string;
   description?: string;
   type: string;
-  properties: Record<string, any>;
+  properties: Record<string, SchemaNode>;
   required?: string[];
   additionalProperties: boolean;
 }
@@ -121,11 +121,41 @@ export interface DuplicatePathErrorContext extends SchemaPropertyMetadata {
  * Template structure (minimal interface for derivation)
  * Only the fields needed for schema derivation
  */
+/**
+ * Prompt configuration embedded within a template.
+ */
+export interface TemplatePrompt {
+  system?: string;
+  main?: string;
+  rules?: string[];
+  }
+
+export type TableDensity = 'compact' | 'normal' | 'spacious';
+
+export interface PrintStyleOptions {
+  size?: 'Letter' | 'A4';
+  margin?: string;
+  header?: boolean;
+  footer?: boolean;
+}
+
+export interface TemplateStyle {
+  font: string;
+  color: string;
+  muted?: string;
+  accent: string;
+  spacing: number;
+  tableDensity?: TableDensity;
+  print?: PrintStyleOptions;
+}
+
 export interface NoteTemplate {
   id: string;
   name: string;
   version: string;
+  style?: TemplateStyle;
   layout: Component[];
+  prompt?: TemplatePrompt;
 }
 
 /**
@@ -140,8 +170,26 @@ export interface TableProps {
   colWidths?: string[];
 }
 
-export type ComponentProps = ListProps | TableProps | Record<string, unknown>;
+export interface BaseComponentProps {
+  hideTitle?: boolean;
+  variant?: 'default' | 'info' | 'warning' | 'critical';
+  [key: string]: unknown;
+}
 
+/**
+ * Supported property bags for layout components.
+ *
+ * Extensible union that captures props for each concrete component type while
+ * allowing forward compatibility via a generic record.
+ */
+export type ComponentProps =
+  | (BaseComponentProps & ListProps)
+  | (BaseComponentProps & TableProps)
+  | BaseComponentProps;
+
+/**
+ * Layout component node used when traversing template trees during derivation.
+ */
 export interface Component {
   id: string;
   type: string;
@@ -151,6 +199,14 @@ export interface Component {
   children?: Component[];
 }
 
+/**
+ * Arbitrary style metadata attached to content items to guide rendering.
+ */
+export type StyleHints = Record<string, unknown>;
+
+/**
+ * Template content item; represents a single slot rendered in the note.
+ */
 export interface ContentItem {
   id: string;
   slot: 'static' | 'ai' | 'lookup' | 'computed' | 'verbatim';
@@ -160,14 +216,14 @@ export interface ContentItem {
   source?: string[];
   guidance?: string[];
   aiDeps?: string[];
-  styleHints?: any;
+  styleHints?: StyleHints;
   constraints?: ContentConstraints;
   listItems?: ContentItem[];
   tableMap?: Record<string, ContentItem>;
   lookup?: string;
   formula?: string;
   resultType?: string;
-  format?: string;
+  format?: 'plain' | 'deltaScore' | 'percent';
   text?: string;
   verbatimRef?: string;
 }

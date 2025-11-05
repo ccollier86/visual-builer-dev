@@ -1,6 +1,10 @@
 // Section rendering component
 // Handles sections, subsections, and heading hierarchy
 
+import type { Component } from '../../derivation/types';
+import type { RenderPayload } from '../../types/payloads';
+import type { DesignTokens } from '../../tokens/types';
+
 import { escapeHtml } from "../utils/html-escape";
 
 /**
@@ -33,7 +37,7 @@ export function getHeadingClass(componentType: string, depth: number): string {
 /**
  * Determines CSS class for component wrapper
  */
-export function getComponentClass(comp: any): string {
+export function getComponentClass(comp: Component): string {
   switch (comp.type) {
     case "header":
       return "section header";
@@ -62,15 +66,17 @@ export function getComponentClass(comp: any): string {
  * Renders a section heading if title exists and not hidden
  */
 export function renderSectionHeading(
-  comp: any,
+  comp: Component,
   depth: number,
-  tokens?: any
+  tokens?: DesignTokens
 ): string {
   // Check if title should be shown
+  const props = comp.props as Record<string, unknown> | undefined;
+  const hideTitleProp = typeof props?.hideTitle === 'boolean' ? props.hideTitle : false;
   const showTitle =
     comp.type === "header"
       ? tokens?.layout?.headerShowTitle ?? true
-      : !comp?.props?.hideTitle;
+      : !hideTitleProp;
 
   if (!comp.title || !showTitle) return "";
 
@@ -84,19 +90,22 @@ export function renderSectionHeading(
  * Renders patient block as a definition list
  * Only renders if patient data exists in payload
  */
-export function renderPatientBlock(payload: any): string {
-  const patient = payload?.patient;
+export function renderPatientBlock(payload: RenderPayload): string {
+  const patientValue = payload?.patient;
+  if (!isRecord(patientValue)) return "";
+
+  const patient = patientValue as Record<string, unknown>;
   if (!patient) return "";
 
   const chunks: string[] = ['<dl class="patient">'];
 
-  if (patient.name) {
+  if (typeof patient.name === 'string') {
     chunks.push(`<dt>Name</dt><dd>${escapeHtml(patient.name)}</dd>`);
   }
-  if (patient.dob) {
+  if (typeof patient.dob === 'string') {
     chunks.push(`<dt>DOB</dt><dd>${escapeHtml(patient.dob)}</dd>`);
   }
-  if (patient.mrn) {
+  if (typeof patient.mrn === 'string') {
     chunks.push(`<dt>MRN</dt><dd>${escapeHtml(patient.mrn)}</dd>`);
   }
 
@@ -112,4 +121,8 @@ export function renderSignatureBlock(): string {
   <div>Clinician: ____________________  Date: __________</div>
   <div>Patient/Guardian: _____________  Date: __________</div>
 </div>`;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

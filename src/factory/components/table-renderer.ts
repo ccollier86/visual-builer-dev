@@ -1,6 +1,9 @@
 // Table rendering component
 // Generates semantic HTML tables with colgroup, thead, tbody
 
+import type { Component, ContentItem } from '../../derivation/types';
+import type { RenderPayload } from '../../types/payloads';
+
 import { escapeHtml, escapeAttr } from "../utils/html-escape";
 import {
   getByPath,
@@ -18,18 +21,20 @@ import type { VerbatimValue } from "../types";
  * @returns HTML string for the table
  */
 export function renderTableComponent(
-  comp: any,
-  payload: any,
+  comp: Component,
+  payload: RenderPayload,
   collectedRefs: Set<string>
 ): string {
-  const columns: string[] = comp?.props?.columns || [];
-  const colWidths: string[] = comp?.props?.colWidths || [];
-  const content = (comp.content || [])[0] || {};
-  const tableMap = content.tableMap ? Object.values(content.tableMap) : [];
+  const props = (comp.props as Record<string, unknown> | undefined) ?? {};
+  const columns = Array.isArray(props.columns) ? (props.columns as string[]) : [];
+  const colWidths = Array.isArray(props.colWidths) ? (props.colWidths as string[]) : [];
+  const content = (comp.content ?? [])[0];
+  const tableMap = content?.tableMap ? Object.values(content.tableMap) as ContentItem[] : [];
 
   // Determine array root from tableMap (e.g., "diagnoses[]")
   const rowPath = inferArrayRoot(tableMap);
-  const rows: any[] = getByPath(payload, rowPath) || [];
+  const rowsValue = getByPath(payload, rowPath);
+  const rows = Array.isArray(rowsValue) ? rowsValue : [];
 
   const chunks: string[] = [];
   chunks.push(
@@ -81,10 +86,10 @@ function renderTableHeaders(columns: string[]): string {
  * Renders table body (tbody) with data rows
  */
 function renderTableRows(
-  rows: any[],
-  tableMap: any[],
+  rows: unknown[],
+  tableMap: ContentItem[],
   rowPath: string,
-  payload: any,
+  payload: RenderPayload,
   collectedRefs: Set<string>
 ): string {
   const chunks: string[] = ["<tbody>"];
@@ -114,17 +119,21 @@ function renderTableRows(
  * Renders a single table cell
  */
 function renderTableCell(
-  colDef: any,
-  payload: any,
+  colDef: ContentItem,
+  payload: RenderPayload,
   rowPath: string,
   rowIndex: number,
   collectedRefs: Set<string>
 ): string | null {
-  const path = normalizeRowPath(
-    colDef.outputPath || colDef.targetPath,
-    rowPath,
-    rowIndex
-  );
+  const basePath = colDef.outputPath ?? colDef.targetPath;
+  if (typeof basePath !== "string" || basePath.length === 0) {
+    return null;
+  }
+
+  const path =
+    rowPath && rowPath.length > 0
+      ? normalizeRowPath(basePath, rowPath, rowIndex)
+      : basePath;
   const value = getByPath(payload, path);
 
   if (colDef.slot === "verbatim") {
@@ -139,13 +148,13 @@ function renderTableCell(
  * Renders a verbatim value with optional ref footnote
  */
 function renderVerbatimValue(
-  value: any,
+  value: unknown,
   collectedRefs: Set<string>
 ): string | null {
   if (!value) return null;
 
-  if (typeof value === "object" && "text" in value) {
-    const verbatim = value as VerbatimValue;
+  if (isVerbatimValue(value)) {
+    const verbatim = value;
     let html = escapeHtml(verbatim.text);
 
     if (verbatim.ref) {
@@ -158,4 +167,12 @@ function renderVerbatimValue(
   }
 
   return escapeHtml(String(value));
+}
+
+function isVerbatimValue(value: unknown): value is VerbatimValue {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as Record<string, unknown>).text === 'string'
+  );
 }

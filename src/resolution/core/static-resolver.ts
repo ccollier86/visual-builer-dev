@@ -1,3 +1,4 @@
+import type { ContentItem } from '../../derivation/types';
 import type { ISlotResolver, ResolutionContext, ResolvedField } from '../contracts/types';
 
 /**
@@ -10,7 +11,7 @@ export class StaticResolver implements ISlotResolver {
     return slotType === 'static';
   }
 
-  resolve(item: any, context: ResolutionContext): ResolvedField | null {
+  resolve(item: ContentItem, _context: ResolutionContext): ResolvedField | null {
     if (!item.text || !item.targetPath) {
       return null;
     }

@@ -5,7 +5,8 @@
  * Follows the specification format with PURPOSE, RULES, CONTRACT, CONTEXT, FIELD GUIDE.
  */
 
-import type { Message, FieldGuideEntry } from '../types';
+import type { NoteTemplate } from '../../derivation/types';
+import type { FactPack, Message, FieldGuideEntry, NasSnapshot } from '../types';
 
 /**
  * Build messages array for prompt bundle
@@ -25,10 +26,10 @@ import type { Message, FieldGuideEntry } from '../types';
  * @returns Array of [system, user] messages
  */
 export function buildMessages(
-  template: any,
+  template: NoteTemplate,
   fieldGuide: FieldGuideEntry[],
-  factPack: any | undefined,
-  nasSlices: any
+  factPack: FactPack | undefined,
+  nasSlices: NasSnapshot
 ): Message[] {
   const systemMessage = buildSystemMessage(template);
   const userMessage = buildUserMessage(template, fieldGuide, factPack, nasSlices);
@@ -47,11 +48,11 @@ export function buildMessages(
  * @param template - Note template
  * @returns System message
  */
-function buildSystemMessage(template: any): Message {
+function buildSystemMessage(template: NoteTemplate): Message {
   const parts: string[] = [];
 
   // Template-defined system prompt
-  if (template.prompt.system) {
+  if (template.prompt?.system) {
     parts.push(template.prompt.system);
   }
 
@@ -83,20 +84,20 @@ function buildSystemMessage(template: any): Message {
  * @returns User message
  */
 function buildUserMessage(
-  template: any,
+  template: NoteTemplate,
   fieldGuide: FieldGuideEntry[],
-  factPack: any | undefined,
-  nasSlices: any
+  factPack: FactPack | undefined,
+  nasSlices: NasSnapshot
 ): Message {
   const sections: string[] = [];
 
   // PURPOSE section
   sections.push('PURPOSE');
-  sections.push(template.prompt.main || '');
+  sections.push(template.prompt?.main || '');
   sections.push('');
 
   // HARD RULES section
-  if (template.prompt.rules && template.prompt.rules.length > 0) {
+  if (template.prompt?.rules && template.prompt.rules.length > 0) {
     sections.push('HARD RULES');
     for (const rule of template.prompt.rules) {
       sections.push(`- ${rule}`);
@@ -195,19 +196,27 @@ function formatFieldGuideEntry(entry: FieldGuideEntry): string {
  * @param obj - Object to stringify
  * @returns JSON string with sorted keys
  */
-function stringifyDeterministic(obj: any): string {
-  // Replacer function to sort keys at all levels
-  const replacer = (key: string, value: any) => {
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-      return Object.keys(value)
-        .sort()
-        .reduce((sorted: any, k) => {
-          sorted[k] = value[k];
-          return sorted;
-        }, {});
+function stringifyDeterministic(input: unknown): string {
+  const normalise = (value: unknown): unknown => {
+    if (Array.isArray(value)) {
+      return value.map(normalise);
     }
+
+    if (isPlainObject(value)) {
+      const sortedKeys = Object.keys(value).sort();
+      const result: Record<string, unknown> = {};
+      for (const key of sortedKeys) {
+        result[key] = normalise(value[key]);
+      }
+      return result;
+    }
+
     return value;
   };
 
-  return JSON.stringify(obj, replacer, 2);
+  return JSON.stringify(normalise(input), null, 2);
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

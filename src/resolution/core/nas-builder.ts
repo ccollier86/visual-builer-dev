@@ -1,3 +1,5 @@
+import type { Component, ContentItem } from '../../derivation/types';
+import type { NasSnapshot } from '../../types/payloads';
 import type {
   INASBuilder,
   ISlotResolver,
@@ -16,7 +18,7 @@ import { setByPath } from './path-setter';
 interface ExpectedSlot {
   componentId: string;
   slotId: string;
-  slotType: string;
+  slotType: ContentItem['slot'];
   targetPath?: string;
 }
 
@@ -39,7 +41,7 @@ export class NASBuilder implements INASBuilder {
   async build(context: ResolutionContext): Promise<ResolutionResult> {
     const resolved: ResolvedField[] = [];
     const warnings: ResolutionWarning[] = [];
-    const nasData: Record<string, any> = {};
+    const nasData: NasSnapshot = {};
     const expectedSlots: ExpectedSlot[] = [];
 
     // Walk template layout depth-first
@@ -55,14 +57,14 @@ export class NASBuilder implements INASBuilder {
     for (const field of resolved) {
       try {
         setByPath(nasData, field.path, field.value);
-      } catch (error) {
+      } catch (error: unknown) {
         warnings.push({
           componentId: 'unknown',
           slotId: 'unknown',
           slotType: field.slotType,
           path: field.path,
           reason: 'type_mismatch',
-          message: `Failed to set value at path ${field.path}: ${error}`
+          message: `Failed to set value at path ${field.path}: ${extractErrorMessage(error)}`
         });
       }
     }
@@ -84,7 +86,7 @@ export class NASBuilder implements INASBuilder {
   }
 
   private walkLayout(
-    components: any[],
+    components: Component[],
     context: ResolutionContext,
     resolved: ResolvedField[],
     warnings: ResolutionWarning[],
@@ -105,7 +107,7 @@ export class NASBuilder implements INASBuilder {
 
           // Process nested tableMap
           if (item.tableMap) {
-            for (const colItem of Object.values(item.tableMap)) {
+            for (const colItem of Object.values(item.tableMap) as ContentItem[]) {
               this.resolveItem(colItem, component.id, context, resolved, warnings, expectedSlots);
             }
           }
@@ -120,7 +122,7 @@ export class NASBuilder implements INASBuilder {
   }
 
   private resolveItem(
-    item: any,
+    item: ContentItem,
     componentId: string,
     context: ResolutionContext,
     resolved: ResolvedField[],
@@ -189,7 +191,11 @@ function findUnresolvedSlots(
     return [];
   }
 
-  const resolvedPaths = new Set(resolved.map((field) => field.path));
+  const stripWildcards = (path: string): string => path.replace(/\[\]/g, '');
+  const resolvedRoots = new Set(
+    resolved.map((field) => stripWildcards(field.path))
+  );
+
   const warnedSlots = new Set(
     warnings.map((warning) => `${warning.componentId}:${warning.slotId}`)
   );
@@ -199,7 +205,15 @@ function findUnresolvedSlots(
       return false;
     }
 
-    if (resolvedPaths.has(slot.targetPath)) {
+    const normalizedTarget = stripWildcards(slot.targetPath);
+    const isSatisfied = Array.from(resolvedRoots).some((resolvedPath) => {
+      return (
+        normalizedTarget === resolvedPath ||
+        normalizedTarget.startsWith(`${resolvedPath}.`)
+      );
+    });
+
+    if (isSatisfied) {
       return false;
     }
 
@@ -209,4 +223,14 @@ function findUnresolvedSlots(
 
     return true;
   });
+}
+
+function extractErrorMessage(error: unknown): string {
+  if (typeof error === 'object' && error !== null) {
+    const message = (error as Record<string, unknown>).message;
+    if (typeof message === 'string') {
+      return message;
+    }
+  }
+  return String(error);
 }
