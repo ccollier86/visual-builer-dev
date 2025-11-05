@@ -100,12 +100,18 @@ export interface ContentItem {
   slot: 'static' | 'ai' | 'lookup' | 'computed' | 'verbatim';
   outputPath?: string;
   targetPath?: string;
+  description?: string;
+  source?: string[];
+  guidance?: string[];
+  aiDeps?: string[];
+  styleHints?: any;
   constraints?: ContentConstraints;
   listItems?: ContentItem[];
   tableMap?: Record<string, ContentItem>;
   lookup?: string;
   formula?: string;
   resultType?: string;
+  format?: string;
   text?: string;
   verbatimRef?: string;
 }
