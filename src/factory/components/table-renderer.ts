@@ -150,8 +150,8 @@ function renderTableCellGroup(
     if (!content) continue;
 
     const hints = getTableCellHints(colDef);
-    const role = getCellRole(hints, primaryRendered);
-    const classes = buildClassList(role, hints, columnIndex);
+    const role = deriveCellRole(hints, primaryRendered);
+    const classes = buildCellClassList(role, hints, columnIndex);
     const classAttr = classes.length > 0 ? ` class="${classes.join(" ")}"` : "";
 
     fragments.push(`<span${classAttr}>${content}</span>`);
