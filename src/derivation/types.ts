@@ -87,11 +87,25 @@ export interface NoteTemplate {
   layout: Component[];
 }
 
+/**
+ * Component props by type
+ */
+export interface ListProps {
+  ordered?: boolean;
+}
+
+export interface TableProps {
+  columns?: string[];
+  colWidths?: string[];
+}
+
+export type ComponentProps = ListProps | TableProps | Record<string, unknown>;
+
 export interface Component {
   id: string;
   type: string;
   title?: string;
-  props?: any;
+  props?: ComponentProps;
   content?: ContentItem[];
   children?: Component[];
 }
