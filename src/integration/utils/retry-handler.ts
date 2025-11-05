@@ -6,17 +6,7 @@
  */
 
 import type { RetryConfig } from '../types';
-
-/**
- * Default retry configuration
- * Exponential backoff: 1s, 2s, 4s
- */
-const DEFAULT_RETRY_CONFIG: RetryConfig = {
-  maxRetries: 3,
-  baseDelayMs: 1000,
-  maxDelayMs: 8000,
-  retryableStatusCodes: [429, 500, 502, 503, 504],
-};
+import { DEFAULT_RETRY_CONFIG } from '../types';
 
 /**
  * Determines if an error is retryable
