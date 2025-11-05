@@ -9,6 +9,7 @@ export { composePrompt } from './core/prompt-composer';
 export { buildFieldGuide } from './core/field-guide-builder';
 export { sliceContext } from './core/context-slicer';
 export { buildMessages } from './core/message-builder';
+export { lintPromptBundle } from './core/prompt-linter';
 
 export type {
   PromptBundle,
@@ -17,3 +18,5 @@ export type {
   FieldConstraints,
   CompositionInput
 } from './types';
+
+export type { LintResult, LintIssue } from './core/prompt-linter';
