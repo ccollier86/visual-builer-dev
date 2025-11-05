@@ -803,32 +803,38 @@
             {
               "slot": "static",
               "id": "intervention-med-management",
-              "text": "Medical Management: Referral to primary care physician for medical conditions and psychiatric evaluation for potential pharmacological intervention for presenting symptoms."
+              "text": "Medical Management: Referral to primary care physician for medical conditions and psychiatric evaluation for potential pharmacological intervention for presenting symptoms.",
+              "targetPath": "plan.interventionsRecommended[0]"
             },
             {
               "slot": "static",
               "id": "intervention-individual-therapy",
-              "text": "Individual Psychotherapy: Regular individual therapy sessions to address identified issues. Treatment should incorporate appropriate evidence-based approaches."
+              "text": "Individual Psychotherapy: Regular individual therapy sessions to address identified issues. Treatment should incorporate appropriate evidence-based approaches.",
+              "targetPath": "plan.interventionsRecommended[1]"
             },
             {
               "slot": "static",
               "id": "intervention-psychoeducation",
-              "text": "Psychoeducation: Comprehensive education regarding diagnoses, substance use recovery, relapse prevention strategies, medication management, coping skills development, and healthy lifestyle choices."
+              "text": "Psychoeducation: Comprehensive education regarding diagnoses, substance use recovery, relapse prevention strategies, medication management, coping skills development, and healthy lifestyle choices.",
+              "targetPath": "plan.interventionsRecommended[2]"
             },
             {
               "slot": "static",
               "id": "intervention-group-therapy",
-              "text": "Group Therapy: Participation in psychoeducation groups focusing on diagnosis understanding, medication management, coping skills, substance use education, mental health awareness, and recovery principles."
+              "text": "Group Therapy: Participation in psychoeducation groups focusing on diagnosis understanding, medication management, coping skills, substance use education, mental health awareness, and recovery principles.",
+              "targetPath": "plan.interventionsRecommended[3]"
             },
             {
               "slot": "static",
               "id": "intervention-case-management",
-              "text": "Case Management Services: Case management to assist with vocational rehabilitation, educational opportunities, stable housing maintenance, and transportation resources."
+              "text": "Case Management Services: Case management to assist with vocational rehabilitation, educational opportunities, stable housing maintenance, and transportation resources.",
+              "targetPath": "plan.interventionsRecommended[4]"
             },
             {
               "slot": "static",
               "id": "intervention-peer-support",
-              "text": "Peer Support Services: Connection with certified peer recovery specialists who can provide lived experience perspective and motivation for sustained recovery."
+              "text": "Peer Support Services: Connection with certified peer recovery specialists who can provide lived experience perspective and motivation for sustained recovery.",
+              "targetPath": "plan.interventionsRecommended[5]"
             }
           ]
         },
@@ -858,12 +864,14 @@
             {
               "slot": "static",
               "id": "coordination-case-management",
-              "text": "Case Management Services: Engage case management for navigating social services, employment, and housing resources. Obtain ROI and establish communication protocols with assigned case manager."
+              "text": "Case Management Services: Engage case management for navigating social services, employment, and housing resources. Obtain ROI and establish communication protocols with assigned case manager.",
+              "targetPath": "plan.coordinationOfCareRecommendations[0]"
             },
             {
               "slot": "static",
               "id": "coordination-vocational",
-              "text": "Vocational Services: Refer to vocational rehabilitation and explore local transportation assistance programs. Obtain ROI and establish communication protocols with vocational counselor to address employment barriers."
+              "text": "Vocational Services: Refer to vocational rehabilitation and explore local transportation assistance programs. Obtain ROI and establish communication protocols with vocational counselor to address employment barriers.",
+              "targetPath": "plan.coordinationOfCareRecommendations[1]"
             }
           ]
         },
@@ -879,47 +887,56 @@
             {
               "slot": "static",
               "id": "followup-outpatient-therapy",
-              "text": "Outpatient Therapy: Regular outpatient follow-up with clinician for individual psychotherapy and psychoeducation."
+              "text": "Outpatient Therapy: Regular outpatient follow-up with clinician for individual psychotherapy and psychoeducation.",
+              "targetPath": "plan.followUpPlan[0]"
             },
             {
               "slot": "static",
               "id": "followup-peer-support",
-              "text": "Peer Support Services: Regular attendance at peer support services for recovery support and social connection."
+              "text": "Peer Support Services: Regular attendance at peer support services for recovery support and social connection.",
+              "targetPath": "plan.followUpPlan[1]"
             },
             {
               "slot": "static",
               "id": "followup-case-management",
-              "text": "Case Management: Regular case management sessions for resource coordination and barrier resolution."
+              "text": "Case Management: Regular case management sessions for resource coordination and barrier resolution.",
+              "targetPath": "plan.followUpPlan[2]"
             },
             {
               "slot": "static",
               "id": "followup-psychiatric",
-              "text": "Psychiatric Services: Psychiatric appointment for medication evaluation and ongoing medication management as indicated."
+              "text": "Psychiatric Services: Psychiatric appointment for medication evaluation and ongoing medication management as indicated.",
+              "targetPath": "plan.followUpPlan[3]"
             },
             {
               "slot": "static",
               "id": "followup-group-therapy",
-              "text": "Group Therapy: Group therapy attendance for psychoeducation focusing on diagnosis understanding, medication management, coping skills, substance use education, mental health awareness, and recovery principles."
+              "text": "Group Therapy: Group therapy attendance for psychoeducation focusing on diagnosis understanding, medication management, coping skills, substance use education, mental health awareness, and recovery principles.",
+              "targetPath": "plan.followUpPlan[4]"
             },
             {
               "slot": "static",
               "id": "followup-safety-monitoring",
-              "text": "Safety Monitoring: Periodic monitoring call for safety check and PHQ-9 administration to track symptom progression."
+              "text": "Safety Monitoring: Periodic monitoring call for safety check and PHQ-9 administration to track symptom progression.",
+              "targetPath": "plan.followUpPlan[5]"
             },
             {
               "slot": "static",
               "id": "followup-drug-screening",
-              "text": "Drug Screening: Recommend drug screening given current diagnosis and continued drug testing to be determined by medical provider."
+              "text": "Drug Screening: Recommend drug screening given current diagnosis and continued drug testing to be determined by medical provider.",
+              "targetPath": "plan.followUpPlan[6]"
             },
             {
               "slot": "static",
               "id": "followup-treatment-plan",
-              "text": "Treatment Plan Review: Comprehensive treatment planning to be completed every 90 days with multidisciplinary team input."
+              "text": "Treatment Plan Review: Comprehensive treatment planning to be completed every 90 days with multidisciplinary team input.",
+              "targetPath": "plan.followUpPlan[7]"
             },
             {
               "slot": "static",
               "id": "followup-progress-monitoring",
-              "text": "Progress Monitoring: Standardized testing to be performed quarterly to monitor patient progress and adjust interventions accordingly."
+              "text": "Progress Monitoring: Standardized testing to be performed quarterly to monitor patient progress and adjust interventions accordingly.",
+              "targetPath": "plan.followUpPlan[8]"
             }
           ]
         },
@@ -935,32 +952,38 @@
             {
               "slot": "static",
               "id": "crisis-warning-signs",
-              "text": "Warning Signs Recognition: Increased irritability, social withdrawal, expressions of hopelessness, renewed substance use urges, significant changes in sleep or appetite, isolation from support systems."
+              "text": "Warning Signs Recognition: Increased irritability, social withdrawal, expressions of hopelessness, renewed substance use urges, significant changes in sleep or appetite, isolation from support systems.",
+              "targetPath": "plan.crisisSafetyPlan.items[0]"
             },
             {
               "slot": "static",
               "id": "crisis-coping-strategies",
-              "text": "Internal Coping Strategies: Engage in healthy activities, practice mindfulness and grounding exercises, utilize breathing techniques, journal thoughts and feelings, connect with sober peers, review recovery materials."
+              "text": "Internal Coping Strategies: Engage in healthy activities, practice mindfulness and grounding exercises, utilize breathing techniques, journal thoughts and feelings, connect with sober peers, review recovery materials.",
+              "targetPath": "plan.crisisSafetyPlan.items[1]"
             },
             {
               "slot": "static",
               "id": "crisis-social-support",
-              "text": "Social Support Contacts: Contact supportive peers or family, notify designated support persons, utilize peer support networks."
+              "text": "Social Support Contacts: Contact supportive peers or family, notify designated support persons, utilize peer support networks.",
+              "targetPath": "plan.crisisSafetyPlan.items[2]"
             },
             {
               "slot": "static",
               "id": "crisis-professional-support",
-              "text": "Professional Support: Contact treating therapist, reach out to case manager, contact prescribing clinician for medication concerns."
+              "text": "Professional Support: Contact treating therapist, reach out to case manager, contact prescribing clinician for medication concerns.",
+              "targetPath": "plan.crisisSafetyPlan.items[3]"
             },
             {
               "slot": "static",
               "id": "crisis-resources",
-              "text": "Crisis Resources: National Suicide & Crisis Lifeline: 988 (24/7), local crisis intervention team, emergency department if immediate safety concern, mobile crisis response team."
+              "text": "Crisis Resources: National Suicide & Crisis Lifeline: 988 (24/7), local crisis intervention team, emergency department if immediate safety concern, mobile crisis response team.",
+              "targetPath": "plan.crisisSafetyPlan.items[4]"
             },
             {
               "slot": "static",
               "id": "crisis-safety-environment",
-              "text": "Safety Environment: Remove access to means of self-harm, avoid high-risk situations or triggers, utilize structured living/supports."
+              "text": "Safety Environment: Remove access to means of self-harm, avoid high-risk situations or triggers, utilize structured living/supports.",
+              "targetPath": "plan.crisisSafetyPlan.items[5]"
             }
           ]
         },
