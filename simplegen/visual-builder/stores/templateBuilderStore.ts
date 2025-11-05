@@ -156,29 +156,15 @@ export const templateBuilderStore = createStore<TemplateBuilderState>(
 );
 
 // Helper functions for common operations
-export function getSectionById(state: TemplateBuilderState, sectionId: string): SectionComponent | undefined {
-  return state.template.sections.find(s => s.id === sectionId);
+export function getBlockById(state: TemplateBuilderState, blockId: string): Block | undefined {
+  return state.template.blocks.find(b => b.id === blockId);
 }
 
-export function getFieldById(state: TemplateBuilderState, sectionId: string, fieldId: string): FieldComponent | undefined {
-  const section = getSectionById(state, sectionId);
-  return section?.fields.find(f => f.id === fieldId);
+export function getSelectedBlock(state: TemplateBuilderState): Block | undefined {
+  if (!state.selectedBlockId) return undefined;
+  return getBlockById(state, state.selectedBlockId);
 }
 
-export function getSelectedSection(state: TemplateBuilderState): SectionComponent | undefined {
-  if (!state.selectedSectionId) return undefined;
-  return getSectionById(state, state.selectedSectionId);
-}
-
-export function getSelectedField(state: TemplateBuilderState): { section: SectionComponent; field: FieldComponent } | undefined {
-  if (!state.selectedFieldId) return undefined;
-
-  for (const section of state.template.sections) {
-    const field = section.fields.find(f => f.id === state.selectedFieldId);
-    if (field) {
-      return { section, field };
-    }
-  }
-
-  return undefined;
+export function getBlockIndex(state: TemplateBuilderState, blockId: string): number {
+  return state.template.blocks.findIndex(b => b.id === blockId);
 }
