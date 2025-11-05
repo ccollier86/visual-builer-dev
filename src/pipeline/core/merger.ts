@@ -45,7 +45,7 @@ export function mergePayloads(aiOutput: AIPayload, nasData: NasSnapshot): Render
         }
 
         if (Array.isArray(incoming) && Array.isArray(existing)) {
-          result[key] = incoming;
+          result[key] = mergeArrays(incoming as unknown[], existing as unknown[]) as unknown as RenderPayload;
           continue;
         }
       }
@@ -60,9 +60,7 @@ export function mergePayloads(aiOutput: AIPayload, nasData: NasSnapshot): Render
 
   // Handle arrays - AI output takes precedence
   if (Array.isArray(aiOutput) && Array.isArray(nasData)) {
-    // For arrays, we can't intelligently merge - use AI output
-    // (Template should not create conflicts here)
-    return aiOutput;
+    return mergeArrays(aiOutput as unknown[], nasData as unknown[]) as unknown as RenderPayload;
   }
 
   // For primitives or type conflicts, AI output wins
@@ -153,4 +151,34 @@ function getValueType(value: unknown): string {
   if (Array.isArray(value)) return 'array';
   if (typeof value === 'object') return 'object';
   return typeof value;
+}
+
+function mergeArrays(incoming: unknown[], existing: unknown[]): unknown[] {
+  const incomingObjects = incoming.every(isPlainObject);
+  const existingObjects = existing.every(isPlainObject);
+
+  if (incomingObjects && existingObjects) {
+    const maxLength = Math.max(existing.length, incoming.length);
+    const merged: unknown[] = [];
+
+    for (let i = 0; i < maxLength; i++) {
+      const baseItem = existing[i];
+      const incomingItem = incoming[i];
+
+      if (isPlainObject(baseItem) && isPlainObject(incomingItem)) {
+        merged[i] = mergePayloads(incomingItem as AIPayload, baseItem as NasSnapshot);
+      } else if (incomingItem === undefined) {
+        merged[i] = baseItem;
+      } else if (baseItem === undefined) {
+        merged[i] = incomingItem;
+      } else {
+        merged[i] = incomingItem;
+      }
+    }
+
+    return merged;
+  }
+
+  // Default: use AI output array
+  return incoming;
 }
