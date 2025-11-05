@@ -15,7 +15,7 @@ import { withRetry } from '../utils/retry-handler';
  * Default generation options
  */
 const DEFAULT_OPTIONS: Required<GenerationOptions> = {
-  model: 'gpt-4-turbo',
+  model: 'gpt-5',
   temperature: 0.7,
   maxTokens: 4000,
   retries: 3,
