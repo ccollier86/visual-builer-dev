@@ -288,8 +288,8 @@ export interface SpacerComponent extends BaseComponent {
 
 // ===== UNION TYPE =====
 
-export type AnyComponent =
-  | SectionComponent
+export type Block =
+  | SectionBlock
   | FieldComponent
   | NarrativeComponent
   | ListComponent
