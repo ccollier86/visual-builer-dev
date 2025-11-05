@@ -8,6 +8,7 @@
 import { buildFieldGuide } from './field-guide-builder';
 import { sliceContext } from './context-slicer';
 import { buildMessages } from './message-builder';
+import { lintPromptBundle } from './prompt-linter';
 import type { PromptBundle, CompositionInput } from '../types';
 
 /**
