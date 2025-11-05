@@ -1,9 +1,6 @@
 // Main factory renderer
 // Orchestrates HTML generation from template + validated RPS payload
 
-import type { Component } from "../../derivation/types";
-import type { DesignTokens } from "../../tokens/types";
-import type { RenderPayload } from "../../types/payloads";
 import { escapeHtml, escapeAttr } from "../utils/html-escape";
 import type { FactoryInputs } from "../types";
 import {
