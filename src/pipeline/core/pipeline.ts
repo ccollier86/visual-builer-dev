@@ -10,13 +10,13 @@
  */
 
 import { deriveAIS, deriveNAS, mergeToRPS } from '../../derivation';
-import { validateNoteTemplate, validateAIS } from '../../validation';
+import { validateNoteTemplate, validateAIS, getAIOutputValidator } from '../../validation';
 import { composePrompt } from '../../composition';
 import { createOpenAIClient, generateWithSchema } from '../../integration';
 import { compileCSS } from '../../tokens';
 import { renderNoteHTML } from '../../factory';
 import { mergePayloads, findMergeConflicts } from './merger';
-import type { PipelineInput, PipelineOutput, PipelineOptions, PipelineError } from '../types';
+import type { PipelineInput, PipelineOutput, PipelineOptions, PipelineError, PipelineWarnings } from '../types';
 import type { DesignTokens } from '../../tokens';
 import defaultTokensRaw from '../../tokens/defaults/default-tokens.json';
 
@@ -42,6 +42,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
   const validate = options.validateSteps ?? true;
 
   try {
+    const pipelineWarnings: PipelineWarnings = {};
     // Step 1: Validate template
     log(options, 'Step 1/8: Validating note template...');
     const templateResult = validateNoteTemplate(input.template);
@@ -56,6 +57,18 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
     // Step 2: Derive AIS schema (AI Structured Output)
     log(options, 'Step 2/8: Deriving AIS schema...');
     const ais = deriveAIS(input.template);
+
+    // Validate AIS schema structure against meta-schema
+    if (validate) {
+      const aisSchemaResult = validateAIS(ais);
+      if (!aisSchemaResult.ok) {
+        throw createError(
+          'Derived AIS schema failed validation',
+          'ais-schema-validation',
+          aisSchemaResult.errors
+        );
+      }
+    }
 
     // Step 3: Derive NAS schema (Non-AI Snapshot)
     log(options, 'Step 3/8: Deriving NAS schema...');
@@ -87,21 +100,63 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 
     // Log warnings
     if (resolutionResult.warnings.length > 0) {
-      console.warn(`Resolution warnings (${resolutionResult.warnings.length}):`);
-      resolutionResult.warnings.forEach(w => {
-        console.warn(`  [${w.componentId}/${w.slotId}] ${w.message}`);
-      });
+      if (options.guards?.resolution?.failOnWarning) {
+        throw createError(
+          'Resolution produced warnings',
+          'resolution-warnings',
+          resolutionResult.warnings
+        );
+      }
+
+      pipelineWarnings.resolution = resolutionResult.warnings;
+
+      if (options.verbose) {
+        console.warn(`Resolution warnings (${resolutionResult.warnings.length}):`);
+        resolutionResult.warnings.forEach(w => {
+          console.warn(`  [${w.componentId}/${w.slotId}] ${w.message}`);
+        });
+      }
     }
 
     log(options, `Resolved ${resolutionResult.resolved.length} fields`);
 
     // Step 6: Compose prompt bundle
     log(options, 'Step 6/8: Composing prompt bundle...');
-    const promptBundle = composePrompt({
+    const promptResult = composePrompt({
       template: input.template,
       aiSchema: ais,
       nasSnapshot: resolvedNasData,
     });
+    const promptBundle = promptResult.bundle;
+
+    const lintResult = promptResult.lint;
+
+    if (lintResult.errors.length > 0) {
+      throw createError(
+        'Prompt bundle validation failed',
+        'prompt-lint',
+        lintResult.errors
+      );
+    }
+
+    if (lintResult.warnings.length > 0) {
+      if (options.guards?.promptLint?.failOnWarning) {
+        throw createError(
+          'Prompt bundle warnings present',
+          'prompt-lint-warning',
+          lintResult.warnings
+        );
+      }
+
+      pipelineWarnings.prompt = lintResult.warnings;
+
+      if (options.verbose) {
+        console.warn(`Prompt bundle warnings (${lintResult.warnings.length}):`);
+        lintResult.warnings.forEach(w => {
+          console.warn(`  [${w.check}] ${w.message}`);
+        });
+      }
+    }
 
     // Step 7: Generate AI output via OpenAI
     log(options, 'Step 7/8: Generating AI output...');
@@ -112,17 +167,16 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       process.env.OPENAI_API_KEY = options.openaiKey;
     }
 
+    const aiOutputValidator = getAIOutputValidator(ais);
+
     let generation;
     try {
       const client = createOpenAIClient();
 
-      // Create validator wrapper that matches expected signature
-      const aisValidator = (data: any, schema: any) => validateAIS(data);
-
       generation = await generateWithSchema(
         client,
         promptBundle,
-        aisValidator,
+        aiOutputValidator,
         options.generationOptions
       );
     } finally {
@@ -137,7 +191,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
     }
 
     if (validate) {
-      const aisResult = validateAIS(generation.output);
+      const aisResult = aiOutputValidator(generation.output);
       if (!aisResult.ok) {
         throw createError(
           'AI output validation failed',
@@ -176,6 +230,8 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 
     log(options, 'Pipeline complete!');
 
+    const warnings = Object.keys(pipelineWarnings).length > 0 ? pipelineWarnings : undefined;
+
     return {
       html,
       css,
@@ -183,6 +239,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       schemas: { ais, nas, rps },
       usage: generation.usage,
       model: generation.model,
+      warnings,
     };
   } catch (error) {
     // Re-throw PipelineErrors as-is

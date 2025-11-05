@@ -112,19 +112,25 @@ function processContentItem(
 		const segment = segments[i];
 		const isLastSegment = i === segments.length - 1;
 		const segmentPath = currentPath ? `${currentPath}.${segment.name}` : segment.name;
+		const propertyPath = segment.isArray ? `${segmentPath}[]` : segmentPath;
 
 		if (isLastSegment) {
 			// Leaf node - create the actual value schema
 			const leafNode = createStringNode(item.constraints);
+			const propertyOptions = {
+				isRequired: item.constraints?.required ?? false,
+				path: propertyPath,
+				sourceId: item.id,
+			};
 
 			// Add to parent
 			if (segment.isArray) {
 				// This leaf is an array of strings (uncommon but possible)
 				const arrayNode = createArrayNode(leafNode);
-				addProperty(currentNode, segment.name, arrayNode, item.constraints?.required);
+				addProperty(currentNode, segment.name, arrayNode, propertyOptions);
 			} else {
 				// Normal leaf
-				addProperty(currentNode, segment.name, leafNode, item.constraints?.required);
+				addProperty(currentNode, segment.name, leafNode, propertyOptions);
 			}
 		} else {
 			// Intermediate node - create/get object or array
@@ -139,7 +145,10 @@ function processContentItem(
 					arrayNode = createArrayNode(itemsNode);
 
 					// Add array to current object
-					addProperty(currentNode, segment.name, arrayNode, false);
+					addProperty(currentNode, segment.name, arrayNode, {
+						path: propertyPath,
+						sourceId: item.id,
+					});
 
 					// Cache array and its items
 					schemaMap.set(arrayPath, arrayNode);
@@ -158,7 +167,10 @@ function processContentItem(
 					objectNode = createObjectNode(false);
 
 					// Add to parent
-					addProperty(currentNode, segment.name, objectNode, false);
+					addProperty(currentNode, segment.name, objectNode, {
+						path: propertyPath,
+						sourceId: item.id,
+					});
 
 					// Cache object
 					schemaMap.set(segmentPath, objectNode);

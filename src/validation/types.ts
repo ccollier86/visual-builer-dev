@@ -8,3 +8,9 @@ export interface ValidationResult {
   ok: boolean;
   errors: ErrorObject[];
 }
+
+/**
+ * Runtime schema validator function signature.
+ * Accepts arbitrary data and returns structured validation metadata.
+ */
+export type SchemaValidator = (data: unknown) => ValidationResult;

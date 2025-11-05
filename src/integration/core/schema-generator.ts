@@ -8,7 +8,7 @@
 import type OpenAI from 'openai';
 import type { PromptBundle } from '../../composition/types';
 import type { GenerationOptions, GenerationResult } from '../types';
-import type { ValidationResult } from '../../validation/types';
+import type { SchemaValidator } from '../../validation/types';
 import { withRetry } from '../utils/retry-handler';
 import { DEFAULT_OPTIONS } from '../types';
 
@@ -28,7 +28,7 @@ import { DEFAULT_OPTIONS } from '../types';
 export async function generateWithSchema(
   client: OpenAI,
   bundle: PromptBundle,
-  validator: (data: any, schema: any) => ValidationResult,
+  validator: SchemaValidator,
   options: Partial<GenerationOptions> = {}
 ): Promise<GenerationResult> {
   const finalOptions = { ...DEFAULT_OPTIONS, ...options };
@@ -75,7 +75,7 @@ export async function generateWithSchema(
   }
 
   // Validate against AIS schema
-  const validationResult = validator(aiOutput, bundle.jsonSchema);
+  const validationResult = validator(aiOutput);
   if (!validationResult.ok) {
     const errorMessages = validationResult.errors
       .map(err => `${err.instancePath}: ${err.message}`)

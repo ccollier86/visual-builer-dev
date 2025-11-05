@@ -35,6 +35,7 @@ export interface ResolutionResult {
   nasData: Record<string, any>;     // Complete NAS snapshot
   resolved: ResolvedField[];         // Successfully resolved fields
   warnings: ResolutionWarning[];     // Missing sources, failed formulas, etc.
+  unresolvedSlots: UnresolvedSlot[]; // Slots requiring attention after resolution
 }
 
 /**
@@ -45,8 +46,23 @@ export interface ResolutionWarning {
   slotId: string;
   slotType: string;
   path: string;
-  reason: 'missing_source' | 'formula_error' | 'invalid_ref' | 'type_mismatch';
+  reason:
+    | 'missing_source'
+    | 'formula_error'
+    | 'invalid_ref'
+    | 'type_mismatch'
+    | 'unresolved_slot';
   message: string;
+}
+
+/**
+ * Details describing a slot that remained unresolved without existing warnings.
+ */
+export interface UnresolvedSlot {
+  componentId: string;
+  slotId: string;
+  slotType: string;
+  targetPath?: string;
 }
 
 /**

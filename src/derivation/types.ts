@@ -77,6 +77,47 @@ export interface SchemaNode {
 }
 
 /**
+ * Named constants for custom string constraint keywords applied to schema nodes.
+ * Keeps all rune-style keys in one place so builders and mergers stay consistent.
+ */
+export const CUSTOM_STRING_CONSTRAINTS = {
+  MIN_WORDS: 'x-minWords',
+  MAX_WORDS: 'x-maxWords',
+  MIN_SENTENCES: 'x-minSentences',
+  MAX_SENTENCES: 'x-maxSentences',
+} as const;
+
+/**
+ * Utility type representing all supported custom string constraint keyword values.
+ */
+export type CustomStringConstraintKey =
+  (typeof CUSTOM_STRING_CONSTRAINTS)[keyof typeof CUSTOM_STRING_CONSTRAINTS];
+
+/**
+ * Metadata describing the source context for a schema property.
+ */
+export interface SchemaPropertyMetadata {
+  /** Full output/target path (dot + [] notation). */
+  path?: string;
+  /** Optional originating template content identifier. */
+  sourceId?: string;
+}
+
+/**
+ * Options provided when attaching properties to schema nodes.
+ */
+export interface AddPropertyOptions extends SchemaPropertyMetadata {
+  isRequired?: boolean;
+}
+
+/**
+ * Detailed context carried with duplicate-path errors.
+ */
+export interface DuplicatePathErrorContext extends SchemaPropertyMetadata {
+  propertyName: string;
+}
+
+/**
  * Template structure (minimal interface for derivation)
  * Only the fields needed for schema derivation
  */

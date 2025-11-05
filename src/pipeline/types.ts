@@ -6,6 +6,8 @@
 
 import type { DesignTokens, CompiledCSS } from '../tokens';
 import type { GenerationOptions } from '../integration';
+import type { ResolutionWarning } from '../resolution';
+import type { LintIssue } from '../composition';
 
 /**
  * Input configuration for the complete pipeline
@@ -42,6 +44,24 @@ export interface PipelineOptions {
 
   /** Enable verbose logging for debugging */
   verbose?: boolean;
+
+  /** Guardrail behaviour for warnings surfaced by pipeline stages */
+  guards?: PipelineGuardOptions;
+}
+
+/**
+ * Fine-grained guardrail configuration per pipeline stage.
+ */
+export interface PipelineGuardOptions {
+  resolution?: WarningGuardOptions;
+  promptLint?: WarningGuardOptions;
+}
+
+/**
+ * Warning guard configuration shared across guardable stages.
+ */
+export interface WarningGuardOptions {
+  failOnWarning?: boolean;
 }
 
 /**
@@ -73,6 +93,17 @@ export interface PipelineOutput {
 
   /** Generation model used */
   model: string;
+
+  /** Collected non-fatal warnings surfaced during execution */
+  warnings?: PipelineWarnings;
+}
+
+/**
+ * Warning collections keyed by pipeline stage.
+ */
+export interface PipelineWarnings {
+  resolution?: ResolutionWarning[];
+  prompt?: LintIssue[];
 }
 
 /**

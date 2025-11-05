@@ -37,6 +37,8 @@ export {
 	mergeNodes,
 } from './utils/schema-builder';
 
+export { DuplicatePathError } from './errors';
+
 // Types
 export type {
 	Component,

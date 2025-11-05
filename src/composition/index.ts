@@ -17,6 +17,7 @@ export type {
   FieldGuideEntry,
   FieldConstraints,
   CompositionInput,
+  CompositionResult,
   LintResult,
   LintIssue
 } from './types';

@@ -5,7 +5,9 @@
  * Supports objects, arrays, strings, numbers, and booleans with constraints.
  */
 
-import type { ContentConstraints, SchemaNode } from '../types';
+import { DuplicatePathError } from '../errors';
+import { CUSTOM_STRING_CONSTRAINTS } from '../types';
+import type { AddPropertyOptions, ContentConstraints, SchemaNode } from '../types';
 
 /**
  * Create an object schema node
@@ -113,7 +115,7 @@ export function addProperty(
 	objectNode: SchemaNode,
 	propertyName: string,
 	propertySchema: SchemaNode,
-	isRequired = false
+	options: AddPropertyOptions = {}
 ): void {
 	if (objectNode.type !== 'object') {
 		throw new Error('Can only add properties to object nodes');
@@ -123,7 +125,21 @@ export function addProperty(
 		objectNode.properties = {};
 	}
 
+	if (Object.prototype.hasOwnProperty.call(objectNode.properties, propertyName)) {
+		const context = {
+			path: options.path ?? propertyName,
+			sourceId: options.sourceId,
+			propertyName,
+		};
+		throw new DuplicatePathError(
+			`Duplicate schema property encountered at path "${context.path}"`,
+			context
+		);
+	}
+
 	objectNode.properties[propertyName] = propertySchema;
+
+	const isRequired = options.isRequired ?? false;
 
 	if (isRequired) {
 		if (!objectNode.required) {
@@ -191,16 +207,169 @@ export function mergeNodes(nodeA: SchemaNode, nodeB: SchemaNode, path: string): 
 		} else {
 			merged.items = nodeA.items || nodeB.items;
 		}
+	} else if (nodeA.type === 'string') {
+		const mergedEnum = mergeEnums(nodeA.enum, nodeB.enum, path);
+		if (mergedEnum) {
+			merged.enum = mergedEnum;
+		} else {
+			delete merged.enum;
+		}
+
+		const mergedPattern = mergePatterns(nodeA.pattern, nodeB.pattern, path);
+		if (mergedPattern) {
+			merged.pattern = mergedPattern;
+		} else {
+			delete merged.pattern;
+		}
+
+		const mergedMinWords = mergeLowerBound(nodeA['x-minWords'], nodeB['x-minWords']);
+		const mergedMaxWords = mergeUpperBound(nodeA['x-maxWords'], nodeB['x-maxWords']);
+		assertBoundsConsistency(
+			path,
+			CUSTOM_STRING_CONSTRAINTS.MIN_WORDS,
+			mergedMinWords,
+			CUSTOM_STRING_CONSTRAINTS.MAX_WORDS,
+			mergedMaxWords
+		);
+		if (mergedMinWords !== undefined) {
+			merged['x-minWords'] = mergedMinWords;
+		} else {
+			delete merged['x-minWords'];
+		}
+		if (mergedMaxWords !== undefined) {
+			merged['x-maxWords'] = mergedMaxWords;
+		} else {
+			delete merged['x-maxWords'];
+		}
+
+		const mergedMinSentences = mergeLowerBound(nodeA['x-minSentences'], nodeB['x-minSentences']);
+		const mergedMaxSentences = mergeUpperBound(nodeA['x-maxSentences'], nodeB['x-maxSentences']);
+		assertBoundsConsistency(
+			path,
+			CUSTOM_STRING_CONSTRAINTS.MIN_SENTENCES,
+			mergedMinSentences,
+			CUSTOM_STRING_CONSTRAINTS.MAX_SENTENCES,
+			mergedMaxSentences
+		);
+		if (mergedMinSentences !== undefined) {
+			merged['x-minSentences'] = mergedMinSentences;
+		} else {
+			delete merged['x-minSentences'];
+		}
+		if (mergedMaxSentences !== undefined) {
+			merged['x-maxSentences'] = mergedMaxSentences;
+		} else {
+			delete merged['x-maxSentences'];
+		}
+	} else if (nodeA.type === 'number') {
+		const mergedMinimum = mergeLowerBound(nodeA.minimum, nodeB.minimum);
+		const mergedMaximum = mergeUpperBound(nodeA.maximum, nodeB.maximum);
+		assertBoundsConsistency(path, 'minimum', mergedMinimum, 'maximum', mergedMaximum);
+
+		if (mergedMinimum !== undefined) {
+			merged.minimum = mergedMinimum;
+		} else {
+			delete merged.minimum;
+		}
+		if (mergedMaximum !== undefined) {
+			merged.maximum = mergedMaximum;
+		} else {
+			delete merged.maximum;
+		}
 	} else {
-		// For leaf nodes (string, number, boolean), prefer nodeA's constraints
-		// but allow nodeB to add constraints if nodeA doesn't have them
-		merged.enum = nodeA.enum || nodeB.enum;
-		merged.pattern = nodeA.pattern || nodeB.pattern;
-		merged['x-minWords'] = nodeA['x-minWords'] ?? nodeB['x-minWords'];
-		merged['x-maxWords'] = nodeA['x-maxWords'] ?? nodeB['x-maxWords'];
-		merged['x-minSentences'] = nodeA['x-minSentences'] ?? nodeB['x-minSentences'];
-		merged['x-maxSentences'] = nodeA['x-maxSentences'] ?? nodeB['x-maxSentences'];
+		// For boolean or other primitive nodes without constraints, prefer stricter truthy values.
+		if (nodeB.enum && !merged.enum) {
+			merged.enum = nodeB.enum;
+		}
 	}
 
 	return merged;
+}
+
+/**
+ * Compute compatible enum values shared by both schema nodes.
+ * Throws if no overlap exists, because merged schema would otherwise be unsatisfiable.
+ */
+function mergeEnums(enumA: string[] | undefined, enumB: string[] | undefined, path: string): string[] | undefined {
+	if (!enumA && !enumB) {
+		return undefined;
+	}
+	if (!enumA) {
+		return enumB;
+	}
+	if (!enumB) {
+		return enumA;
+	}
+
+	const intersection = enumA.filter((value) => enumB.includes(value));
+
+	if (intersection.length === 0) {
+		throw new Error(`Enum conflict at path "${path}": no overlapping values between schemas`);
+	}
+
+	return intersection;
+}
+
+/**
+ * Ensure pattern constraints match exactly; conflicting patterns cannot be merged safely.
+ */
+function mergePatterns(patternA: string | undefined, patternB: string | undefined, path: string): string | undefined {
+	if (!patternA && !patternB) {
+		return undefined;
+	}
+	if (!patternA) {
+		return patternB;
+	}
+	if (!patternB) {
+		return patternA;
+	}
+	if (patternA !== patternB) {
+		throw new Error(
+			`Pattern conflict at path "${path}": patterns "${patternA}" and "${patternB}" are incompatible`
+		);
+	}
+	return patternA;
+}
+
+/**
+ * Merge lower-bound numeric/string constraints by selecting the stricter (highest) value.
+ */
+function mergeLowerBound(valueA?: number, valueB?: number): number | undefined {
+	if (valueA === undefined) {
+		return valueB;
+	}
+	if (valueB === undefined) {
+		return valueA;
+	}
+	return Math.max(valueA, valueB);
+}
+
+/**
+ * Merge upper-bound numeric/string constraints by selecting the stricter (lowest) value.
+ */
+function mergeUpperBound(valueA?: number, valueB?: number): number | undefined {
+	if (valueA === undefined) {
+		return valueB;
+	}
+	if (valueB === undefined) {
+		return valueA;
+	}
+	return Math.min(valueA, valueB);
+}
+
+/**
+ * Validate that merged min/max bounds remain logically consistent.
+ */
+function assertBoundsConsistency(
+	path: string,
+	minKey: string,
+	minValue: number | undefined,
+	maxKey: string,
+	maxValue: number | undefined
+): void {
+	if (minValue !== undefined && maxValue !== undefined && minValue > maxValue) {
+		throw new Error(
+			`Constraint conflict at path "${path}": ${minKey} (${minValue}) exceeds ${maxKey} (${maxValue})`
+		);
+	}
 }

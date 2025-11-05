@@ -4,9 +4,21 @@ import type {
   ResolutionContext,
   ResolutionResult,
   ResolvedField,
-  ResolutionWarning
+  ResolutionWarning,
+  UnresolvedSlot
 } from '../contracts/types';
 import { setByPath } from './path-setter';
+
+/**
+ * Internal bookkeeping structure tracking every non-AI slot encountered during resolution.
+ * Enables post-processing to ensure each slot either produced data or emitted a warning.
+ */
+interface ExpectedSlot {
+  componentId: string;
+  slotId: string;
+  slotType: string;
+  targetPath?: string;
+}
 
 /**
  * Orchestrates all slot resolvers to build complete NAS snapshot
@@ -28,13 +40,15 @@ export class NASBuilder implements INASBuilder {
     const resolved: ResolvedField[] = [];
     const warnings: ResolutionWarning[] = [];
     const nasData: Record<string, any> = {};
+    const expectedSlots: ExpectedSlot[] = [];
 
     // Walk template layout depth-first
     this.walkLayout(
       context.template.layout,
       context,
       resolved,
-      warnings
+      warnings,
+      expectedSlots
     );
 
     // Assemble resolved fields into NAS data structure
@@ -53,32 +67,46 @@ export class NASBuilder implements INASBuilder {
       }
     }
 
-    return { nasData, resolved, warnings };
+    const unresolvedSlots = findUnresolvedSlots(expectedSlots, resolved, warnings);
+
+    for (const slot of unresolvedSlots) {
+      warnings.push({
+        componentId: slot.componentId,
+        slotId: slot.slotId,
+        slotType: slot.slotType,
+        path: slot.targetPath || 'unknown',
+        reason: 'unresolved_slot',
+        message: `Slot ${slot.slotId} (${slot.slotType}) was not resolved and produced no data`,
+      });
+    }
+
+    return { nasData, resolved, warnings, unresolvedSlots };
   }
 
   private walkLayout(
     components: any[],
     context: ResolutionContext,
     resolved: ResolvedField[],
-    warnings: ResolutionWarning[]
+    warnings: ResolutionWarning[],
+    expectedSlots: ExpectedSlot[]
   ): void {
     for (const component of components) {
       // Process content items
       if (component.content) {
         for (const item of component.content) {
-          this.resolveItem(item, component.id, context, resolved, warnings);
+          this.resolveItem(item, component.id, context, resolved, warnings, expectedSlots);
 
           // Process nested listItems
           if (item.listItems) {
             for (const listItem of item.listItems) {
-              this.resolveItem(listItem, component.id, context, resolved, warnings);
+              this.resolveItem(listItem, component.id, context, resolved, warnings, expectedSlots);
             }
           }
 
           // Process nested tableMap
           if (item.tableMap) {
             for (const colItem of Object.values(item.tableMap)) {
-              this.resolveItem(colItem, component.id, context, resolved, warnings);
+              this.resolveItem(colItem, component.id, context, resolved, warnings, expectedSlots);
             }
           }
         }
@@ -86,7 +114,7 @@ export class NASBuilder implements INASBuilder {
 
       // Recurse into children (subsections)
       if (component.children) {
-        this.walkLayout(component.children, context, resolved, warnings);
+        this.walkLayout(component.children, context, resolved, warnings, expectedSlots);
       }
     }
   }
@@ -96,8 +124,18 @@ export class NASBuilder implements INASBuilder {
     componentId: string,
     context: ResolutionContext,
     resolved: ResolvedField[],
-    warnings: ResolutionWarning[]
+    warnings: ResolutionWarning[],
+    expectedSlots: ExpectedSlot[]
   ): void {
+    if (item.slot !== 'ai') {
+      expectedSlots.push({
+        componentId,
+        slotId: item.id,
+        slotType: item.slot,
+        targetPath: item.targetPath,
+      });
+    }
+
     // Skip AI slots (handled by LLM, not resolution)
     if (item.slot === 'ai') return;
 
@@ -132,4 +170,43 @@ export class NASBuilder implements INASBuilder {
       });
     }
   }
+}
+
+/**
+ * Determine which expected slots failed to produce resolved data and have no prior warnings.
+ *
+ * @param expected - All slots encountered while walking the template
+ * @param resolved - Successfully resolved fields
+ * @param warnings - Warnings already emitted during resolution
+ * @returns Slots that require follow-up (will become unresolved warnings)
+ */
+function findUnresolvedSlots(
+  expected: ExpectedSlot[],
+  resolved: ResolvedField[],
+  warnings: ResolutionWarning[]
+): UnresolvedSlot[] {
+  if (expected.length === 0) {
+    return [];
+  }
+
+  const resolvedPaths = new Set(resolved.map((field) => field.path));
+  const warnedSlots = new Set(
+    warnings.map((warning) => `${warning.componentId}:${warning.slotId}`)
+  );
+
+  return expected.filter((slot) => {
+    if (!slot.targetPath) {
+      return false;
+    }
+
+    if (resolvedPaths.has(slot.targetPath)) {
+      return false;
+    }
+
+    if (warnedSlots.has(`${slot.componentId}:${slot.slotId}`)) {
+      return false;
+    }
+
+    return true;
+  });
 }

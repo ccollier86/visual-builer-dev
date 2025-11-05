@@ -16,6 +16,11 @@ export { addCustomKeywords } from './core/custom-keywords';
 // Validators
 export { validateNoteTemplate } from './validators/template-validator';
 export { validateAIS } from './validators/ais-validator';
+export {
+  createAIOutputValidator,
+  getAIOutputValidator,
+  clearAIOutputValidatorCache
+} from './validators/ai-output-validator';
 export { validateNAS } from './validators/nas-validator';
 export { validatePromptBundle } from './validators/prompt-validator';
 export { validateRPS } from './validators/rps-validator';

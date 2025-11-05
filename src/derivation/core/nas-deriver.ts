@@ -118,9 +118,15 @@ function processContentItem(
     const segment = segments[i];
     const isLastSegment = i === segments.length - 1;
     const segmentPath = currentPath ? `${currentPath}.${segment.name}` : segment.name;
+    const propertyPath = segment.isArray ? `${segmentPath}[]` : segmentPath;
 
     if (isLastSegment) {
       // Leaf node - add the value schema
+      const propertyOptions = {
+        isRequired: item.constraints?.required ?? false,
+        path: propertyPath,
+        sourceId: item.id,
+      };
       if (segment.isArray) {
         // This leaf is an array of values
         const arrayNode = createArrayNode(leafNode);
@@ -128,7 +134,7 @@ function processContentItem(
           currentNode,
           segment.name,
           arrayNode,
-          item.constraints?.required
+          propertyOptions
         );
       } else {
         // Normal leaf
@@ -136,7 +142,7 @@ function processContentItem(
           currentNode,
           segment.name,
           leafNode,
-          item.constraints?.required
+          propertyOptions
         );
       }
     } else {
@@ -152,7 +158,10 @@ function processContentItem(
           arrayNode = createArrayNode(itemsNode);
 
           // Add array to current object
-          addProperty(currentNode, segment.name, arrayNode, false);
+          addProperty(currentNode, segment.name, arrayNode, {
+            path: propertyPath,
+            sourceId: item.id,
+          });
 
           // Cache array and its items
           schemaMap.set(arrayPath, arrayNode);
@@ -171,7 +180,10 @@ function processContentItem(
           objectNode = createObjectNode(false);
 
           // Add to parent
-          addProperty(currentNode, segment.name, objectNode, false);
+          addProperty(currentNode, segment.name, objectNode, {
+            path: propertyPath,
+            sourceId: item.id,
+          });
 
           // Cache object
           schemaMap.set(segmentPath, objectNode);
@@ -262,8 +274,8 @@ function createLeafNodeForItem(item: ContentItem): SchemaNode {
   // For verbatim, it's an object with { text: string, ref: string }
   if (item.slot === 'verbatim') {
     const verbatimNode = createObjectNode(false);
-    addProperty(verbatimNode, 'text', createStringNode(), true);
-    addProperty(verbatimNode, 'ref', createStringNode(), true);
+    addProperty(verbatimNode, 'text', createStringNode(), { isRequired: true });
+    addProperty(verbatimNode, 'ref', createStringNode(), { isRequired: true });
     return verbatimNode;
   }
 

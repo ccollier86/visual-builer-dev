@@ -57,6 +57,14 @@ export interface FieldConstraints {
 }
 
 /**
+ * Result of composing a prompt bundle along with lint diagnostics.
+ */
+export interface CompositionResult {
+  bundle: PromptBundle;
+  lint: LintResult;
+}
+
+/**
  * Input for prompt composition
  * Everything needed to build a deterministic prompt bundle
  */
