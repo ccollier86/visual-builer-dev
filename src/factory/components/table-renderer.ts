@@ -74,7 +74,7 @@ export function renderTableComponent(
   }
 
   // Table body
-  chunks.push(renderTableRows(rows, columnGroups, rowPath, payload, collectedRefs));
+  chunks.push(renderTableRows(rows, columnGroups, columnCount, rowPath, payload, collectedRefs));
 
   chunks.push(`</table>`);
   return chunks.join("");
@@ -110,6 +110,7 @@ function renderTableHeaders(columns: string[]): string {
 function renderTableRows(
   rows: unknown[],
   columnGroups: ContentItem[][],
+  columnCount: number,
   rowPath: string,
   payload: RenderPayload,
   collectedRefs: Set<string>
@@ -119,8 +120,10 @@ function renderTableRows(
   for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
     chunks.push("<tr>");
 
-    for (let colIndex = 0; colIndex < columnGroups.length; colIndex++) {
-      const colItems = columnGroups[colIndex];
+    const maxColumns = Math.min(columnCount, columnGroups.length || columnCount);
+
+    for (let colIndex = 0; colIndex < maxColumns; colIndex++) {
+      const colItems = columnGroups[colIndex] ?? [];
       const cellContent = renderTableCellGroup(
         colItems,
         colIndex,

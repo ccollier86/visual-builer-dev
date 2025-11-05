@@ -297,4 +297,74 @@ describe('renderNoteHTML layout', () => {
       '<div class="note-table-stack"><span class="note-table-primary note-table-strong">Generalized Anxiety Disorder</span><span class="note-table-support note-table-muted note-table-italic">Persistent worry impacting sleep and concentration.</span></div>'
     );
   });
+
+  it('never renders more cells than column definitions', () => {
+    const template: NoteTemplate = {
+      id: 'table-cell-count',
+      name: 'Table Cell Count Template',
+      version: '1.0.0',
+      layout: [
+        {
+          id: 'diagnostic-impressions',
+          type: 'table',
+          title: 'DIAGNOSTIC IMPRESSIONS',
+          props: {
+            columns: ['ICD-10', 'DSM-5 Code', 'Description'],
+            colWidths: ['15%', '15%', '70%'],
+          },
+          content: [
+            {
+              slot: 'lookup',
+              id: 'diagnostic-table',
+              tableMap: [
+                {
+                  slot: 'lookup',
+                  id: 'diagnosis-icd10',
+                  targetPath: 'assessment.diagnosticImpressions[].icd10Code',
+                },
+                {
+                  slot: 'lookup',
+                  id: 'diagnosis-dsm5',
+                  targetPath: 'assessment.diagnosticImpressions[].dsm5Code',
+                },
+                {
+                  slot: 'lookup',
+                  id: 'diagnosis-description',
+                  targetPath: 'assessment.diagnosticImpressions[].description',
+                },
+                {
+                  slot: 'ai',
+                  id: 'diagnosis-criteria',
+                  outputPath: 'assessment.diagnosticImpressions[].criteria',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    const payload = {
+      assessment: {
+        diagnosticImpressions: [
+          {
+            icd10Code: 'F33.1',
+            dsm5Code: 'F33.1',
+            description: 'Major Depressive Disorder, Moderate',
+            criteria: 'Symptoms include persistent low mood, poor concentration, and moderate impact on functioning.',
+          },
+          {
+            icd10Code: 'F41.1',
+            dsm5Code: 'F41.1',
+            description: 'Generalized Anxiety Disorder',
+            criteria: 'Persistent worry impacting sleep and concentration.',
+          },
+        ],
+      },
+    } as RenderPayload;
+
+    const html = renderNoteHTML({ template, payload, tokens, options: {} });
+    const tdCount = [...html.matchAll(/<td>/g)].length;
+    expect(tdCount).toBe(6);
+  });
 });
