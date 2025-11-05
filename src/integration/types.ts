@@ -36,3 +36,15 @@ export interface RetryConfig {
   maxDelayMs: number;
   retryableStatusCodes: number[];
 }
+
+/**
+ * Default retry configuration
+ * Exponential backoff: 1s, 2s, 4s
+ * Handles rate limits (429) and server errors (500-599)
+ */
+export const DEFAULT_RETRY_CONFIG: RetryConfig = {
+  maxRetries: 3,
+  baseDelayMs: 1000,
+  maxDelayMs: 8000,
+  retryableStatusCodes: [429, 500, 502, 503, 504],
+};
