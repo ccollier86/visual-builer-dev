@@ -42,32 +42,13 @@ export function useTemplate() {
 }
 
 /**
- * Get selected section
+ * Get selected block
  */
-export function useSelectedSection() {
+export function useSelectedBlock() {
   return useSelector(templateBuilderStore, (state) => {
-    const { selectedSectionId, template } = state.context;
-    if (!selectedSectionId) return null;
-    return template.sections.find(s => s.id === selectedSectionId) || null;
-  });
-}
-
-/**
- * Get selected field (with its parent section)
- */
-export function useSelectedField() {
-  return useSelector(templateBuilderStore, (state) => {
-    const { selectedFieldId, template } = state.context;
-    if (!selectedFieldId) return null;
-
-    for (const section of template.sections) {
-      const field = section.fields.find(f => f.id === selectedFieldId);
-      if (field) {
-        return { section, field };
-      }
-    }
-
-    return null;
+    const { selectedBlockId, template } = state.context;
+    if (!selectedBlockId) return null;
+    return template.blocks.find(b => b.id === selectedBlockId) || null;
   });
 }
 
