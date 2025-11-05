@@ -61,10 +61,10 @@ export const templateBuilderStore = createStore<TemplateBuilderState, TemplateBu
       }
     }),
 
-    updateTemplateType: (ctx, event: { type: Template['type'] }) => ({
+    updateTemplateType: (ctx, event: { templateType: Template['type'] }) => ({
       template: {
         ...ctx.template,
-        type: event.type
+        type: event.templateType
       }
     }),
 
