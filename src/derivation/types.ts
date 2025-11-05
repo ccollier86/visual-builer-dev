@@ -91,6 +91,7 @@ export interface Component {
   id: string;
   type: string;
   title?: string;
+  props?: any;
   content?: ContentItem[];
   children?: Component[];
 }
