@@ -2,127 +2,65 @@
 // Handles sections, subsections, and heading hierarchy
 
 import type { Component } from '../../derivation/types';
-import type { RenderPayload } from '../../types/payloads';
 import type { DesignTokens } from '../../tokens/types';
 
-import { escapeHtml } from "../utils/html-escape";
+import { escapeHtml } from '../utils/html-escape';
 
 /**
- * Determines heading tag based on component type and depth
- *
- * - header component → h1
- * - depth 0 (top-level section) → h2
- * - depth 1+ (subsection) → h3
+ * Map component types to structural CSS classes.
  */
-export function getHeadingTag(
-  componentType: string,
-  depth: number
-): "h1" | "h2" | "h3" {
-  if (componentType === "header") return "h1";
-  return depth === 0 ? "h2" : "h3";
-}
-
-/**
- * Determines CSS class for heading based on depth and type
- *
- * - header → "note-title"
- * - depth 0 → "section-title"
- * - depth 1+ → "subsection-title"
- */
-export function getHeadingClass(componentType: string, depth: number): string {
-  if (componentType === "header") return "note-title";
-  return depth === 0 ? "section-title" : "subsection-title";
-}
-
-/**
- * Determines CSS class for component wrapper
- */
-export function getComponentClass(comp: Component): string {
+export function getComponentClass(comp: Component, depth: number): string {
   switch (comp.type) {
-    case "header":
-      return "section header";
-    case "footer":
-      return "section footer";
-    case "section":
-      return "section";
-    case "paragraph":
-      return "section paragraph";
-    case "list":
-      return "section list";
-    case "table":
-      return "section table";
-    case "patientBlock":
-      return "section patient";
-    case "signatureBlock":
-      return "section signature";
-    case "alertPanel":
-      return "section alert";
+    case 'section':
+      return depth === 0 ? 'note-section note-section--top' : 'note-section';
+    case 'paragraph':
+      return 'note-section note-section--paragraph';
+    case 'list':
+      return 'note-section note-section--list';
+    case 'table':
+      return 'note-section note-section--table';
+    case 'alertPanel':
+      return 'note-section note-section--alert';
+    case 'footer':
+      return 'note-section note-section--footer';
     default:
-      return "section";
+      return 'note-section';
   }
 }
 
 /**
- * Renders a section heading if title exists and not hidden
+ * Render heading markup for a component when titles are enabled.
  */
 export function renderSectionHeading(
   comp: Component,
   depth: number,
   tokens?: DesignTokens
 ): string {
-  // Check if title should be shown
+  if (!shouldShowTitle(comp, tokens)) {
+    return '';
+  }
+
+  if (comp.type === 'section' && depth === 0) {
+    return `<h2 class="note-section-banner">${escapeHtml(comp.title ?? '')}</h2>`;
+  }
+
+  if (comp.type === 'alertPanel') {
+    return `<h3 class="note-alert-title">${escapeHtml(comp.title ?? '')}</h3>`;
+  }
+
+  return `<h3 class="note-subsection-title">${escapeHtml(comp.title ?? '')}</h3>`;
+}
+
+function shouldShowTitle(comp: Component, tokens?: DesignTokens): boolean {
+  if (!comp.title) {
+    return false;
+  }
+
+  if (comp.type === 'header') {
+    return tokens?.layout?.headerShowTitle ?? true;
+  }
+
   const props = comp.props as Record<string, unknown> | undefined;
-  const hideTitleProp = typeof props?.hideTitle === 'boolean' ? props.hideTitle : false;
-  const showTitle =
-    comp.type === "header"
-      ? tokens?.layout?.headerShowTitle ?? true
-      : !hideTitleProp;
-
-  if (!comp.title || !showTitle) return "";
-
-  const headingTag = getHeadingTag(comp.type, depth);
-  const headingClass = getHeadingClass(comp.type, depth);
-
-  return `<${headingTag} class="${headingClass}">${escapeHtml(comp.title)}</${headingTag}>`;
-}
-
-/**
- * Renders patient block as a definition list
- * Only renders if patient data exists in payload
- */
-export function renderPatientBlock(payload: RenderPayload): string {
-  const patientValue = payload?.patient;
-  if (!isRecord(patientValue)) return "";
-
-  const patient = patientValue as Record<string, unknown>;
-  if (!patient) return "";
-
-  const chunks: string[] = ['<dl class="patient">'];
-
-  if (typeof patient.name === 'string') {
-    chunks.push(`<dt>Name</dt><dd>${escapeHtml(patient.name)}</dd>`);
-  }
-  if (typeof patient.dob === 'string') {
-    chunks.push(`<dt>DOB</dt><dd>${escapeHtml(patient.dob)}</dd>`);
-  }
-  if (typeof patient.mrn === 'string') {
-    chunks.push(`<dt>MRN</dt><dd>${escapeHtml(patient.mrn)}</dd>`);
-  }
-
-  chunks.push("</dl>");
-  return chunks.join("");
-}
-
-/**
- * Renders signature block with signature lines
- */
-export function renderSignatureBlock(): string {
-  return `<div class="signature">
-  <div>Clinician: ____________________  Date: __________</div>
-  <div>Patient/Guardian: _____________  Date: __________</div>
-</div>`;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+  const hideTitle = typeof props?.hideTitle === 'boolean' ? props.hideTitle : false;
+  return !hideTitle;
 }

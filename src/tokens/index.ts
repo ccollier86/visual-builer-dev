@@ -16,6 +16,7 @@ export type {
   Layout,
   PrintOptions,
   BrandAssets,
+  SurfacePalette,
 } from './types.js';
 
 export { compileCSS, compileScreenCSS, compilePrintCSS } from './core/compiler.js';

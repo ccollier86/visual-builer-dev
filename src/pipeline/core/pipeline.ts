@@ -17,7 +17,7 @@ import { compileCSS } from '../../tokens';
 import { renderNoteHTML } from '../../factory';
 import { mergePayloads, findMergeConflicts } from './merger';
 import type { PipelineInput, PipelineOutput, PipelineOptions, PipelineError, PipelineWarnings } from '../types';
-import type { DesignTokens } from '../../tokens';
+import type { DesignTokens, Layout } from '../../tokens';
 import type { TemplateStyle } from '../../derivation/types';
 import defaultTokensRaw from '../../tokens/defaults/default-tokens.json';
 
@@ -60,6 +60,26 @@ function applyTemplateStyle(tokens: DesignTokens, style?: TemplateStyle): void {
   }
 }
 
+function mergeLayout(base?: Layout, override?: Layout): Layout | undefined {
+  if (!base && !override) {
+    return undefined;
+  }
+
+  const merged: Layout = {
+    ...(base ?? {}),
+    ...(override ?? {}),
+  };
+
+  if (base?.sectionBanner || override?.sectionBanner) {
+    merged.sectionBanner = {
+      ...(base?.sectionBanner ?? {}),
+      ...(override?.sectionBanner ?? {}),
+    };
+  }
+
+  return merged;
+}
+
 function mergeDesignTokens(base: DesignTokens, override?: DesignTokens): DesignTokens {
   if (!override) {
     return base;
@@ -88,10 +108,7 @@ function mergeDesignTokens(base: DesignTokens, override?: DesignTokens): DesignT
       ...(base.list ?? {}),
       ...(override.list ?? {}),
     },
-    layout: {
-      ...(base.layout ?? {}),
-      ...(override.layout ?? {}),
-    },
+    layout: mergeLayout(base.layout, override.layout),
     print: {
       ...base.print,
       ...override.print,
