@@ -16,7 +16,7 @@ export type {
   Message,
   FieldGuideEntry,
   FieldConstraints,
-  CompositionInput
+  CompositionInput,
+  LintResult,
+  LintIssue
 } from './types';
-
-export type { LintResult, LintIssue } from './core/prompt-linter';
