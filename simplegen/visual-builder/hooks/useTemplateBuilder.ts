@@ -58,15 +58,14 @@ export function useSelectedBlock() {
 export function useTemplateBuilder() {
   const state = useTemplateBuilderState();
   const template = state.template;
-  const sections = template.sections;
+  const blocks = template.blocks;
 
   return {
     // State
     template,
-    sections,
-    selectedSectionId: state.selectedSectionId,
-    selectedFieldId: state.selectedFieldId,
-    isFieldEditorOpen: state.isFieldEditorOpen,
+    blocks,
+    selectedBlockId: state.selectedBlockId,
+    isBlockEditorOpen: state.isBlockEditorOpen,
     isDragging: state.isDragging,
 
     // Template actions
@@ -82,44 +81,28 @@ export function useTemplateBuilder() {
     setTheme: (theme: typeof template.theme) =>
       templateBuilderStore.send({ type: 'setTheme', theme }),
 
-    // Section actions
-    addSection: (section: (typeof sections)[0], atIndex?: number) =>
-      templateBuilderStore.send({ type: 'addSection', section, atIndex }),
+    // Block actions (unified for all block types)
+    addBlock: (block: (typeof blocks)[0], atIndex?: number) =>
+      templateBuilderStore.send({ type: 'addBlock', block, atIndex }),
 
-    reorderSections: (sectionIds: string[]) =>
-      templateBuilderStore.send({ type: 'reorderSections', sectionIds }),
+    reorderBlocks: (blockIds: string[]) =>
+      templateBuilderStore.send({ type: 'reorderBlocks', blockIds }),
 
-    removeSection: (sectionId: string) =>
-      templateBuilderStore.send({ type: 'removeSection', sectionId }),
+    removeBlock: (blockId: string) =>
+      templateBuilderStore.send({ type: 'removeBlock', blockId }),
 
-    updateSection: (sectionId: string, updates: Partial<(typeof sections)[0]>) =>
-      templateBuilderStore.send({ type: 'updateSection', sectionId, updates }),
-
-    // Field actions
-    addField: (sectionId: string, field: any, atIndex?: number) =>
-      templateBuilderStore.send({ type: 'addField', sectionId, field, atIndex }),
-
-    reorderFields: (sectionId: string, fieldIds: string[]) =>
-      templateBuilderStore.send({ type: 'reorderFields', sectionId, fieldIds }),
-
-    removeField: (sectionId: string, fieldId: string) =>
-      templateBuilderStore.send({ type: 'removeField', sectionId, fieldId }),
-
-    updateField: (sectionId: string, fieldId: string, updates: any) =>
-      templateBuilderStore.send({ type: 'updateField', sectionId, fieldId, updates }),
+    updateBlock: (blockId: string, updates: Partial<(typeof blocks)[0]>) =>
+      templateBuilderStore.send({ type: 'updateBlock', blockId, updates }),
 
     // UI actions
-    selectSection: (sectionId: string | null) =>
-      templateBuilderStore.send({ type: 'selectSection', sectionId }),
+    selectBlock: (blockId: string | null) =>
+      templateBuilderStore.send({ type: 'selectBlock', blockId }),
 
-    selectField: (fieldId: string | null) =>
-      templateBuilderStore.send({ type: 'selectField', fieldId }),
+    openBlockEditor: (blockId?: string) =>
+      templateBuilderStore.send({ type: 'openBlockEditor', blockId }),
 
-    openFieldEditor: (fieldId?: string) =>
-      templateBuilderStore.send({ type: 'openFieldEditor', fieldId }),
-
-    closeFieldEditor: () =>
-      templateBuilderStore.send({ type: 'closeFieldEditor' }),
+    closeBlockEditor: () =>
+      templateBuilderStore.send({ type: 'closeBlockEditor' }),
 
     setDragging: (isDragging: boolean) =>
       templateBuilderStore.send({ type: 'setDragging', isDragging })
