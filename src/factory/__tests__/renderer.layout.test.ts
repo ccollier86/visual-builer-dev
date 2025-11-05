@@ -242,4 +242,59 @@ describe('renderNoteHTML layout', () => {
       '<div class="note-table-stack"><span class="note-table-primary note-table-strong">Major Depressive Disorder, Moderate</span><span class="note-table-support note-table-muted">Symptoms include persistent low mood and sleep disturbance.</span></div>'
     );
   });
+
+  it('applies default styling heuristics when table hints are absent', () => {
+    const template: NoteTemplate = {
+      id: 'table-defaults',
+      name: 'Table Defaults Template',
+      version: '1.0.0',
+      layout: [
+        {
+          id: 'diagnostic-impressions',
+          type: 'table',
+          title: 'DIAGNOSTIC IMPRESSIONS',
+          props: {
+            columns: ['ICD-10', 'DSM-5 Code', 'Description'],
+          },
+          content: [
+            {
+              slot: 'lookup',
+              id: 'diagnostic-table',
+              tableMap: [
+                { slot: 'lookup', id: 'diagnosis-icd10', targetPath: 'assessment.diagnosticImpressions[].icd10Code' },
+                { slot: 'lookup', id: 'diagnosis-dsm5', targetPath: 'assessment.diagnosticImpressions[].dsm5Code' },
+                { slot: 'lookup', id: 'diagnosis-description', targetPath: 'assessment.diagnosticImpressions[].description' },
+                { slot: 'ai', id: 'diagnosis-criteria', outputPath: 'assessment.diagnosticImpressions[].criteria' },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    const payload = {
+      assessment: {
+        diagnosticImpressions: [
+          {
+            icd10Code: 'F41.1',
+            dsm5Code: 'F41.1',
+            description: 'Generalized Anxiety Disorder',
+            criteria: 'Persistent worry impacting sleep and concentration.',
+          },
+        ],
+      },
+    } as RenderPayload;
+
+    const html = renderNoteHTML({ template, payload, tokens, options: {} });
+
+    expect(html).toContain(
+      '<span class="note-table-primary note-table-italic note-table-muted">F41.1</span>'
+    );
+    expect(html).toContain(
+      '<span class="note-table-primary note-table-italic note-table-bold">F41.1</span>'
+    );
+    expect(html).toContain(
+      '<div class="note-table-stack"><span class="note-table-primary note-table-strong">Generalized Anxiety Disorder</span><span class="note-table-support note-table-muted note-table-italic">Persistent worry impacting sleep and concentration.</span></div>'
+    );
+  });
 });
