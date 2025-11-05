@@ -391,8 +391,7 @@ export interface PaletteItem {
 
 export interface TemplateBuilderState {
   template: Template;
-  selectedSectionId: string | null;
-  selectedFieldId: string | null;
-  isFieldEditorOpen: boolean;
+  selectedBlockId: string | null;
+  isBlockEditorOpen: boolean;
   isDragging: boolean;
 }
