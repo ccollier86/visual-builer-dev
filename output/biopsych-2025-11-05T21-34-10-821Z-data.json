@@ -1,0 +1,742 @@
+{
+  "patient": "Michael Rodriguez",
+  "timestamp": "2025-11-05T21-34-10-821Z",
+  "aiOutput": {
+    "chiefComplaint": "\"I feel overwhelmed and anxious all the time, and it's affecting my work and relationships.\"",
+    "subjective": {
+      "hpi": "The patient reports feeling increasingly overwhelmed and anxious over the past six months. The symptoms began after a significant work-related stressor and have progressively worsened. Currently, the patient experiences persistent anxiety that interferes with daily functioning, including difficulty concentrating at work and strained relationships. Sleep disturbances and a decrease in appetite have also been noted. Coping attempts, such as mindfulness exercises, have provided limited relief. The patient expresses frustration with the inability to manage these symptoms effectively, impacting overall quality of life.",
+      "pastPsychiatricHistory": "The patient has a history of generalized anxiety disorder diagnosed two years ago but had not engaged in consistent treatment. Past treatment included a brief trial of cognitive-behavioral therapy, which was discontinued after a few sessions. The patient reports no previous hospitalizations or use of psychiatric medications. Currently, there is no active psychiatric treatment. The patient acknowledges the need for more consistent therapeutic engagement and expresses openness to exploring medication options.",
+      "currentMedications": "No current medications.",
+      "familyPsychiatricHistory": "The patient reports a family history of mental health issues, including a mother with depression and an uncle with alcohol use disorder. There is also a history of anxiety disorders in the extended family. This pattern suggests a possible genetic predisposition to anxiety and mood disorders. The patient is aware of these familial patterns and expresses concern about their potential influence on their own mental health.",
+      "medicalHistory": "The patient reports no significant medical conditions and denies any medication allergies. General health is considered good, with regular physical activity and a balanced diet being maintained. The patient has had routine medical check-ups with no noted chronic conditions. There is a focus on maintaining overall wellness to support mental health management.",
+      "socialHistory": "The patient lives alone in an apartment and is employed full-time as a project manager. Relationship status is single, with a few close friends providing some support. Financial stressors are present, primarily due to student loans and living expenses, contributing to anxiety. The patient identifies strong organizational skills as a personal strength, aiding in maintaining work performance despite mental health challenges.",
+      "substanceUseHistory": "The patient denies current or past substance use, including tobacco, alcohol, or illicit drugs. There are no reported legal issues or health problems related to substance use. The patient expresses understanding of the importance of avoiding substances due to family history and their potential impact on anxiety. Regular engagement in healthy coping strategies is emphasized as part of maintaining sobriety and mental health balance."
+    },
+    "objective": {
+      "functionalAssessment": "The patient reports significant impairment in work performance due to anxiety, with frequent difficulty concentrating and completing tasks on time. There have been occasional absences from work, although the patient strives to maintain responsibilities. Relationships are strained, as anxiety contributes to social withdrawal and conflict avoidance. Self-care routines are maintained but with reduced motivation. Social engagement is limited, with the patient preferring solitude over social activities, exacerbating feelings of loneliness. Despite these challenges, the patient demonstrates strong organizational skills and a commitment to personal wellness practices, such as regular exercise, which help mitigate some functional impairments."
+    },
+    "assessment": {
+      "clinicalFormulation": "The patient presents with symptoms consistent with generalized anxiety disorder, characterized by pervasive anxiety impacting work and social functioning. The clinical picture is compounded by a family history of mood and anxiety disorders, suggesting a genetic predisposition. The patient’s PHQ-9 score indicates moderate depression, with anhedonia and sleep disturbances present. GAD-7 scores reflect severe anxiety, aligning with the patient’s reported experiences. Protective factors include a supportive social network and strong organizational skills, which provide some resilience against the functional impacts of anxiety. The interplay between anxiety and situational stressors, such as financial pressures, further exacerbates symptoms. Treatment will aim to address both the psychological symptoms and the contributing environmental stressors.",
+      "riskAssessment": "The patient denies any current or historical suicidal or homicidal ideation. There are no past self-harm behaviors or substance use issues. The presence of anxiety presents a risk for heightened distress under stress, but the patient demonstrates insight and a willingness to engage in treatment. Protective factors include a supportive network of friends and a commitment to self-care practices. The patient is aware of emergency contacts and crisis resources, providing additional safety measures. The risk is assessed as low, with recommendations for regular monitoring and therapeutic interventions to manage anxiety effectively.",
+      "prognosis": "The prognosis is cautiously optimistic, given the patient’s motivation to engage in treatment and existing personal strengths. The severity of anxiety and financial stressors present challenges; however, the patient’s insight and organizational skills are favorable factors. Previous lack of consistent treatment engagement suggests the need for structured and supportive therapeutic interventions. The patient’s willingness to explore medication options and engage in therapy increases the likelihood of symptom improvement. Continued support from friends and a focus on financial planning may alleviate some stressors, contributing to a positive treatment outcome.",
+      "diagnosticImpressions": [
+        {
+          "icd10Code": "F41.1",
+          "criteria": "GAD-7 score indicates severe anxiety impacting daily functioning and relationships."
+        },
+        {
+          "icd10Code": "F33.1",
+          "criteria": "PHQ-9 score reflects moderate depression with persistent anhedonia and sleep issues."
+        }
+      ]
+    },
+    "plan": {
+      "reasonsForLiving": "The patient identifies strong relationships with a few close friends and a desire to advance in their career as key reasons for staying engaged in treatment. The patient also values personal growth and maintaining mental health for overall well-being. These goals provide motivation to pursue therapeutic interventions and manage symptoms effectively."
+    }
+  },
+  "schemas": {
+    "ais": {
+      "$id": "https://catalyst/generated/structured-output/biopsych-intake-v1@1.0.0.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Structured Output — Comprehensive Biopsychosocial Intake Assessment v1.0.0",
+      "description": "AI-generated fields for Comprehensive Biopsychosocial Intake Assessment",
+      "type": "object",
+      "properties": {
+        "chiefComplaint": {
+          "type": "string",
+          "x-minWords": 5,
+          "x-maxWords": 50
+        },
+        "subjective": {
+          "type": "object",
+          "properties": {
+            "hpi": {
+              "type": "string",
+              "x-minSentences": 6,
+              "x-maxSentences": 8
+            },
+            "pastPsychiatricHistory": {
+              "type": "string",
+              "x-minSentences": 4,
+              "x-maxSentences": 8
+            },
+            "currentMedications": {
+              "type": "string",
+              "x-minWords": 3,
+              "x-maxWords": 150
+            },
+            "familyPsychiatricHistory": {
+              "type": "string",
+              "x-minSentences": 3,
+              "x-maxSentences": 7
+            },
+            "medicalHistory": {
+              "type": "string",
+              "x-minSentences": 3,
+              "x-maxSentences": 7
+            },
+            "socialHistory": {
+              "type": "string",
+              "x-minSentences": 5,
+              "x-maxSentences": 8
+            },
+            "substanceUseHistory": {
+              "type": "string",
+              "x-minSentences": 4,
+              "x-maxSentences": 8
+            }
+          },
+          "required": [
+            "hpi",
+            "pastPsychiatricHistory",
+            "currentMedications",
+            "familyPsychiatricHistory",
+            "medicalHistory",
+            "socialHistory",
+            "substanceUseHistory"
+          ],
+          "additionalProperties": false
+        },
+        "objective": {
+          "type": "object",
+          "properties": {
+            "functionalAssessment": {
+              "type": "string",
+              "x-minSentences": 6,
+              "x-maxSentences": 8
+            }
+          },
+          "required": [
+            "functionalAssessment"
+          ],
+          "additionalProperties": false
+        },
+        "assessment": {
+          "type": "object",
+          "properties": {
+            "clinicalFormulation": {
+              "type": "string",
+              "x-minSentences": 7,
+              "x-maxSentences": 9
+            },
+            "riskAssessment": {
+              "type": "string",
+              "x-minSentences": 6,
+              "x-maxSentences": 8
+            },
+            "prognosis": {
+              "type": "string",
+              "x-minSentences": 6,
+              "x-maxSentences": 8
+            },
+            "diagnosticImpressions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "icd10Code": {
+                    "type": "string"
+                  },
+                  "criteria": {
+                    "type": "string",
+                    "x-minWords": 5,
+                    "x-maxWords": 50
+                  }
+                },
+                "required": [
+                  "icd10Code",
+                  "criteria"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "clinicalFormulation",
+            "riskAssessment",
+            "prognosis",
+            "diagnosticImpressions"
+          ],
+          "additionalProperties": false
+        },
+        "plan": {
+          "type": "object",
+          "properties": {
+            "reasonsForLiving": {
+              "type": "string",
+              "x-minWords": 20,
+              "x-maxWords": 60
+            }
+          },
+          "required": [
+            "reasonsForLiving"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "chiefComplaint",
+        "subjective",
+        "objective",
+        "assessment",
+        "plan"
+      ],
+      "additionalProperties": false
+    },
+    "nas": {
+      "$id": "https://catalyst/generated/non-ai-output/biopsych-intake-v1@1.0.0.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Non-AI Output — Comprehensive Biopsychosocial Intake Assessment v1.0.0",
+      "description": "Non-AI fields (lookup/computed/static/verbatim) for Comprehensive Biopsychosocial Intake Assessment",
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "object",
+          "properties": {
+            "patient": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "dob": {
+                  "type": "string"
+                },
+                "age": {
+                  "type": "string"
+                },
+                "gender": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "facility": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "address": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "encounter": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "provider": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                },
+                "signature": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "subjective": {
+          "type": "object",
+          "properties": {
+            "previouslyTrialedMedications": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "objective": {
+          "type": "object",
+          "properties": {
+            "mentalStatusExam": {
+              "type": "object",
+              "properties": {
+                "appearance": {
+                  "type": "string"
+                },
+                "behavior": {
+                  "type": "string"
+                },
+                "speech": {
+                  "type": "string"
+                },
+                "mood": {
+                  "type": "string"
+                },
+                "affect": {
+                  "type": "string"
+                },
+                "thoughtProcess": {
+                  "type": "string"
+                },
+                "thoughtContent": {
+                  "type": "string"
+                },
+                "perceptualDisturbances": {
+                  "type": "string"
+                },
+                "cognition": {
+                  "type": "string"
+                },
+                "insight": {
+                  "type": "string"
+                },
+                "judgment": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "standardizedScores": {
+              "type": "object",
+              "properties": {
+                "phq9": {
+                  "type": "string"
+                },
+                "gad7": {
+                  "type": "string"
+                },
+                "ace": {
+                  "type": "string"
+                },
+                "audit": {
+                  "type": "string"
+                },
+                "dast10": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "plan": {
+          "type": "object",
+          "properties": {
+            "interventionsRecommended": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "coordinationOfCareIntro": {
+              "type": "string"
+            },
+            "coordinationOfCareRecommendations": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "followUpPlan": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "crisisSafetyPlan": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "note": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "signature": {
+          "type": "object",
+          "properties": {
+            "renderedBy": {
+              "type": "string"
+            },
+            "supervisedBy": {
+              "type": "string"
+            },
+            "attestation": {
+              "type": "string"
+            },
+            "accuracyStatement": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "rps": {
+      "$id": "https://catalyst/generated/render/biopsych-intake-v1@1.0.0.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Render Payload — Comprehensive Biopsychosocial Intake Assessment v1.0.0",
+      "description": "Final payload schema (AIS ∪ NAS) for Comprehensive Biopsychosocial Intake Assessment",
+      "type": "object",
+      "properties": {
+        "chiefComplaint": {
+          "type": "string",
+          "x-minWords": 5,
+          "x-maxWords": 50
+        },
+        "subjective": {
+          "type": "object",
+          "properties": {
+            "hpi": {
+              "type": "string",
+              "x-minSentences": 6,
+              "x-maxSentences": 8
+            },
+            "pastPsychiatricHistory": {
+              "type": "string",
+              "x-minSentences": 4,
+              "x-maxSentences": 8
+            },
+            "currentMedications": {
+              "type": "string",
+              "x-minWords": 3,
+              "x-maxWords": 150
+            },
+            "familyPsychiatricHistory": {
+              "type": "string",
+              "x-minSentences": 3,
+              "x-maxSentences": 7
+            },
+            "medicalHistory": {
+              "type": "string",
+              "x-minSentences": 3,
+              "x-maxSentences": 7
+            },
+            "socialHistory": {
+              "type": "string",
+              "x-minSentences": 5,
+              "x-maxSentences": 8
+            },
+            "substanceUseHistory": {
+              "type": "string",
+              "x-minSentences": 4,
+              "x-maxSentences": 8
+            },
+            "previouslyTrialedMedications": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hpi",
+            "pastPsychiatricHistory",
+            "currentMedications",
+            "familyPsychiatricHistory",
+            "medicalHistory",
+            "socialHistory",
+            "substanceUseHistory"
+          ],
+          "additionalProperties": false
+        },
+        "objective": {
+          "type": "object",
+          "properties": {
+            "functionalAssessment": {
+              "type": "string",
+              "x-minSentences": 6,
+              "x-maxSentences": 8
+            },
+            "mentalStatusExam": {
+              "type": "object",
+              "properties": {
+                "appearance": {
+                  "type": "string"
+                },
+                "behavior": {
+                  "type": "string"
+                },
+                "speech": {
+                  "type": "string"
+                },
+                "mood": {
+                  "type": "string"
+                },
+                "affect": {
+                  "type": "string"
+                },
+                "thoughtProcess": {
+                  "type": "string"
+                },
+                "thoughtContent": {
+                  "type": "string"
+                },
+                "perceptualDisturbances": {
+                  "type": "string"
+                },
+                "cognition": {
+                  "type": "string"
+                },
+                "insight": {
+                  "type": "string"
+                },
+                "judgment": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "standardizedScores": {
+              "type": "object",
+              "properties": {
+                "phq9": {
+                  "type": "string"
+                },
+                "gad7": {
+                  "type": "string"
+                },
+                "ace": {
+                  "type": "string"
+                },
+                "audit": {
+                  "type": "string"
+                },
+                "dast10": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "functionalAssessment"
+          ],
+          "additionalProperties": false
+        },
+        "assessment": {
+          "type": "object",
+          "properties": {
+            "clinicalFormulation": {
+              "type": "string",
+              "x-minSentences": 7,
+              "x-maxSentences": 9
+            },
+            "riskAssessment": {
+              "type": "string",
+              "x-minSentences": 6,
+              "x-maxSentences": 8
+            },
+            "prognosis": {
+              "type": "string",
+              "x-minSentences": 6,
+              "x-maxSentences": 8
+            },
+            "diagnosticImpressions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "icd10Code": {
+                    "type": "string"
+                  },
+                  "criteria": {
+                    "type": "string",
+                    "x-minWords": 5,
+                    "x-maxWords": 50
+                  }
+                },
+                "required": [
+                  "icd10Code",
+                  "criteria"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "clinicalFormulation",
+            "riskAssessment",
+            "prognosis",
+            "diagnosticImpressions"
+          ],
+          "additionalProperties": false
+        },
+        "plan": {
+          "type": "object",
+          "properties": {
+            "reasonsForLiving": {
+              "type": "string",
+              "x-minWords": 20,
+              "x-maxWords": 60
+            },
+            "interventionsRecommended": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "coordinationOfCareIntro": {
+              "type": "string"
+            },
+            "coordinationOfCareRecommendations": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "followUpPlan": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "crisisSafetyPlan": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "note": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "reasonsForLiving"
+          ],
+          "additionalProperties": false
+        },
+        "header": {
+          "type": "object",
+          "properties": {
+            "patient": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "dob": {
+                  "type": "string"
+                },
+                "age": {
+                  "type": "string"
+                },
+                "gender": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "facility": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "address": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "encounter": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "provider": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                },
+                "signature": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "signature": {
+          "type": "object",
+          "properties": {
+            "renderedBy": {
+              "type": "string"
+            },
+            "supervisedBy": {
+              "type": "string"
+            },
+            "attestation": {
+              "type": "string"
+            },
+            "accuracyStatement": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "chiefComplaint",
+        "subjective",
+        "objective",
+        "assessment",
+        "plan"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "usage": {
+    "promptTokens": 3758,
+    "completionTokens": 1124,
+    "totalTokens": 4882
+  },
+  "model": "gpt-4o-2024-08-06"
+}

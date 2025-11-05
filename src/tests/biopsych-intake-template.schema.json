@@ -733,6 +733,7 @@
                   ],
                   "styleHints": {
                     "tableCell": {
+                      "columnIndex": 0,
                       "emphasis": "muted",
                       "italic": true
                     }
@@ -746,6 +747,7 @@
                   "targetPath": "assessment.diagnosticImpressions[].dsm5Code",
                   "styleHints": {
                     "tableCell": {
+                      "columnIndex": 1,
                       "bold": true,
                       "italic": true
                     }
@@ -759,6 +761,7 @@
                   "targetPath": "assessment.diagnosticImpressions[].description",
                   "styleHints": {
                     "tableCell": {
+                      "columnIndex": 2,
                       "emphasis": "strong"
                     }
                   }
@@ -771,7 +774,8 @@
                   "guidance": [
                     "Write 1-2 sentence supporting rationale for this diagnosis",
                     "Reference specific assessment scores, symptoms, or clinical data",
-                    "Keep concise - this is supporting criteria, not full formulation"
+                    "Keep concise - this is supporting criteria, not full formulation",
+                    "Maintain the same diagnosis order as clinical_intake.structured.diagnoses"
                   ],
                   "constraints": {
                     "required": true,
@@ -782,7 +786,8 @@
                     "tableCell": {
                       "role": "support",
                       "columnIndex": 2,
-                      "muted": true
+                      "muted": true,
+                      "italic": true
                     }
                   }
                 }
