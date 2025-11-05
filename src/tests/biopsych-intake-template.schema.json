@@ -730,21 +730,38 @@
                     "If clinician provided DSM-5 code in clinical_intake.structured.diagnoses, map that DSM-5 code to closest ICD-10-CM equivalent",
                     "DSM-5 and ICD-10 codes are OFTEN the same (e.g., F33.1 → F33.1) but sometimes differ",
                     "Use closest ICD-10-CM match for billing/diagnostic purposes"
-                  ]
+                  ],
+                  "styleHints": {
+                    "tableCell": {
+                      "emphasis": "muted",
+                      "italic": true
+                    }
+                  }
                 },
                 {
                   "slot": "lookup",
                   "id": "diagnosis-dsm5",
                   "description": "DSM-5 code from clinician (EXACT, no changes)",
                   "lookup": "clinical_intake.structured.diagnoses[].code",
-                  "targetPath": "assessment.diagnosticImpressions[].dsm5Code"
+                  "targetPath": "assessment.diagnosticImpressions[].dsm5Code",
+                  "styleHints": {
+                    "tableCell": {
+                      "bold": true,
+                      "italic": true
+                    }
+                  }
                 },
                 {
                   "slot": "lookup",
                   "id": "diagnosis-description",
                   "description": "Diagnosis description from clinician (EXACT, no changes)",
                   "lookup": "clinical_intake.structured.diagnoses[].description",
-                  "targetPath": "assessment.diagnosticImpressions[].description"
+                  "targetPath": "assessment.diagnosticImpressions[].description",
+                  "styleHints": {
+                    "tableCell": {
+                      "emphasis": "strong"
+                    }
+                  }
                 },
                 {
                   "slot": "ai",
@@ -760,6 +777,13 @@
                     "required": true,
                     "minWords": 5,
                     "maxWords": 50
+                  },
+                  "styleHints": {
+                    "tableCell": {
+                      "role": "support",
+                      "columnIndex": 2,
+                      "muted": true
+                    }
                   }
                 }
               ],

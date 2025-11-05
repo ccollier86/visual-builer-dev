@@ -1,45 +1,43 @@
-/**
- * Design Tokens - CSS Templates
- *
- * Domain: tokens/core
- * Responsibility: Provide CSS template strings with {{variable}} placeholders
+/*
+ * Screen CSS - tokens_reference v1.0.0
+ * Hash: faa76edd56
+ * Generated: 2025-11-05T19:32:03.722Z
  */
 
-export const SCREEN_CSS_TEMPLATE = `
 :root {
-  --note-font: {{typography.fontFamily}};
-  --note-font-mono: {{typography.monospaceFamily}};
-  --note-text: {{color.text}};
-  --note-muted: {{color.muted}};
-  --note-accent: {{color.accent}};
-  --note-border: {{color.border}};
-  --note-bg: {{color.background}};
-  --note-base: {{typography.baseSizePx}}px;
-  --note-line: {{typography.lineHeight}};
-  --sp-1: calc({{spacing.unitPx}}px * 0.5);
-  --sp-2: {{spacing.unitPx}}px;
-  --sp-3: calc({{spacing.unitPx}}px * 1.5);
-  --sp-4: calc({{spacing.unitPx}}px * 2);
-  --note-section-gap: {{layout.sectionGap}}px;
-  --note-paragraph-gap: {{layout.paragraphGap}}px;
-  --note-page-padding: {{layout.pagePaddingPx}}px;
-  --note-container-padding: {{layout.containerPaddingPx}}px;
-  --note-container-max-width: {{layout.containerMaxWidthPx}}px;
-  --note-header-gap: {{layout.headerGapPx}}px;
-  --note-header-padding-y: {{layout.headerPaddingY}}px;
-  --note-banner-margin: {{layout.sectionBanner.marginPx}}px;
-  --note-banner-padding-y: {{layout.sectionBanner.paddingY}}px;
-  --note-banner-padding-left: {{layout.sectionBanner.paddingLeftPx}}px;
-  --note-banner-border-width: {{layout.sectionBanner.borderWidthPx}}px;
-  --surface-header-bg: {{surface.headerBackground}};
-  --surface-header-border: {{surface.headerBorder}};
-  --surface-banner-bg: {{surface.sectionBannerBackground}};
-  --surface-banner-border: {{surface.sectionBannerBorder}};
-  --surface-card-bg: {{surface.cardBackground}};
-  --surface-card-border: {{surface.cardBorder}};
-  --surface-alert-info-bg: {{surface.alertInfoBackground}};
-  --surface-alert-info-border: {{surface.alertInfoBorder}};
-  --surface-signature-border: {{surface.signatureBorder}};
+  --note-font: 'Open Sans', Arial, sans-serif;
+  --note-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --note-text: #000000;
+  --note-muted: #555555;
+  --note-accent: #666666;
+  --note-border: #cccccc;
+  --note-bg: #ffffff;
+  --note-base: 14px;
+  --note-line: 1.6;
+  --sp-1: calc(12px * 0.5);
+  --sp-2: 12px;
+  --sp-3: calc(12px * 1.5);
+  --sp-4: calc(12px * 2);
+  --note-section-gap: 20px;
+  --note-paragraph-gap: 12px;
+  --note-page-padding: 40px;
+  --note-container-padding: 60px;
+  --note-container-max-width: 1000px;
+  --note-header-gap: 20px;
+  --note-header-padding-y: 20px;
+  --note-banner-margin: 60px;
+  --note-banner-padding-y: 8px;
+  --note-banner-padding-left: 75px;
+  --note-banner-border-width: 4px;
+  --surface-header-bg: #ffffff;
+  --surface-header-border: #cccccc;
+  --surface-banner-bg: #e8e8e8;
+  --surface-banner-border: #999999;
+  --surface-card-bg: #ffffff;
+  --surface-card-border: #d4d4d4;
+  --surface-alert-info-bg: #f5f5f5;
+  --surface-alert-info-border: #666666;
+  --surface-signature-border: #cccccc;
 }
 
 *,
@@ -87,8 +85,8 @@ body.note-body {
   margin: 0;
 }
 
-.note h1 { font-size: calc(var(--note-base) * {{typography.scale}} * {{typography.scale}}); }
-.note h2 { font-size: calc(var(--note-base) * {{typography.scale}}); }
+.note h1 { font-size: calc(var(--note-base) * 1.25 * 1.25); }
+.note h2 { font-size: calc(var(--note-base) * 1.25); }
 .note h3 { font-size: calc(var(--note-base) * 1.05); }
 .note h4 { font-size: calc(var(--note-base)); }
 
@@ -210,13 +208,13 @@ body.note-body {
 }
 
 .note ul {
-  list-style: {{list.bulletStyle}};
+  list-style: disc;
   margin: var(--sp-2) 0 var(--sp-2) var(--sp-4);
   padding: 0;
 }
 
 .note ol {
-  list-style: {{list.numberStyle}};
+  list-style: decimal;
   margin: var(--sp-2) 0 var(--sp-2) var(--sp-4);
   padding: 0;
 }
@@ -234,8 +232,8 @@ body.note-body {
 
 .note th,
 .note td {
-  border-bottom: {{table.borderStyle}};
-  padding: {{table.padding}};
+  border-bottom: 1px solid var(--note-border);
+  padding: 8px;
   text-align: left;
   vertical-align: top;
 }
@@ -245,46 +243,7 @@ body.note-body {
   font-weight: 600;
 }
 
-.note thead th {
-  border-bottom: 2px solid var(--note-text);
-  font-weight: 700;
-}
 
-.note-table-stack {
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--sp-1) * 0.5);
-}
-
-.note-table-primary {
-  display: block;
-}
-
-.note-table-support {
-  display: block;
-  font-size: calc(var(--note-base) * 0.92);
-  color: var(--note-muted);
-  font-style: italic;
-  margin-top: calc(var(--sp-1) * 0.5);
-}
-
-.note-table-italic {
-  font-style: italic;
-}
-
-.note-table-bold {
-  font-weight: 600;
-}
-
-.note-table-strong {
-  font-weight: 700;
-}
-
-.note-table-muted {
-  color: var(--note-muted);
-}
-
-{{table.stripedCSS}}
 
 .note-alert-title {
   margin: 0 0 var(--sp-2);
@@ -354,19 +313,3 @@ body.note-body {
 .note-provenance li {
   margin-bottom: var(--sp-1);
 }
-`.trim();
-
-export const PRINT_CSS_TEMPLATE = `
-@page { size: {{print.pageSize}}; margin: {{print.margin}}; }
-
-@media print {
-  body.note-body { padding: 0; }
-  .note { color: {{print.textColor}}; }
-  .note a { color: inherit; text-decoration: none; }
-  .note table { page-break-inside: avoid; }
-  .note h1, .note h2, .note h3 { break-after: avoid; }
-  .note p { orphans: 2; widows: 2; }
-  {{print.headerCSS}}
-  {{print.footerCSS}}
-}
-`.trim();
