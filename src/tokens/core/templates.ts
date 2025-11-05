@@ -234,8 +234,8 @@ body.note-body {
 
 .note th,
 .note td {
-  border-bottom: {{table.borderStyle}};
-  padding: {{table.padding}};
+  border-bottom: 1px solid var(--surface-card-border);
+  padding: calc(var(--note-base) * 0.7) calc(var(--note-base) * 0.85);
   text-align: left;
   vertical-align: top;
 }
