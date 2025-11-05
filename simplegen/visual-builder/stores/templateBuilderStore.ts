@@ -6,8 +6,7 @@
 import { createStore } from '@xstate/store';
 import type {
   Template,
-  SectionComponent,
-  FieldComponent,
+  Block,
   TemplateBuilderState,
   Theme
 } from '../types/template';
@@ -17,7 +16,7 @@ const EMPTY_TEMPLATE: Template = {
   id: null,
   name: 'Untitled Template',
   type: 'custom',
-  sections: [],
+  blocks: [],
   theme: DEFAULT_THEME
 };
 
