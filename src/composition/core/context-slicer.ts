@@ -54,6 +54,10 @@ export function sliceContext(
     }
   }
 
+  if (isEmptyObject(sliced)) {
+    return nasSnapshot;
+  }
+
   return sliced;
 }
 
@@ -196,6 +200,14 @@ function ensureArrayContainer(container: Record<string, unknown>, key: string): 
   }
 
   return array[0] as Record<string, unknown>;
+}
+
+function isEmptyObject(value: unknown): boolean {
+  if (!isObjectLike(value)) {
+    return true;
+  }
+
+  return Object.keys(value as Record<string, unknown>).length === 0;
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

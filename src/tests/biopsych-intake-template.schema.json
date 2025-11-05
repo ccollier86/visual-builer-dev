@@ -730,7 +730,8 @@
                     "If clinician provided DSM-5 code in clinical_intake.structured.diagnoses, map that DSM-5 code to closest ICD-10-CM equivalent",
                     "DSM-5 and ICD-10 codes are OFTEN the same (e.g., F33.1 → F33.1) but sometimes differ",
                     "Use closest ICD-10-CM match for billing/diagnostic purposes",
-                    "Return one ICD-10 code per diagnosis in the same order"
+                    "Return one ICD-10 code per diagnosis in the same order",
+                    "Do not generate ICD-10 codes for different disorders. If uncertain, mirror the DSM-5 code without inventing a new diagnosis."
                   ],
                   "styleHints": {
                     "tableCell": {
@@ -776,7 +777,8 @@
                     "Write 1-2 sentence supporting rationale for this diagnosis",
                     "Reference specific assessment scores, symptoms, or clinical data",
                     "Keep concise - this is supporting criteria, not full formulation",
-                    "Maintain the same diagnosis order as clinical_intake.structured.diagnoses"
+                    "Maintain the same diagnosis order as clinical_intake.structured.diagnoses",
+                    "Provide rationale for every diagnosis; do not leave this field empty or generic"
                   ],
                   "constraints": {
                     "required": true,
@@ -801,7 +803,8 @@
               "guidance": [
                 "Generate diagnostic impressions for each diagnosis (number of rows determined by clinical_intake.structured.diagnoses array length, or infer 1-3 if none provided)",
                 "High assessment scores should correspond to diagnoses: PHQ-9 ≥10 suggests depression, GAD-7 ≥10 suggests anxiety, AUDIT ≥8 suggests alcohol use concern, PCL-5 ≥31 suggests PTSD",
-                "Use official DSM-5 diagnosis terminology with appropriate specifiers"
+                "Use official DSM-5 diagnosis terminology with appropriate specifiers",
+                "Maintain exact ordering with clinician-provided diagnoses; each row must include ICD-10 code, DSM-5 code, description, and supporting criteria"
               ],
               "aiDeps": [
                 "clinical_intake.structured.diagnoses",

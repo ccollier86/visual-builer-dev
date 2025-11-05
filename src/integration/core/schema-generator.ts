@@ -67,6 +67,13 @@ export async function generateWithSchema(
     { maxRetries: finalOptions.retries }
   );
 
+  validateResponseStatus(completion);
+  const refusalMessage = extractRefusal(completion);
+  if (refusalMessage) {
+    throw new Error(`OpenAI refused to complete the request: ${refusalMessage}`);
+  }
+
+  
   // Extract AI output
   const messageContent = extractFirstTextOutput(completion);
   if (!messageContent) {
@@ -116,6 +123,52 @@ export async function generateWithSchema(
     model: completion.model,
     warnings: validationWarnings.length > 0 ? validationWarnings : undefined,
   };
+}
+
+function validateResponseStatus(response: Response): void {
+  switch (response.status) {
+    case 'completed':
+      return;
+    case 'incomplete': {
+      const reason = response.incomplete_details?.reason;
+      if (reason === 'max_output_tokens') {
+        throw new Error(
+          'OpenAI response truncated: reached max_output_tokens. Consider raising the token limit or simplifying the prompt.'
+        );
+      }
+      if (reason === 'content_filter') {
+        throw new Error(
+          'OpenAI halted generation due to content filtering. Review the input data for disallowed content.'
+        );
+      }
+      throw new Error(
+        `OpenAI response incomplete: ${reason ?? 'unknown reason'}.`
+      );
+    }
+    default:
+      throw new Error(`OpenAI response returned unexpected status: ${response.status}`);
+  }
+}
+
+function extractRefusal(response: Response): string | null {
+  if (!Array.isArray(response.output)) {
+    return null;
+  }
+
+  for (const block of response.output) {
+    if (!block || typeof block !== 'object') continue;
+    const contentList = (block as { content?: Array<Record<string, unknown>> }).content;
+    if (!Array.isArray(contentList)) continue;
+
+    for (const content of contentList) {
+      if (!content) continue;
+      if (content.type === 'refusal' && typeof content.refusal === 'string') {
+        return content.refusal;
+      }
+    }
+  }
+
+  return null;
 }
 
 function extractFirstTextOutput(response: Response): string | null {
