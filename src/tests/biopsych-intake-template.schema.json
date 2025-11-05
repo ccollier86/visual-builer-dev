@@ -729,7 +729,8 @@
                   "guidance": [
                     "If clinician provided DSM-5 code in clinical_intake.structured.diagnoses, map that DSM-5 code to closest ICD-10-CM equivalent",
                     "DSM-5 and ICD-10 codes are OFTEN the same (e.g., F33.1 → F33.1) but sometimes differ",
-                    "Use closest ICD-10-CM match for billing/diagnostic purposes"
+                    "Use closest ICD-10-CM match for billing/diagnostic purposes",
+                    "Return one ICD-10 code per diagnosis in the same order"
                   ],
                   "styleHints": {
                     "tableCell": {
