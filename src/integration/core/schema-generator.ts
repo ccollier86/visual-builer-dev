@@ -10,16 +10,7 @@ import type { PromptBundle } from '../../composition/types';
 import type { GenerationOptions, GenerationResult } from '../types';
 import type { ValidationResult } from '../../validation/types';
 import { withRetry } from '../utils/retry-handler';
-
-/**
- * Default generation options
- */
-const DEFAULT_OPTIONS: Required<GenerationOptions> = {
-  model: 'gpt-5',
-  temperature: 0.7,
-  maxTokens: 4000,
-  retries: 3,
-};
+import { DEFAULT_OPTIONS } from '../types';
 
 /**
  * Generates AI output using schema-constrained generation
