@@ -4,27 +4,20 @@
 import type { Component, ContentItem } from '../../derivation/types';
 import type { RenderPayload } from '../../types/payloads';
 
-import { escapeHtml, escapeAttr } from "../utils/html-escape";
+import { escapeHtml, escapeAttr } from '../utils/html-escape';
 import {
   getByPath,
   inferArrayRoot,
   normalizeRowPath,
-} from "../utils/path-resolver";
-import type { VerbatimValue } from "../types";
-
-type TableCellHints = {
-  columnIndex?: number;
-  column?: number | string;
-  columnKey?: string;
-  columnId?: string;
-  role?: "primary" | "support";
-  emphasis?: string;
-  italic?: boolean;
-  bold?: boolean;
-  strong?: boolean;
-  muted?: boolean;
-  className?: string | string[];
-};
+} from '../utils/path-resolver';
+import type { VerbatimValue } from '../types';
+import {
+  buildCellClassList,
+  deriveCellRole,
+  extractTableItems,
+  getTableCellHints,
+  groupTableItems,
+} from './table/utils';
 
 /**
  * Renders a table component with full structure
