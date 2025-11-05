@@ -127,7 +127,7 @@ Generate all narrative sections according to their specific instructions above. 
  * Generate static Plan sections with pronoun substitution
  */
 function generatePlanSections(data: any): any {
-  const pronouns = data.patient.pronouns;
+  const pronouns = parsePronounsFromString(data.patient.pronouns || 'they/them');
   const name = data.patient.name.split(' ')[0]; // First name
 
   return {
