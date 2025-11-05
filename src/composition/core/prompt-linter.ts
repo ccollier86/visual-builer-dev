@@ -145,7 +145,11 @@ function countAIItems(template: NoteTemplate): number {
 
           // Check nested tableMap
           if (item.tableMap) {
-            for (const colItem of Object.values(item.tableMap) as ContentItem[]) {
+            const tableItems = Array.isArray(item.tableMap)
+              ? item.tableMap
+              : Object.values(item.tableMap);
+
+            for (const colItem of tableItems) {
               if (colItem.slot === 'ai') count++;
             }
           }

@@ -219,7 +219,7 @@ export interface ContentItem {
   styleHints?: StyleHints;
   constraints?: ContentConstraints;
   listItems?: ContentItem[];
-  tableMap?: Record<string, ContentItem>;
+  tableMap?: Record<string, ContentItem> | ContentItem[];
   lookup?: string;
   formula?: string;
   resultType?: string;

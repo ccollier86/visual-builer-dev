@@ -107,7 +107,11 @@ export class NASBuilder implements INASBuilder {
 
           // Process nested tableMap
           if (item.tableMap) {
-            for (const colItem of Object.values(item.tableMap) as ContentItem[]) {
+            const tableItems = Array.isArray(item.tableMap)
+              ? item.tableMap
+              : Object.values(item.tableMap);
+
+            for (const colItem of tableItems) {
               this.resolveItem(colItem, component.id, context, resolved, warnings, expectedSlots);
             }
           }

@@ -137,4 +137,109 @@ describe('renderNoteHTML layout', () => {
     expect(html).toContain('I declare this record is accurate and complete.');
     expect(html).not.toContain('Clinician: ____________________');
   });
+
+  it('renders stacked table cells with style hints and support content', () => {
+    const template: NoteTemplate = {
+      id: 'table-test',
+      name: 'Table Layout Template',
+      version: '1.0.0',
+      layout: [
+        {
+          id: 'assessment',
+          type: 'section',
+          title: 'ASSESSMENT',
+          children: [
+            {
+              id: 'diagnostic-impressions',
+              type: 'table',
+              title: 'DIAGNOSTIC IMPRESSIONS',
+              props: {
+                columns: ['ICD-10', 'DSM-5 Code', 'Description'],
+                colWidths: ['10%', '12%', '78%'],
+              },
+              content: [
+                {
+                  slot: 'lookup',
+                  id: 'diagnostic-table',
+                  tableMap: [
+                    {
+                      slot: 'lookup',
+                      id: 'diagnosis-icd10',
+                      targetPath: 'assessment.diagnosticImpressions[].icd10Code',
+                      styleHints: {
+                        tableCell: {
+                          emphasis: 'muted',
+                          italic: true,
+                        },
+                      },
+                    },
+                    {
+                      slot: 'lookup',
+                      id: 'diagnosis-dsm5',
+                      targetPath: 'assessment.diagnosticImpressions[].dsm5Code',
+                      styleHints: {
+                        tableCell: {
+                          bold: true,
+                          italic: true,
+                        },
+                      },
+                    },
+                    {
+                      slot: 'lookup',
+                      id: 'diagnosis-description',
+                      targetPath: 'assessment.diagnosticImpressions[].description',
+                      styleHints: {
+                        tableCell: {
+                          emphasis: 'strong',
+                        },
+                      },
+                    },
+                    {
+                      slot: 'ai',
+                      id: 'diagnosis-criteria',
+                      outputPath: 'assessment.diagnosticImpressions[].criteria',
+                      styleHints: {
+                        tableCell: {
+                          role: 'support',
+                          columnIndex: 2,
+                          muted: true,
+                        },
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    const payload: RenderPayload = {
+      assessment: {
+        diagnosticImpressions: [
+          {
+            icd10Code: 'F33.1',
+            dsm5Code: 'F33.1',
+            description: 'Major Depressive Disorder, Moderate',
+            criteria: 'Symptoms include persistent low mood and sleep disturbance.',
+          },
+        ],
+      },
+    } as RenderPayload;
+
+    const html = renderNoteHTML({ template, payload, tokens, options: {} });
+
+    expect(html).toContain('<col style="width:10%">');
+    expect(html).toContain('<th scope="col">ICD-10</th>');
+    expect(html).toContain(
+      '<span class="note-table-primary note-table-italic note-table-muted">F33.1</span>'
+    );
+    expect(html).toContain(
+      '<span class="note-table-primary note-table-italic note-table-bold">F33.1</span>'
+    );
+    expect(html).toContain(
+      '<div class="note-table-stack"><span class="note-table-primary note-table-strong">Major Depressive Disorder, Moderate</span><span class="note-table-support note-table-muted">Symptoms include persistent low mood and sleep disturbance.</span></div>'
+    );
+  });
 });

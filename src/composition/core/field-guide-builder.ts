@@ -95,7 +95,11 @@ export function buildFieldGuide(layout: Component[]): FieldGuideEntry[] {
     }
 
     if (item.tableMap) {
-      for (const tableItem of Object.values(item.tableMap)) {
+      const tableItems = Array.isArray(item.tableMap)
+        ? item.tableMap
+        : Object.values(item.tableMap);
+
+      for (const tableItem of tableItems) {
         processContentItem(tableItem);
       }
     }
