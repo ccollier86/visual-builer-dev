@@ -59,6 +59,23 @@ export function composePrompt(input: CompositionInput): PromptBundle {
     }
   };
 
+  // Step 6: Lint the bundle
+  const lintResult = lintPromptBundle(bundle, aiSchema, template);
+
+  // Log warnings
+  if (lintResult.warnings.length > 0) {
+    console.warn(`Prompt bundle has ${lintResult.warnings.length} warnings:`);
+    lintResult.warnings.forEach(w => {
+      console.warn(`  [${w.check}] ${w.message}`);
+    });
+  }
+
+  // Throw on errors
+  if (!lintResult.ok) {
+    const errorMessages = lintResult.errors.map(e => `[${e.check}] ${e.message}`).join('\n');
+    throw new Error(`Prompt bundle validation failed:\n${errorMessages}`);
+  }
+
   return bundle;
 }
 
