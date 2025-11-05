@@ -75,8 +75,8 @@ export function useTemplateBuilder() {
     updateTemplateName: (name: string) =>
       templateBuilderStore.send({ type: 'updateTemplateName', name }),
 
-    updateTemplateType: (type: typeof template.type) =>
-      templateBuilderStore.send({ type: 'updateTemplateType', type }),
+    updateTemplateType: (templateType: typeof template.type) =>
+      templateBuilderStore.send({ type: 'updateTemplateType', templateType }),
 
     setTheme: (theme: typeof template.theme) =>
       templateBuilderStore.send({ type: 'setTheme', theme }),
