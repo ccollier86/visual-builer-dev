@@ -119,9 +119,11 @@ function renderTableRows(
   for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
     chunks.push("<tr>");
 
-    for (const colItems of columnGroups) {
+    for (let colIndex = 0; colIndex < columnGroups.length; colIndex++) {
+      const colItems = columnGroups[colIndex];
       const cellContent = renderTableCellGroup(
         colItems,
+        colIndex,
         payload,
         rowPath,
         rowIndex,
@@ -139,6 +141,7 @@ function renderTableRows(
 
 function renderTableCellGroup(
   colItems: ContentItem[],
+  columnIndex: number,
   payload: RenderPayload,
   rowPath: string,
   rowIndex: number,
@@ -157,7 +160,7 @@ function renderTableCellGroup(
 
     const hints = getTableCellHints(colDef);
     const role = getCellRole(hints, primaryRendered);
-    const classes = buildClassList(role, hints);
+    const classes = buildClassList(role, hints, columnIndex);
     const classAttr = classes.length > 0 ? ` class="${classes.join(" ")}"` : "";
 
     fragments.push(`<span${classAttr}>${content}</span>`);
