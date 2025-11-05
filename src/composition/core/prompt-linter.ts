@@ -78,7 +78,8 @@ export function lintPromptBundle(
       if (fg.constraints.enum && aisNode.enum) {
         const fgSet = new Set(fg.constraints.enum);
         const aisSet = new Set(aisNode.enum);
-        if (fgSet.size !== aisSet.size || ![...fgSet].every(v => aisSet.has(v))) {
+        const fgArray = Array.from(fgSet);
+        if (fgSet.size !== aisSet.size || !fgArray.every(v => aisSet.has(v))) {
           issues.push({
             severity: 'warning',
             check: 'constraint-harmony',

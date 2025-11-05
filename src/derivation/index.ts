@@ -20,30 +20,30 @@ export { mergeToRPS, validateMergeable } from './core/rps-merger';
 
 // Utilities
 export {
-  parsePath,
-  validatePath,
-  hasArraySegments,
-  getLeafSegment,
-  getParentPath,
+	getLeafSegment,
+	getParentPath,
+	hasArraySegments,
+	parsePath,
+	validatePath,
 } from './utils/path-parser';
 
 export {
-  createObjectNode,
-  createArrayNode,
-  createStringNode,
-  createNumberNode,
-  createBooleanNode,
-  addProperty,
-  mergeNodes,
+	addProperty,
+	createArrayNode,
+	createBooleanNode,
+	createNumberNode,
+	createObjectNode,
+	createStringNode,
+	mergeNodes,
 } from './utils/schema-builder';
 
 // Types
 export type {
-  DerivedSchema,
-  PathSegment,
-  ContentConstraints,
-  SchemaNode,
-  NoteTemplate,
-  Component,
-  ContentItem,
+	Component,
+	ContentConstraints,
+	ContentItem,
+	DerivedSchema,
+	NoteTemplate,
+	PathSegment,
+	SchemaNode,
 } from './types';
