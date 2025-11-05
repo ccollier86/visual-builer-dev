@@ -306,7 +306,7 @@ export interface Template {
   id: string | null;
   name: string;
   type: 'soap' | 'dap' | 'biopsych' | 'progress' | 'discharge' | 'custom';
-  sections: SectionComponent[];
+  blocks: Block[];
   theme: Theme;
   createdAt?: string;
   updatedAt?: string;
