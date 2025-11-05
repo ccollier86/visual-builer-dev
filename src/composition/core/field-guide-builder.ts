@@ -86,7 +86,7 @@ export function buildFieldGuide(layout: any[]): FieldGuideEntry[] {
     }
 
     if (item.tableMap) {
-      for (const tableItem of item.tableMap) {
+      for (const tableItem of Object.values(item.tableMap)) {
         processContentItem(tableItem);
       }
     }
