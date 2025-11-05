@@ -20,7 +20,22 @@ const EMPTY_TEMPLATE: Template = {
   theme: DEFAULT_THEME
 };
 
-export const templateBuilderStore = createStore<TemplateBuilderState>(
+// Events type for the store
+type TemplateBuilderEvents =
+  | { type: 'setTemplate'; template: Template }
+  | { type: 'updateTemplateName'; name: string }
+  | { type: 'updateTemplateType'; type: Template['type'] }
+  | { type: 'setTheme'; theme: Theme }
+  | { type: 'addBlock'; block: Block; atIndex?: number }
+  | { type: 'reorderBlocks'; blockIds: string[] }
+  | { type: 'removeBlock'; blockId: string }
+  | { type: 'updateBlock'; blockId: string; updates: Partial<Block> }
+  | { type: 'selectBlock'; blockId: string | null }
+  | { type: 'openBlockEditor'; blockId?: string }
+  | { type: 'closeBlockEditor' }
+  | { type: 'setDragging'; isDragging: boolean };
+
+export const templateBuilderStore = createStore<TemplateBuilderState, TemplateBuilderEvents>(
   // Initial state
   {
     template: EMPTY_TEMPLATE,
