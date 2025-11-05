@@ -24,7 +24,7 @@ const EMPTY_TEMPLATE: Template = {
 type TemplateBuilderEvents =
   | { type: 'setTemplate'; template: Template }
   | { type: 'updateTemplateName'; name: string }
-  | { type: 'updateTemplateType'; type: Template['type'] }
+  | { type: 'updateTemplateType'; templateType: Template['type'] }
   | { type: 'setTheme'; theme: Theme }
   | { type: 'addBlock'; block: Block; atIndex?: number }
   | { type: 'reorderBlocks'; blockIds: string[] }
