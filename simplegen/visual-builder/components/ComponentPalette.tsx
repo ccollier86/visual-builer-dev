@@ -4,15 +4,37 @@
 
 'use client';
 
-import type { PaletteItem } from '../types/template';
+import {
+  LayoutList,
+  Grid3x3,
+  Minus,
+  Square,
+  Database,
+  Calculator,
+  Sparkles,
+  FileText,
+  List,
+  Table2,
+  AlertCircle,
+  Image
+} from 'lucide-react';
 
-const PALETTE_ITEMS: PaletteItem[] = [
+interface PaletteItemWithIcon {
+  id: string;
+  type: string;
+  name: string;
+  Icon: any;
+  category: string;
+  description: string;
+}
+
+const PALETTE_ITEMS: PaletteItemWithIcon[] = [
   // LAYOUT
   {
     id: 'section',
     type: 'section',
     name: 'Section',
-    icon: '📄',
+    Icon: LayoutList,
     category: 'layout',
     description: 'Container for fields'
   },
@@ -20,7 +42,7 @@ const PALETTE_ITEMS: PaletteItem[] = [
     id: 'grid',
     type: 'grid',
     name: 'Grid',
-    icon: '🔲',
+    Icon: Grid3x3,
     category: 'layout',
     description: 'Multi-column layout'
   },
@@ -28,7 +50,7 @@ const PALETTE_ITEMS: PaletteItem[] = [
     id: 'divider',
     type: 'divider',
     name: 'Divider',
-    icon: '━━',
+    Icon: Minus,
     category: 'layout',
     description: 'Visual separator'
   },
@@ -36,7 +58,7 @@ const PALETTE_ITEMS: PaletteItem[] = [
     id: 'spacer',
     type: 'spacer',
     name: 'Spacer',
-    icon: '⬜',
+    Icon: Square,
     category: 'layout',
     description: 'Empty space'
   },
@@ -46,7 +68,7 @@ const PALETTE_ITEMS: PaletteItem[] = [
     id: 'field-text',
     type: 'field',
     name: 'Text Field',
-    icon: '📝',
+    Icon: Database,
     category: 'content',
     description: 'Single text value'
   },
@@ -54,7 +76,7 @@ const PALETTE_ITEMS: PaletteItem[] = [
     id: 'field-computed',
     type: 'field',
     name: 'Computed Field',
-    icon: '🔢',
+    Icon: Calculator,
     category: 'content',
     description: 'Calculated value'
   },
@@ -62,7 +84,7 @@ const PALETTE_ITEMS: PaletteItem[] = [
     id: 'field-ai',
     type: 'field',
     name: 'AI Field',
-    icon: '🤖',
+    Icon: Sparkles,
     category: 'content',
     description: 'AI-generated content'
   },
@@ -70,7 +92,7 @@ const PALETTE_ITEMS: PaletteItem[] = [
     id: 'narrative',
     type: 'narrative',
     name: 'Narrative',
-    icon: '📋',
+    Icon: FileText,
     category: 'content',
     description: 'Multi-paragraph text'
   },
@@ -78,7 +100,7 @@ const PALETTE_ITEMS: PaletteItem[] = [
     id: 'list',
     type: 'list',
     name: 'List',
-    icon: '📑',
+    Icon: List,
     category: 'content',
     description: 'Ordered or unordered list'
   },
@@ -86,69 +108,73 @@ const PALETTE_ITEMS: PaletteItem[] = [
     id: 'table',
     type: 'table',
     name: 'Table',
-    icon: '📊',
-    category: 'content',
-    description: 'Structured data table'
+    Icon: Table2,
+    category: 'special',
+    description: 'Structured data grid'
   },
-
-  // SPECIAL
   {
     id: 'alert',
     type: 'alert',
-    name: 'Alert Box',
-    icon: '⚠️',
+    name: 'Alert',
+    Icon: AlertCircle,
     category: 'special',
-    description: 'Highlighted important info'
+    description: 'Important notice'
   },
   {
     id: 'image',
     type: 'image',
     name: 'Image',
-    icon: '🖼️',
+    Icon: Image,
     category: 'special',
-    description: 'Logo or graphic'
+    description: 'Image or diagram'
   }
 ];
 
 const CATEGORIES = [
-  { id: 'layout', name: 'Layout', emoji: '📦' },
-  { id: 'content', name: 'Content', emoji: '📝' },
-  { id: 'special', name: 'Special', emoji: '🎨' }
-] as const;
+  { id: 'layout', name: 'Layout', Icon: LayoutList },
+  { id: 'content', name: 'Content', Icon: FileText },
+  { id: 'special', name: 'Special', Icon: AlertCircle }
+];
 
 export function ComponentPalette() {
   return (
-    <aside className="component-palette">
+    <aside className="palette-panel">
       <div className="palette-header">
         <h2>Components</h2>
-        <p className="palette-hint">Drag to add</p>
       </div>
 
-      <div className="palette-sections">
+      <div className="palette-content">
         {CATEGORIES.map(category => {
+          const CategoryIcon = category.Icon;
           const items = PALETTE_ITEMS.filter(item => item.category === category.id);
 
           return (
             <div key={category.id} className="palette-category">
-              <h3 className="category-title">
-                <span className="category-emoji">{category.emoji}</span>
-                {category.name}
-              </h3>
+              <div className="category-header">
+                <CategoryIcon size={14} />
+                <span>{category.name}</span>
+              </div>
 
               <div className="palette-items">
-                {items.map(item => (
-                  <div
-                    key={item.id}
-                    className={`palette-item palette-${item.type}`}
-                    data-component-type={item.type}
-                    data-palette-id={item.id}
-                    draggable="false" // GSAP will handle dragging
-                    title={item.description}
-                  >
-                    <span className="item-icon">{item.icon}</span>
-                    <span className="item-name">{item.name}</span>
-                  </div>
-                ))}
+                {items.map(item => {
+                  const ItemIcon = item.Icon;
+                  return (
+                    <div
+                      key={item.id}
+                      className="palette-item"
+                      data-component-type={item.type}
+                      data-palette-id={item.id}
+                    >
+                      <div className="item-icon">
+                        <ItemIcon size={16} />
+                      </div>
+                      <div className="item-info">
+                        <div className="item-name">{item.name}</div>
+                        <div className="item-desc">{item.description}</div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           );
@@ -156,37 +182,30 @@ export function ComponentPalette() {
       </div>
 
       <style jsx>{`
-        .component-palette {
+        .palette-panel {
           width: 280px;
-          height: 100%;
-          background: #f9fafb;
+          background: white;
           border-right: 1px solid #e5e7eb;
           display: flex;
           flex-direction: column;
-          overflow-y: auto;
+          overflow: hidden;
         }
 
         .palette-header {
           padding: 20px;
           border-bottom: 1px solid #e5e7eb;
-          background: white;
         }
 
         .palette-header h2 {
           margin: 0;
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 600;
           color: #111827;
         }
 
-        .palette-hint {
-          margin: 4px 0 0;
-          font-size: 12px;
-          color: #6b7280;
-        }
-
-        .palette-sections {
+        .palette-content {
           flex: 1;
+          overflow-y: auto;
           padding: 16px;
         }
 
@@ -194,45 +213,43 @@ export function ComponentPalette() {
           margin-bottom: 24px;
         }
 
-        .category-title {
-          margin: 0 0 12px;
-          font-size: 13px;
-          font-weight: 600;
-          color: #374151;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
+        .palette-category:last-child {
+          margin-bottom: 0;
+        }
+
+        .category-header {
           display: flex;
           align-items: center;
           gap: 6px;
-        }
-
-        .category-emoji {
-          font-size: 14px;
+          margin-bottom: 8px;
+          font-size: 11px;
+          font-weight: 600;
+          color: #6b7280;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
 
         .palette-items {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 4px;
         }
 
         .palette-item {
-          padding: 12px;
-          background: white;
-          border: 2px solid #e5e7eb;
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          padding: 10px;
+          background: #f9fafb;
+          border: 1px solid #e5e7eb;
           border-radius: 6px;
           cursor: grab;
-          display: flex;
-          align-items: center;
-          gap: 10px;
           transition: all 0.15s;
-          user-select: none;
         }
 
         .palette-item:hover {
-          border-color: #3b82f6;
-          box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
-          transform: translateY(-1px);
+          background: #f3f4f6;
+          border-color: #d1d5db;
         }
 
         .palette-item:active {
@@ -240,27 +257,34 @@ export function ComponentPalette() {
         }
 
         .item-icon {
-          font-size: 20px;
-          line-height: 1;
+          flex-shrink: 0;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: white;
+          border: 1px solid #e5e7eb;
+          border-radius: 4px;
+          color: #6b7280;
+        }
+
+        .item-info {
+          flex: 1;
+          min-width: 0;
         }
 
         .item-name {
           font-size: 13px;
           font-weight: 500;
-          color: #1f2937;
+          color: #111827;
+          margin-bottom: 2px;
         }
 
-        /* Special styling for different types */
-        .palette-field {
-          border-left: 3px solid #10b981;
-        }
-
-        .palette-section {
-          border-left: 3px solid #3b82f6;
-        }
-
-        .palette-alert {
-          border-left: 3px solid #f59e0b;
+        .item-desc {
+          font-size: 11px;
+          color: #6b7280;
+          line-height: 1.4;
         }
       `}</style>
     </aside>
