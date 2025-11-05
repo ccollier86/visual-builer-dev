@@ -25,7 +25,7 @@ export function renderTableComponent(
   const columns: string[] = comp?.props?.columns || [];
   const colWidths: string[] = comp?.props?.colWidths || [];
   const content = (comp.content || [])[0] || {};
-  const tableMap = content.tableMap || [];
+  const tableMap = content.tableMap ? Object.values(content.tableMap) : [];
 
   // Determine array root from tableMap (e.g., "diagnoses[]")
   const rowPath = inferArrayRoot(tableMap);

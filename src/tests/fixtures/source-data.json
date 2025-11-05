@@ -1,0 +1,21 @@
+{
+  "patient": {
+    "name": "John Doe",
+    "dob": "1980-05-15"
+  },
+  "session": {
+    "date": "2024-01-15",
+    "nextScheduled": "2024-01-22"
+  },
+  "assessments": {
+    "current": {
+      "PHQ9": 12
+    },
+    "previous": {
+      "PHQ9": 18
+    }
+  },
+  "transcript": {
+    "current_session": "Patient reports feeling significantly better this week. They have been practicing the breathing exercises daily and notice improved sleep quality."
+  }
+}
