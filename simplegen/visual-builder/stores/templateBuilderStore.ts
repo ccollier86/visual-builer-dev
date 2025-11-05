@@ -24,9 +24,8 @@ export const templateBuilderStore = createStore<TemplateBuilderState>(
   // Initial state
   {
     template: EMPTY_TEMPLATE,
-    selectedSectionId: null,
-    selectedFieldId: null,
-    isFieldEditorOpen: false,
+    selectedBlockId: null,
+    isBlockEditorOpen: false,
     isDragging: false
   },
 
@@ -36,9 +35,8 @@ export const templateBuilderStore = createStore<TemplateBuilderState>(
 
     setTemplate: (ctx, event: { template: Template }) => ({
       template: event.template,
-      selectedSectionId: null,
-      selectedFieldId: null,
-      isFieldEditorOpen: false
+      selectedBlockId: null,
+      isBlockEditorOpen: false
     }),
 
     updateTemplateName: (ctx, event: { name: string }) => ({
@@ -62,184 +60,93 @@ export const templateBuilderStore = createStore<TemplateBuilderState>(
       }
     }),
 
-    // ===== SECTION ACTIONS =====
+    // ===== BLOCK ACTIONS (Unified - works for any block type) =====
 
-    addSection: (ctx, event: { section: SectionComponent; atIndex?: number }) => {
-      const sections = [...ctx.template.sections];
+    addBlock: (ctx, event: { block: Block; atIndex?: number }) => {
+      const blocks = [...ctx.template.blocks];
 
       if (event.atIndex !== undefined) {
-        sections.splice(event.atIndex, 0, event.section);
+        blocks.splice(event.atIndex, 0, event.block);
       } else {
-        sections.push(event.section);
+        blocks.push(event.block);
       }
 
       // Update order values
-      sections.forEach((section, index) => {
-        section.order = index;
+      blocks.forEach((block, index) => {
+        block.order = index;
       });
 
       return {
         template: {
           ...ctx.template,
-          sections
+          blocks
         }
       };
     },
 
-    reorderSections: (ctx, event: { sectionIds: string[] }) => {
-      const sectionsMap = new Map(
-        ctx.template.sections.map(s => [s.id, s])
+    reorderBlocks: (ctx, event: { blockIds: string[] }) => {
+      const blocksMap = new Map(
+        ctx.template.blocks.map(b => [b.id, b])
       );
 
-      const sections = event.sectionIds
+      const blocks = event.blockIds
         .map((id, index) => {
-          const section = sectionsMap.get(id);
-          if (section) {
-            return { ...section, order: index };
+          const block = blocksMap.get(id);
+          if (block) {
+            return { ...block, order: index };
           }
           return null;
         })
-        .filter((s): s is SectionComponent => s !== null);
+        .filter((b): b is Block => b !== null);
 
       return {
         template: {
           ...ctx.template,
-          sections
+          blocks
         }
       };
     },
 
-    removeSection: (ctx, event: { sectionId: string }) => {
-      const sections = ctx.template.sections
-        .filter(s => s.id !== event.sectionId)
-        .map((s, index) => ({ ...s, order: index }));
+    removeBlock: (ctx, event: { blockId: string }) => {
+      const blocks = ctx.template.blocks
+        .filter(b => b.id !== event.blockId)
+        .map((b, index) => ({ ...b, order: index }));
 
       return {
         template: {
           ...ctx.template,
-          sections
+          blocks
         },
-        selectedSectionId: ctx.selectedSectionId === event.sectionId
+        selectedBlockId: ctx.selectedBlockId === event.blockId
           ? null
-          : ctx.selectedSectionId
+          : ctx.selectedBlockId
       };
     },
 
-    updateSection: (ctx, event: { sectionId: string; updates: Partial<SectionComponent> }) => ({
+    updateBlock: (ctx, event: { blockId: string; updates: Partial<Block> }) => ({
       template: {
         ...ctx.template,
-        sections: ctx.template.sections.map(section =>
-          section.id === event.sectionId
-            ? { ...section, ...event.updates }
-            : section
+        blocks: ctx.template.blocks.map(block =>
+          block.id === event.blockId
+            ? { ...block, ...event.updates }
+            : block
         )
-      }
-    }),
-
-    // ===== FIELD ACTIONS =====
-
-    addField: (ctx, event: { sectionId: string; field: FieldComponent; atIndex?: number }) => ({
-      template: {
-        ...ctx.template,
-        sections: ctx.template.sections.map(section => {
-          if (section.id !== event.sectionId) return section;
-
-          const fields = [...section.fields];
-
-          if (event.atIndex !== undefined) {
-            fields.splice(event.atIndex, 0, event.field);
-          } else {
-            fields.push(event.field);
-          }
-
-          // Update order values
-          fields.forEach((field, index) => {
-            field.order = index;
-          });
-
-          return { ...section, fields };
-        })
-      }
-    }),
-
-    reorderFields: (ctx, event: { sectionId: string; fieldIds: string[] }) => ({
-      template: {
-        ...ctx.template,
-        sections: ctx.template.sections.map(section => {
-          if (section.id !== event.sectionId) return section;
-
-          const fieldsMap = new Map(section.fields.map(f => [f.id, f]));
-
-          const fields = event.fieldIds
-            .map((id, index) => {
-              const field = fieldsMap.get(id);
-              if (field) {
-                return { ...field, order: index };
-              }
-              return null;
-            })
-            .filter((f): f is FieldComponent => f !== null);
-
-          return { ...section, fields };
-        })
-      }
-    }),
-
-    removeField: (ctx, event: { sectionId: string; fieldId: string }) => ({
-      template: {
-        ...ctx.template,
-        sections: ctx.template.sections.map(section => {
-          if (section.id !== event.sectionId) return section;
-
-          const fields = section.fields
-            .filter(f => f.id !== event.fieldId)
-            .map((f, index) => ({ ...f, order: index }));
-
-          return { ...section, fields };
-        })
-      },
-      selectedFieldId: ctx.selectedFieldId === event.fieldId
-        ? null
-        : ctx.selectedFieldId
-    }),
-
-    updateField: (ctx, event: { sectionId: string; fieldId: string; updates: Partial<FieldComponent> }) => ({
-      template: {
-        ...ctx.template,
-        sections: ctx.template.sections.map(section => {
-          if (section.id !== event.sectionId) return section;
-
-          return {
-            ...section,
-            fields: section.fields.map(field =>
-              field.id === event.fieldId
-                ? { ...field, ...event.updates }
-                : field
-            )
-          };
-        })
       }
     }),
 
     // ===== UI STATE ACTIONS =====
 
-    selectSection: (ctx, event: { sectionId: string | null }) => ({
-      selectedSectionId: event.sectionId,
-      selectedFieldId: null,
-      isFieldEditorOpen: false
+    selectBlock: (ctx, event: { blockId: string | null }) => ({
+      selectedBlockId: event.blockId
     }),
 
-    selectField: (ctx, event: { fieldId: string | null }) => ({
-      selectedFieldId: event.fieldId
+    openBlockEditor: (ctx, event?: { blockId: string }) => ({
+      selectedBlockId: event?.blockId || ctx.selectedBlockId,
+      isBlockEditorOpen: true
     }),
 
-    openFieldEditor: (ctx, event?: { fieldId: string }) => ({
-      selectedFieldId: event?.fieldId || ctx.selectedFieldId,
-      isFieldEditorOpen: true
-    }),
-
-    closeFieldEditor: (ctx) => ({
-      isFieldEditorOpen: false
+    closeBlockEditor: (ctx) => ({
+      isBlockEditorOpen: false
     }),
 
     setDragging: (ctx, event: { isDragging: boolean }) => ({
