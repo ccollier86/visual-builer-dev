@@ -19,6 +19,25 @@ const openai = new OpenAI({
 });
 
 /**
+ * Parse pronoun string into object
+ * e.g., "she/her" → { subject: "she", object: "her", possessive: "her", reflexive: "herself" }
+ */
+function parsePronounsFromString(pronounStr: string): any {
+  const lower = pronounStr.toLowerCase();
+
+  if (lower.includes('she')) {
+    return { subject: 'she', object: 'her', possessive: 'her', reflexive: 'herself' };
+  } else if (lower.includes('he')) {
+    return { subject: 'he', object: 'him', possessive: 'his', reflexive: 'himself' };
+  } else if (lower.includes('they')) {
+    return { subject: 'they', object: 'them', possessive: 'their', reflexive: 'themselves' };
+  } else {
+    // Default to they/them
+    return { subject: 'they', object: 'them', possessive: 'their', reflexive: 'themselves' };
+  }
+}
+
+/**
  * Build context string for AI from relevant data paths
  */
 function buildContext(data: any, contextPaths: string[]): string {
