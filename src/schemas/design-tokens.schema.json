@@ -89,7 +89,22 @@
 			"properties": {
 				"sectionGap": { "type": "number", "minimum": 0, "maximum": 64, "default": 16 },
 				"paragraphGap": { "type": "number", "minimum": 0, "maximum": 48, "default": 8 },
-				"headerShowTitle": { "type": "boolean", "default": true }
+				"headerShowTitle": { "type": "boolean", "default": true },
+				"pagePaddingPx": { "type": "number", "minimum": 0, "maximum": 160, "default": 40 },
+				"containerPaddingPx": { "type": "number", "minimum": 0, "maximum": 160, "default": 60 },
+				"containerMaxWidthPx": { "type": "number", "minimum": 320, "maximum": 1400, "default": 1000 },
+				"headerGapPx": { "type": "number", "minimum": 0, "maximum": 64, "default": 20 },
+				"headerPaddingY": { "type": "number", "minimum": 0, "maximum": 64, "default": 20 },
+				"sectionBanner": {
+					"type": "object",
+					"properties": {
+						"marginPx": { "type": "number", "minimum": 0, "maximum": 120, "default": 60 },
+						"paddingY": { "type": "number", "minimum": 0, "maximum": 48, "default": 8 },
+						"paddingLeftPx": { "type": "number", "minimum": 0, "maximum": 160, "default": 75 },
+						"borderWidthPx": { "type": "number", "minimum": 0, "maximum": 12, "default": 4 }
+					},
+					"additionalProperties": false
+				}
 			},
 			"additionalProperties": false
 		},
@@ -114,6 +129,23 @@
 				"logoUrl": { "type": "string" },
 				"headerHtml": { "type": "string" },
 				"footerHtml": { "type": "string" }
+			},
+			"additionalProperties": false
+		},
+
+		"surface": {
+			"type": "object",
+			"description": "Surface colours for structural elements.",
+			"properties": {
+				"headerBackground": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^[a-zA-Z]+$" },
+				"headerBorder": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^[a-zA-Z]+$" },
+				"sectionBannerBackground": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^[a-zA-Z]+$" },
+				"sectionBannerBorder": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^[a-zA-Z]+$" },
+				"cardBackground": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^[a-zA-Z]+$" },
+				"cardBorder": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^[a-zA-Z]+$" },
+				"alertInfoBackground": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^[a-zA-Z]+$" },
+				"alertInfoBorder": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^[a-zA-Z]+$" },
+				"signatureBorder": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^[a-zA-Z]+$" }
 			},
 			"additionalProperties": false
 		}

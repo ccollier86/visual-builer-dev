@@ -49,7 +49,7 @@ function getByPath(obj: any, path: string): any {
 }
 
 /**
- * Build prompts for all AI sections
+ * Build targeted prompts using context arrays from sourceMap
  */
 function buildPrompt(data: any): any[] {
   const messages: any[] = [
@@ -68,27 +68,37 @@ Guidelines:
     }
   ];
 
-  // Build user message with all context
-  const allContext = [
-    "=== PATIENT INTAKE DATA ===",
-    data.patientIntake?.narrative || '',
-    "\n=== CLINICAL INTAKE Q&A ===",
-    data.clinicalIntake?.qaText || '',
-    "\n=== STRUCTURED CLINICAL DATA ===",
-    JSON.stringify(data.clinicalIntake?.structured || {}, null, 2),
-    "\n=== ASSESSMENT SCORES ===",
-    JSON.stringify({
-      PHQ9: data.assessments?.PHQ9,
-      GAD7: data.assessments?.GAD7,
-      ACE: data.assessments?.ACE,
-      AUDIT: data.assessments?.AUDIT,
-      DAST10: data.assessments?.DAST10
-    }, null, 2)
-  ].join('\n');
+  // Build targeted context using sourceMap context arrays
+  const promptSections: string[] = [];
+
+  // Collect all AI fields and their contexts
+  const aiFields = Object.entries(sourceMap).filter(([_, entry]) => entry.source === 'ai');
+
+  // Build field-specific prompts with targeted context
+  for (const [fieldPath, entry] of aiFields) {
+    if (entry.prompt && entry.context) {
+      const contextData = buildContext(data, entry.context);
+      if (contextData) {
+        promptSections.push(
+          `\n=== ${fieldPath} ===`,
+          `Instructions: ${entry.prompt}`,
+          `Relevant Data:\n${contextData}`
+        );
+      }
+    }
+  }
+
+  // Also include general patient info for pronoun usage
+  const patientPronouns = data.patient?.pronouns || 'they/them';
+  const patientName = data.patient?.name || 'the patient';
 
   messages.push({
     role: "user",
-    content: `Generate the following sections of a biopsychosocial intake note based on this patient data:\n\n${allContext}\n\nGenerate all requested narrative sections following the prompts provided in the schema.`
+    content: `Patient: ${patientName} (${patientPronouns})
+
+${promptSections.join('\n')}
+
+Generate all narrative sections according to their specific instructions above. Use appropriate pronouns throughout.`
   });
 
   return messages;

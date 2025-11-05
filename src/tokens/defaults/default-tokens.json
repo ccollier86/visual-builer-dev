@@ -31,7 +31,18 @@
   "layout": {
     "sectionGap": 20,
     "paragraphGap": 12,
-    "headerShowTitle": true
+    "headerShowTitle": true,
+    "pagePaddingPx": 40,
+    "containerPaddingPx": 60,
+    "containerMaxWidthPx": 1000,
+    "headerGapPx": 20,
+    "headerPaddingY": 20,
+    "sectionBanner": {
+      "marginPx": 60,
+      "paddingY": 8,
+      "paddingLeftPx": 75,
+      "borderWidthPx": 4
+    }
   },
   "print": {
     "pageSize": "Letter",
@@ -44,5 +55,16 @@
     "logoUrl": "",
     "headerHtml": "",
     "footerHtml": ""
+  },
+  "surface": {
+    "headerBackground": "#ffffff",
+    "headerBorder": "#cccccc",
+    "sectionBannerBackground": "#e8e8e8",
+    "sectionBannerBorder": "#999999",
+    "cardBackground": "#ffffff",
+    "cardBorder": "#d4d4d4",
+    "alertInfoBackground": "#f5f5f5",
+    "alertInfoBorder": "#666666",
+    "signatureBorder": "#cccccc"
   }
 }

@@ -100,6 +100,10 @@ function mergeDesignTokens(base: DesignTokens, override?: DesignTokens): DesignT
       ...(base.brand ?? {}),
       ...(override.brand ?? {}),
     },
+    surface: {
+      ...(base.surface ?? {}),
+      ...(override.surface ?? {}),
+    },
   };
 }
 

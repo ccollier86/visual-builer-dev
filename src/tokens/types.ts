@@ -42,11 +42,25 @@ export interface ListStyle {
   numberStyle?: 'decimal' | 'lower-alpha' | 'upper-roman';
 }
 
+/** Controls spacing for top-level section banners. */
+export interface SectionBannerLayout {
+  marginPx?: number;
+  paddingY?: number;
+  paddingLeftPx?: number;
+  borderWidthPx?: number;
+}
+
 /** Global layout spacing controls used across the document. */
 export interface Layout {
   sectionGap?: number;
   paragraphGap?: number;
   headerShowTitle?: boolean;
+  pagePaddingPx?: number;
+  containerPaddingPx?: number;
+  containerMaxWidthPx?: number;
+  headerGapPx?: number;
+  headerPaddingY?: number;
+  sectionBanner?: SectionBannerLayout;
 }
 
 /** Print-specific overrides for page size and monochrome rendering. */
@@ -65,6 +79,19 @@ export interface BrandAssets {
   footerHtml?: string;
 }
 
+/** Surface colours used for structural elements (header, banners, cards, etc.). */
+export interface SurfacePalette {
+  headerBackground?: string;
+  headerBorder?: string;
+  sectionBannerBackground?: string;
+  sectionBannerBorder?: string;
+  cardBackground?: string;
+  cardBorder?: string;
+  alertInfoBackground?: string;
+  alertInfoBorder?: string;
+  signatureBorder?: string;
+}
+
 /** Complete design token bundle driving stylesheet generation. */
 export interface DesignTokens {
   id: string;
@@ -77,6 +104,7 @@ export interface DesignTokens {
   layout?: Layout;
   print: PrintOptions;
   brand?: BrandAssets;
+  surface?: SurfacePalette;
 }
 
 /** CSS artefacts generated from tokens with accompanying hash metadata. */
