@@ -267,7 +267,7 @@ function getCellRole(hints: TableCellHints, hasPrimary: boolean): "primary" | "s
   return hasPrimary ? "support" : "primary";
 }
 
-function buildClassList(role: "primary" | "support", hints: TableCellHints): string[] {
+function buildClassList(role: "primary" | "support", hints: TableCellHints, columnIndex: number): string[] {
   const classes = new Set<string>();
   classes.add(role === "support" ? "note-table-support" : "note-table-primary");
 
@@ -282,6 +282,14 @@ function buildClassList(role: "primary" | "support", hints: TableCellHints): str
   }
 
   const emphasis = typeof hints.emphasis === "string" ? hints.emphasis.toLowerCase() : undefined;
+  const hasExplicitStyle = Boolean(
+    hints.italic ||
+      hints.bold ||
+      hints.strong ||
+      hints.muted ||
+      emphasis ||
+      hints.className
+  );
 
   if (hints.italic) classes.add("note-table-italic");
   if (hints.bold) classes.add("note-table-bold");
@@ -303,6 +311,23 @@ function buildClassList(role: "primary" | "support", hints: TableCellHints): str
       break;
     default:
       break;
+  }
+
+  if (!hasExplicitStyle) {
+    if (role === "support") {
+      classes.add("note-table-muted");
+      classes.add("note-table-italic");
+    } else {
+      if (columnIndex === 0) {
+        classes.add("note-table-italic");
+        classes.add("note-table-muted");
+      } else if (columnIndex === 1) {
+        classes.add("note-table-italic");
+        classes.add("note-table-bold");
+      } else if (columnIndex === 2) {
+        classes.add("note-table-strong");
+      }
+    }
   }
 
   return Array.from(classes);
