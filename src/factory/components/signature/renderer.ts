@@ -8,7 +8,8 @@ import {
   resolveItemText,
   isVerbatimValue,
 } from '../shared/content-utils';
-import { SIGNATURE_FIELD_CONFIG } from './config';
+import { SIGNATURE_FIELD_CONFIG } from './constants';
+import type { SignatureDisplayMode } from './types';
 
 /**
  * Render the signature block using template-provided fields with fallbacks.
@@ -36,7 +37,7 @@ export function renderSignatureSection(
     const rawValue = resolveItemText(item, payload, collectedRefs);
     if (!rawValue) continue;
 
-    const mode = fieldConfig.mode ?? 'labeled';
+    const mode: SignatureDisplayMode = fieldConfig.mode ?? 'labeled';
     if (mode === 'text') {
       const className = fieldConfig.emphasis === 'italic'
         ? 'note-signature-attestation'
