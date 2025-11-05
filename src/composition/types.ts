@@ -66,3 +66,23 @@ export interface CompositionInput {
   nasSnapshot: any; // NAS (Non-AI Snapshot) resolved runtime data
   factPack?: any; // Optional LPC-derived compact facts
 }
+
+/**
+ * Result of a single lint check
+ */
+export interface LintIssue {
+  severity: 'error' | 'warning';
+  check: string;           // Which check failed
+  message: string;         // Human-readable description
+  path?: string;           // Specific path if applicable
+}
+
+/**
+ * Complete lint result
+ */
+export interface LintResult {
+  ok: boolean;             // True if no errors
+  issues: LintIssue[];     // All issues found
+  errors: LintIssue[];     // Just errors
+  warnings: LintIssue[];   // Just warnings
+}
