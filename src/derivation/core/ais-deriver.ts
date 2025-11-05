@@ -5,13 +5,13 @@
  * Walks the template layout tree and extracts all fields with slot: "ai".
  */
 
-import type { NoteTemplate, Component, ContentItem, DerivedSchema, SchemaNode } from '../types';
+import type { Component, ContentItem, DerivedSchema, NoteTemplate, SchemaNode } from '../types';
 import { parsePath } from '../utils/path-parser';
 import {
-  createObjectNode,
-  createArrayNode,
-  createStringNode,
-  addProperty,
+	addProperty,
+	createArrayNode,
+	createObjectNode,
+	createStringNode,
 } from '../utils/schema-builder';
 
 /**
@@ -30,27 +30,27 @@ import {
  * @throws Error if template is invalid or has conflicting paths
  */
 export function deriveAIS(template: NoteTemplate): DerivedSchema {
-  // Initialize root schema
-  const root = createObjectNode(false);
-  const schemaMap = new Map<string, SchemaNode>();
-  schemaMap.set('', root); // Root is empty string path
+	// Initialize root schema
+	const root = createObjectNode(false);
+	const schemaMap = new Map<string, SchemaNode>();
+	schemaMap.set('', root); // Root is empty string path
 
-  // Walk the template and collect all AI fields
-  walkLayoutForAI(template.layout, root, schemaMap);
+	// Walk the template and collect all AI fields
+	walkLayoutForAI(template.layout, root, schemaMap);
 
-  // Build final schema with metadata
-  const schema: DerivedSchema = {
-    $id: `https://catalyst/generated/structured-output/${template.id}@${template.version}.json`,
-    $schema: 'https://json-schema.org/draft/2020-12/schema',
-    title: `Structured Output — ${template.name} v${template.version}`,
-    description: `AI-generated fields for ${template.name}`,
-    type: 'object',
-    properties: root.properties || {},
-    required: root.required && root.required.length > 0 ? root.required : undefined,
-    additionalProperties: false,
-  };
+	// Build final schema with metadata
+	const schema: DerivedSchema = {
+		$id: `https://catalyst/generated/structured-output/${template.id}@${template.version}.json`,
+		$schema: 'https://json-schema.org/draft/2020-12/schema',
+		title: `Structured Output — ${template.name} v${template.version}`,
+		description: `AI-generated fields for ${template.name}`,
+		type: 'object',
+		properties: root.properties || {},
+		required: root.required && root.required.length > 0 ? root.required : undefined,
+		additionalProperties: false,
+	};
 
-  return schema;
+	return schema;
 }
 
 /**
@@ -61,23 +61,23 @@ export function deriveAIS(template: NoteTemplate): DerivedSchema {
  * @param schemaMap - Map of path -> schema node for tracking
  */
 function walkLayoutForAI(
-  components: Component[],
-  root: SchemaNode,
-  schemaMap: Map<string, SchemaNode>
+	components: Component[],
+	root: SchemaNode,
+	schemaMap: Map<string, SchemaNode>
 ): void {
-  for (const component of components) {
-    // Process content items
-    if (component.content) {
-      for (const item of component.content) {
-        processContentItem(item, root, schemaMap);
-      }
-    }
+	for (const component of components) {
+		// Process content items
+		if (component.content) {
+			for (const item of component.content) {
+				processContentItem(item, root, schemaMap);
+			}
+		}
 
-    // Recurse into children
-    if (component.children) {
-      walkLayoutForAI(component.children, root, schemaMap);
-    }
-  }
+		// Recurse into children
+		if (component.children) {
+			walkLayoutForAI(component.children, root, schemaMap);
+		}
+	}
 }
 
 /**
@@ -88,113 +88,103 @@ function walkLayoutForAI(
  * @param schemaMap - Map of path -> schema node
  */
 function processContentItem(
-  item: ContentItem,
-  root: SchemaNode,
-  schemaMap: Map<string, SchemaNode>
+	item: ContentItem,
+	root: SchemaNode,
+	schemaMap: Map<string, SchemaNode>
 ): void {
-  // Only process AI slots
-  if (item.slot !== 'ai') {
-    return;
-  }
+	// Only process AI slots
+	if (item.slot !== 'ai') {
+		return;
+	}
 
-  if (!item.outputPath) {
-    throw new Error(`AI content item "${item.id}" missing outputPath`);
-  }
+	if (!item.outputPath) {
+		throw new Error(`AI content item "${item.id}" missing outputPath`);
+	}
 
-  // Parse the path
-  const segments = parsePath(item.outputPath);
+	// Parse the path
+	const segments = parsePath(item.outputPath);
 
-  // Build/navigate schema tree
-  let currentNode = root;
-  let currentPath = '';
+	// Build/navigate schema tree
+	let currentNode = root;
+	let currentPath = '';
 
-  for (let i = 0; i < segments.length; i++) {
-    const segment = segments[i];
-    const isLastSegment = i === segments.length - 1;
-    const segmentPath = currentPath ? `${currentPath}.${segment.name}` : segment.name;
+	for (let i = 0; i < segments.length; i++) {
+		const segment = segments[i];
+		const isLastSegment = i === segments.length - 1;
+		const segmentPath = currentPath ? `${currentPath}.${segment.name}` : segment.name;
 
-    if (isLastSegment) {
-      // Leaf node - create the actual value schema
-      const leafNode = createStringNode(item.constraints);
+		if (isLastSegment) {
+			// Leaf node - create the actual value schema
+			const leafNode = createStringNode(item.constraints);
 
-      // Add to parent
-      if (segment.isArray) {
-        // This leaf is an array of strings (uncommon but possible)
-        const arrayNode = createArrayNode(leafNode);
-        addProperty(
-          currentNode,
-          segment.name,
-          arrayNode,
-          item.constraints?.required
-        );
-      } else {
-        // Normal leaf
-        addProperty(
-          currentNode,
-          segment.name,
-          leafNode,
-          item.constraints?.required
-        );
-      }
-    } else {
-      // Intermediate node - create/get object or array
-      if (segment.isArray) {
-        // This segment is an array
-        const arrayPath = `${segmentPath}[]`;
-        let arrayNode = schemaMap.get(arrayPath);
+			// Add to parent
+			if (segment.isArray) {
+				// This leaf is an array of strings (uncommon but possible)
+				const arrayNode = createArrayNode(leafNode);
+				addProperty(currentNode, segment.name, arrayNode, item.constraints?.required);
+			} else {
+				// Normal leaf
+				addProperty(currentNode, segment.name, leafNode, item.constraints?.required);
+			}
+		} else {
+			// Intermediate node - create/get object or array
+			if (segment.isArray) {
+				// This segment is an array
+				const arrayPath = `${segmentPath}[]`;
+				let arrayNode = schemaMap.get(arrayPath);
 
-        if (!arrayNode) {
-          // Create new array with object items
-          const itemsNode = createObjectNode(false);
-          arrayNode = createArrayNode(itemsNode);
+				if (!arrayNode) {
+					// Create new array with object items
+					const itemsNode = createObjectNode(false);
+					arrayNode = createArrayNode(itemsNode);
 
-          // Add array to current object
-          addProperty(currentNode, segment.name, arrayNode, false);
+					// Add array to current object
+					addProperty(currentNode, segment.name, arrayNode, false);
 
-          // Cache array and its items
-          schemaMap.set(arrayPath, arrayNode);
-          schemaMap.set(segmentPath, itemsNode);
-        }
+					// Cache array and its items
+					schemaMap.set(arrayPath, arrayNode);
+					schemaMap.set(segmentPath, itemsNode);
+				}
 
-        // Navigate into array items
-        currentNode = arrayNode.items!;
-        currentPath = arrayPath;
-      } else {
-        // This segment is an object
-        let objectNode = schemaMap.get(segmentPath);
+				// Navigate into array items
+				currentNode = arrayNode.items!;
+				currentPath = arrayPath;
+			} else {
+				// This segment is an object
+				let objectNode = schemaMap.get(segmentPath);
 
-        if (!objectNode) {
-          // Create new object
-          objectNode = createObjectNode(false);
+				if (!objectNode) {
+					// Create new object
+					objectNode = createObjectNode(false);
 
-          // Add to parent
-          addProperty(currentNode, segment.name, objectNode, false);
+					// Add to parent
+					addProperty(currentNode, segment.name, objectNode, false);
 
-          // Cache object
-          schemaMap.set(segmentPath, objectNode);
-        }
+					// Cache object
+					schemaMap.set(segmentPath, objectNode);
+				}
 
-        // Navigate into object
-        if (!currentNode.properties) {
-          currentNode.properties = {};
-        }
-        currentNode = currentNode.properties[segment.name];
-        currentPath = segmentPath;
-      }
-    }
-  }
+				// Navigate into object
+				if (!currentNode.properties) {
+					currentNode.properties = {};
+				}
+				currentNode = currentNode.properties[segment.name];
+				currentPath = segmentPath;
+			}
+		}
+	}
 
-  // Process nested list items
-  if (item.listItems) {
-    for (const listItem of item.listItems) {
-      processContentItem(listItem, root, schemaMap);
-    }
-  }
+	// Process nested list items
+	if (item.listItems) {
+		for (const listItem of item.listItems) {
+			processContentItem(listItem, root, schemaMap);
+		}
+	}
 
-  // Process nested table map
-  if (item.tableMap) {
-    for (const tableItem of Object.values(item.tableMap)) {
-      processContentItem(tableItem, root, schemaMap);
-    }
-  }
+	// Process nested table map
+	if (item.tableMap) {
+		for (const tableItem of Object.values(item.tableMap)) {
+			processContentItem(tableItem, root, schemaMap);
+		}
+	}
 }

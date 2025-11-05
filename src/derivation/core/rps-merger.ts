@@ -31,68 +31,68 @@ import { mergeNodes } from '../utils/schema-builder';
  * @throws Error if schemas have type conflicts
  */
 export function mergeToRPS(
-  ais: DerivedSchema,
-  nas: DerivedSchema,
-  templateId: string,
-  templateName: string,
-  templateVersion: string
+	ais: DerivedSchema,
+	nas: DerivedSchema,
+	templateId: string,
+	templateName: string,
+	templateVersion: string
 ): DerivedSchema {
-  // Build merged properties
-  const mergedProperties: Record<string, SchemaNode> = {};
-  const mergedRequired: string[] = [];
+	// Build merged properties
+	const mergedProperties: Record<string, SchemaNode> = {};
+	const mergedRequired: string[] = [];
 
-  // Get all unique property keys from both schemas
-  const allKeys = new Set([
-    ...Object.keys(ais.properties || {}),
-    ...Object.keys(nas.properties || {}),
-  ]);
+	// Get all unique property keys from both schemas
+	const allKeys = new Set([
+		...Object.keys(ais.properties || {}),
+		...Object.keys(nas.properties || {}),
+	]);
 
-  // Merge each property
-  for (const key of allKeys) {
-    const aisProperty = ais.properties?.[key];
-    const nasProperty = nas.properties?.[key];
+	// Merge each property
+	for (const key of allKeys) {
+		const aisProperty = ais.properties?.[key];
+		const nasProperty = nas.properties?.[key];
 
-    if (aisProperty && nasProperty) {
-      // Both have this property - merge them
-      mergedProperties[key] = mergeNodes(aisProperty, nasProperty, key);
-    } else if (aisProperty) {
-      // Only AIS has this property
-      mergedProperties[key] = aisProperty;
-    } else if (nasProperty) {
-      // Only NAS has this property
-      mergedProperties[key] = nasProperty;
-    }
-  }
+		if (aisProperty && nasProperty) {
+			// Both have this property - merge them
+			mergedProperties[key] = mergeNodes(aisProperty, nasProperty, key);
+		} else if (aisProperty) {
+			// Only AIS has this property
+			mergedProperties[key] = aisProperty;
+		} else if (nasProperty) {
+			// Only NAS has this property
+			mergedProperties[key] = nasProperty;
+		}
+	}
 
-  // Union required fields from both schemas
-  const aisRequired = ais.required || [];
-  const nasRequired = nas.required || [];
+	// Union required fields from both schemas
+	const aisRequired = ais.required || [];
+	const nasRequired = nas.required || [];
 
-  for (const field of aisRequired) {
-    if (!mergedRequired.includes(field)) {
-      mergedRequired.push(field);
-    }
-  }
+	for (const field of aisRequired) {
+		if (!mergedRequired.includes(field)) {
+			mergedRequired.push(field);
+		}
+	}
 
-  for (const field of nasRequired) {
-    if (!mergedRequired.includes(field)) {
-      mergedRequired.push(field);
-    }
-  }
+	for (const field of nasRequired) {
+		if (!mergedRequired.includes(field)) {
+			mergedRequired.push(field);
+		}
+	}
 
-  // Build final RPS schema
-  const rps: DerivedSchema = {
-    $id: `https://catalyst/generated/render/${templateId}@${templateVersion}.json`,
-    $schema: 'https://json-schema.org/draft/2020-12/schema',
-    title: `Render Payload — ${templateName} v${templateVersion}`,
-    description: `Final payload schema (AIS ∪ NAS) for ${templateName}`,
-    type: 'object',
-    properties: mergedProperties,
-    required: mergedRequired.length > 0 ? mergedRequired : undefined,
-    additionalProperties: false,
-  };
+	// Build final RPS schema
+	const rps: DerivedSchema = {
+		$id: `https://catalyst/generated/render/${templateId}@${templateVersion}.json`,
+		$schema: 'https://json-schema.org/draft/2020-12/schema',
+		title: `Render Payload — ${templateName} v${templateVersion}`,
+		description: `Final payload schema (AIS ∪ NAS) for ${templateName}`,
+		type: 'object',
+		properties: mergedProperties,
+		required: mergedRequired.length > 0 ? mergedRequired : undefined,
+		additionalProperties: false,
+	};
 
-  return rps;
+	return rps;
 }
 
 /**
@@ -106,20 +106,20 @@ export function mergeToRPS(
  * @throws Error if schemas have type conflicts
  */
 export function validateMergeable(ais: DerivedSchema, nas: DerivedSchema): boolean {
-  const allKeys = new Set([
-    ...Object.keys(ais.properties || {}),
-    ...Object.keys(nas.properties || {}),
-  ]);
+	const allKeys = new Set([
+		...Object.keys(ais.properties || {}),
+		...Object.keys(nas.properties || {}),
+	]);
 
-  for (const key of allKeys) {
-    const aisProperty = ais.properties?.[key];
-    const nasProperty = nas.properties?.[key];
+	for (const key of allKeys) {
+		const aisProperty = ais.properties?.[key];
+		const nasProperty = nas.properties?.[key];
 
-    if (aisProperty && nasProperty) {
-      // Try to merge - will throw if incompatible
-      mergeNodes(aisProperty, nasProperty, key);
-    }
-  }
+		if (aisProperty && nasProperty) {
+			// Try to merge - will throw if incompatible
+			mergeNodes(aisProperty, nasProperty, key);
+		}
+	}
 
-  return true;
+	return true;
 }
