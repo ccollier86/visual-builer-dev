@@ -1,0 +1,270 @@
+{
+  "id": "soap_v1",
+  "name": "Simple SOAP Note Template",
+  "version": "1.0.0",
+  "style": {
+    "font": "Inter, system-ui, sans-serif",
+    "color": "#111111",
+    "muted": "#6b7280",
+    "accent": "#2563eb",
+    "spacing": 8,
+    "tableDensity": "compact",
+    "print": {
+      "size": "Letter",
+      "margin": "0.75in",
+      "header": true,
+      "footer": true
+    }
+  },
+  "prompt": {
+    "system": "You are a clinical documentation assistant helping to generate SOAP notes for mental health therapy sessions. Write clear, professional, evidence-based clinical narratives.",
+    "main": "Generate a SOAP note based on the provided session context. Focus on observable behaviors, client statements, clinical reasoning, and evidence-based interventions.",
+    "rules": [
+      "Use clinical language appropriate for medical records",
+      "Be concise and specific",
+      "Support assessments with observations",
+      "Ensure plan items are actionable and measurable"
+    ],
+    "jsonOnly": true
+  },
+  "layout": [
+    {
+      "id": "header",
+      "type": "header",
+      "content": [
+        {
+          "slot": "lookup",
+          "id": "patient_name",
+          "targetPath": "header.patientName",
+          "lookup": "patient.name"
+        },
+        {
+          "slot": "lookup",
+          "id": "patient_dob",
+          "targetPath": "header.dateOfBirth",
+          "lookup": "patient.dob"
+        },
+        {
+          "slot": "lookup",
+          "id": "session_date",
+          "targetPath": "header.sessionDate",
+          "lookup": "session.date"
+        }
+      ]
+    },
+    {
+      "id": "subjective",
+      "type": "section",
+      "title": "Subjective",
+      "content": [
+        {
+          "slot": "ai",
+          "id": "subj_summary",
+          "description": "Summary of client's reported concerns and current state",
+          "outputPath": "subjective.summary",
+          "source": ["transcript.current_session"],
+          "constraints": {
+            "minSentences": 2,
+            "maxSentences": 5
+          },
+          "guidance": [
+            "Include client's chief complaint and mood",
+            "Note any significant life events or stressors",
+            "Include relevant quotes when impactful"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "objective",
+      "type": "section",
+      "title": "Objective",
+      "children": [
+        {
+          "id": "obj_observations",
+          "type": "paragraph",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "obj_behavioral",
+              "description": "Observable behavioral and clinical observations",
+              "outputPath": "objective.observations",
+              "source": ["transcript.current_session"],
+              "constraints": {
+                "minSentences": 2,
+                "maxSentences": 4
+              },
+              "guidance": [
+                "Include affect, appearance, speech, and behavior",
+                "Note cognition and orientation if relevant",
+                "Be objective and descriptive"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "obj_scores",
+          "type": "paragraph",
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "phq9_current",
+              "targetPath": "objective.phq9Current",
+              "lookup": "assessments.current.PHQ9"
+            },
+            {
+              "slot": "computed",
+              "id": "phq9_delta",
+              "targetPath": "objective.phq9Delta",
+              "formula": "assessments.current.PHQ9 - assessments.previous.PHQ9",
+              "format": "deltaScore",
+              "resultType": "number"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "assessment",
+      "type": "section",
+      "title": "Assessment",
+      "children": [
+        {
+          "id": "assess_narrative",
+          "type": "paragraph",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "assess_clinical",
+              "description": "Clinical reasoning and diagnostic formulation",
+              "outputPath": "assessment.narrative",
+              "source": ["transcript.current_session"],
+              "aiDeps": ["objective.phq9Current", "objective.phq9Delta"],
+              "constraints": {
+                "minSentences": 3,
+                "maxSentences": 6
+              },
+              "guidance": [
+                "Integrate subjective and objective data",
+                "Reference assessment scores when relevant",
+                "Note progress toward treatment goals",
+                "Address safety and clinical stability"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "assess_diagnoses",
+          "type": "list",
+          "title": "Active Diagnoses",
+          "props": {
+            "ordered": false
+          },
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "diagnoses_list",
+              "targetPath": "assessment.diagnoses[]",
+              "lookup": "patient.diagnoses[].display"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "plan",
+      "type": "section",
+      "title": "Plan",
+      "children": [
+        {
+          "id": "plan_interventions",
+          "type": "list",
+          "title": "Interventions This Session",
+          "props": {
+            "ordered": false
+          },
+          "content": [
+            {
+              "slot": "ai",
+              "id": "plan_interventions_items",
+              "description": "List of interventions used in session",
+              "outputPath": "plan.interventions[]",
+              "source": ["transcript.current_session"],
+              "constraints": {
+                "minWords": 3,
+                "maxWords": 20
+              },
+              "guidance": [
+                "List specific therapeutic techniques used",
+                "Be concrete and evidence-based",
+                "Examples: CBT thought challenging, DBT distress tolerance skills, motivational interviewing"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "plan_homework",
+          "type": "list",
+          "title": "Client Homework",
+          "props": {
+            "ordered": true
+          },
+          "content": [
+            {
+              "slot": "ai",
+              "id": "plan_homework_items",
+              "description": "Homework assignments for client",
+              "outputPath": "plan.homework[]",
+              "source": ["transcript.current_session"],
+              "constraints": {
+                "minWords": 5,
+                "maxWords": 25
+              },
+              "guidance": [
+                "Make homework specific and achievable",
+                "Align with treatment goals",
+                "Include frequency or timeline when relevant"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "plan_next",
+          "type": "paragraph",
+          "content": [
+            {
+              "slot": "static",
+              "id": "next_label",
+              "targetPath": "plan.nextLabel",
+              "text": "Next Session: "
+            },
+            {
+              "slot": "lookup",
+              "id": "next_date",
+              "targetPath": "plan.nextDate",
+              "lookup": "session.nextScheduled"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "signature",
+      "type": "signatureBlock",
+      "content": [
+        {
+          "slot": "lookup",
+          "id": "clinician_name",
+          "targetPath": "signature.clinicianName",
+          "lookup": "clinician.name"
+        },
+        {
+          "slot": "lookup",
+          "id": "clinician_credentials",
+          "targetPath": "signature.credentials",
+          "lookup": "clinician.credentials"
+        }
+      ]
+    }
+  ]
+}

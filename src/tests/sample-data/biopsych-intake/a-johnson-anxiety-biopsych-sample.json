@@ -1,0 +1,232 @@
+{
+  "patient": {
+    "id": "patient-demo-005",
+    "name": "Amanda Johnson",
+    "firstName": "Amanda",
+    "lastName": "Johnson", 
+    "dob": "1995-09-03",
+    "age": 30,
+    "gender": "female",
+    "pronouns": "she/her",
+    "mrn": "MRN-78949"
+  },
+  "facility": {
+    "id": "facility-owensboro",
+    "name": "Owensboro",
+    "phone": "(270) 215-4454",
+    "address": "1102 Triplett Street, Suite 2300",
+    "city": "Owensboro",
+    "state": "KY",
+    "zip": "42303"
+  },
+  "provider": {
+    "id": "provider-005",
+    "name": "Anna Wakeland",
+    "credentials": "LPCC",
+    "fullName": "Anna Wakeland LPCC"
+  },
+  "supervisor": {
+    "name": "Neil Jariwala",
+    "credentials": "M.D., Psychiatrist",
+    "licenseNumber": "53374",
+    "licenseState": "KY"
+  },
+  "encounter": {
+    "date": "2025-11-04",
+    "time": "11:30",
+    "type": "Comprehensive Biopsychosocial Intake",
+    "appointmentId": "appt-demo-005"
+  },
+  "patient_intake": {
+    "narrative": "Virtual Consult MD\nIntake Document\n\nNovember 4, 2025 • Owensboro\n\nDEMOGRAPHICS\nWhat is your first name?\nAmanda\n\nWhat is your last name?\nJohnson\n\nWhat is your date of birth?\n1995-09-03\n\nWhat is your gender identity?\nfemale\n\nWhat are your pronouns?\nshe/her\n\nPRIMARY CONCERNS\nTop concerns?\nAnxiety and worry, Social anxiety, Health anxiety (worry about having serious illness), Checking behaviors, Difficulty with uncertainty\n\nWhen did these concerns start?\nAnxiety has been present since teenage years but has gotten much worse in the past 18 months\n\nTriggers?\nSocial situations (parties, meetings, dating), Health symptoms or doctor appointments, Making decisions, Uncertainty about the future, Being the center of attention\n\nCONTACT INFORMATION\nWhat is your phone number?\n(270) 555-2947\n\nWhat is your email address?\na.johnson.teacher@email.com\n\nEmergency Contact Name?\nLisa Johnson\n\nRelationship?\nMother\n\nEmergency Contact Phone?\n(270) 555-2948\n\nINSURANCE\nWhat type of insurance do you have?\nprivate (teacher's health insurance)\n\nMEDICATION ALLERGIES\nDo you have any medication allergies?\nNo\n\nCURRENT MEDICATIONS\nMedication name?\nBirth control\n\nPAST PSYCHIATRIC MEDICATIONS\nNone - never been on psychiatric medication before\n\nMEDICAL CONDITIONS\nNo major medical conditions, though I worry a lot about developing serious illnesses\n\nSAFETY ASSESSMENT\nCurrent suicidal thoughts?\nNo\n\nThoughts of harming others?\nNo\n\nCurrently safe?\nYes\n\nHEALTHCARE PROVIDERS\nDo you have a primary care provider?\nYes\n\nPCP Name?\nDr. Sarah Mitchell\n\nPCP Practice?\nOwensboro Family Care\n\nPCP Phone?\n(270) 555-6700\n\nSOCIAL & LIFESTYLE\nCurrent living arrangement?\nLiving alone in apartment\n\nRelationship status?\nSingle\n\nChildren?\nNo\n\nEmployment status?\nFull-time elementary school teacher (3rd grade)\n\nEducation?\nBachelor's degree in Elementary Education\n\nSUBSTANCE USE\nDo you smoke or use tobacco?\nNo\n\nHow often do you drink alcohol?\nRarely - maybe 2-3 times per year at social events, and even then only one drink because alcohol makes me feel anxious\n\nHave you used recreational drugs?\nNo - too anxious about potential negative effects\n\nFAMILY HISTORY\nFamily mental health history?\nMother has anxiety, grandmother had 'nerves' (likely anxiety, never treated)\n\nTRAUMA HISTORY\nChildhood trauma?\nNot major trauma, but was bullied in middle school which contributed to social anxiety\n\nAdult trauma?\nNo significant trauma\n\nWORK/DAILY FUNCTIONING\nHow are symptoms affecting your work?\nI'm good at my job and kids like me, but I worry constantly about parent-teacher conferences and being observed by administration. I spend excessive time planning lessons because I'm afraid of making mistakes.\n\nHow are relationships affected?\nI avoid most social situations. Haven't dated in 2 years because first dates make me too anxious. Limited friend circle.\n\nHow is self-care affected?\nSleep is affected by worry, sometimes skip meals when anxious, check my body constantly for signs of illness\n\nGOALS FOR TREATMENT\n1. Reduce constant worry and anxiety\n2. Be more comfortable in social situations\n3. Stop excessive health checking behaviors\n4. Feel confident enough to try dating again\n5. Sleep better\n\nSTRENGTHS\n- Caring and dedicated teacher\n- Good at my job despite anxiety\n- Close relationship with family\n- Motivated to get better\n- No substance use issues",
+    "structured": {
+      "demographics": {
+        "firstName": "Amanda",
+        "lastName": "Johnson",
+        "dob": "1995-09-03",
+        "gender": "female",
+        "pronouns": "she/her"
+      },
+      "primaryConcerns": [
+        "Anxiety and worry",
+        "Social anxiety",
+        "Health anxiety",
+        "Checking behaviors",
+        "Difficulty with uncertainty"
+      ],
+      "concernOnset": "teenage-years",
+      "triggers": [
+        "Social situations",
+        "Health symptoms",
+        "Making decisions",
+        "Uncertainty",
+        "Being center of attention"
+      ],
+      "substanceUse": {
+        "tobacco": "no",
+        "alcohol": "rarely (2-3x per year)",
+        "drugs": "no"
+      },
+      "medicalHistory": {
+        "conditions": [],
+        "allergies": [],
+        "currentMedications": [
+          {"name": "Birth control", "for": "Contraception"}
+        ],
+        "pastPsychMeds": []
+      },
+      "socialHistory": {
+        "living": "Alone in apartment",
+        "relationshipStatus": "Single",
+        "children": "None",
+        "employment": "Full-time 3rd grade teacher",
+        "education": "Bachelor's in Elementary Education",
+        "supportNetwork": "Close with family, limited friend circle"
+      },
+      "familyHistory": {
+        "mentalHealth": "Mother has anxiety, grandmother had 'nerves' (likely anxiety, untreated)"
+      },
+      "traumaHistory": {
+        "childhood": "Bullied in middle school",
+        "adult": "None"
+      },
+      "providers": {
+        "pcp": {
+          "name": "Dr. Sarah Mitchell",
+          "practice": "Owensboro Family Care",
+          "phone": "(270) 555-6700"
+        }
+      }
+    }
+  },
+  "clinical_intake": {
+    "qaText": "=== CLINICAL INTAKE RESPONSES ===\nGenerated: 11/04/2025, 11:30:00 AM\n\n## CHIEF COMPLAINT\nQ: What brings you in today?\nA: I'm tired of being so anxious all the time. I worry about everything - my health, what people think of me, making mistakes at work. It's exhausting and it's holding me back from living my life.\n\n## CURRENT SYMPTOMS & IMPACT\nQ: How are symptoms impacting your work?\nA: Moderate impact - I'm good at teaching and the kids respond well to me, but I spend way too much time over-preparing lessons because I'm terrified of making mistakes or parents complaining. Parent-teacher conferences make me incredibly anxious. I worry for days before administrator observations.\n\nQ: How are symptoms impacting your relationships?\nA: Severe impact - I avoid most social situations, haven't dated in 2 years because first dates terrify me, have very few close friends because I'm too anxious to put myself out there\n\nQ: How are symptoms impacting your self-care?\nA: Moderate impact - anxiety disrupts my sleep, sometimes I'm too anxious to eat, I check my body constantly for signs of illness which creates more anxiety\n\nQ: Current stress level (1-10)?\nA: Usually 7/10, spikes to 9/10 in social situations or when I notice a new health symptom\n\nQ: Sleep quality?\nA: Poor - takes me 1-2 hours to fall asleep because I'm worrying, wake up early with anxiety\n\nQ: Days missed from work in past month?\nA: 0 - I never miss work, even when very anxious\n\nQ: Describe your worry patterns\nA: I worry about everything. Health is a big one - if I notice any symptom (headache, weird sensation, anything), I immediately think it's something serious like cancer or a brain tumor. I Google symptoms constantly which makes it worse. I also worry excessively about what people think of me. After any social interaction I replay it over and over analyzing what I said and convinced I embarrassed myself. I check my body multiple times a day for lumps or changes. I check that my apartment door is locked 3-4 times before leaving.\n\nQ: How do you respond to physical sensations?\nA: Any unusual physical sensation triggers immediate anxiety. Heart palpitation? Must be a heart problem. Headache? Brain tumor. Stomach pain? Must be cancer. I know logically this isn't rational but I can't stop the thoughts. I've been to my PCP multiple times in the past year for symptoms that turned out to be nothing, but I still can't shake the worry.\n\n## DAILY LIFE & SELF-CARE\nQ: Describe your typical day\nA: Wake up around 6am, usually already feeling anxious. Check my phone for any messages I'm worried about. Get ready for work while mentally rehearsing my lesson plans. Teach all day - this is actually when I feel best because I'm focused on the kids. After school I grade papers and over-plan lessons. Come home, make dinner, then spend evening worrying about various things - did I say something wrong today, is this headache serious, what if I get fired, etc. Try to sleep but mind races. Takes 1-2 hours to fall asleep.\n\nQ: How do you cope with anxiety?\nA: Not very well. I avoid situations that make me anxious which provides short-term relief but makes it worse long-term. I seek reassurance from my mom constantly ('Do I look sick? Does this feel like cancer to you?'). I Google symptoms which always makes it worse. I check things repeatedly. None of these actually help but I can't seem to stop.\n\n## GOALS & STRENGTHS\nQ: What are your top treatment goals?\nA: 1) Reduce constant worry so I can enjoy my life more. 2) Be comfortable in social situations so I can make friends and try dating. 3) Stop health anxiety and excessive checking. 4) Sleep better. 5) Stop avoiding things due to anxiety.\n\nQ: What personal strengths can you build on?\nA: I'm a good teacher and care about my students. I have a supportive family. I'm educated and intelligent. I'm motivated to change. I don't use substances to cope. I'm aware the anxiety is excessive and irrational.\n\nQ: Motivation for change (1-10)?\nA: 8/10 - I'm tired of living like this and missing out on things\n\nQ: What barriers do you anticipate?\nA: Avoidance has become a habit. Social situations genuinely terrify me. The health worries feel so real even though I know they're probably not. I'm scared medication might have side effects that could be dangerous (my health anxiety talking).\n\n## DIAGNOSES\nDiagnosis 1:\nQ: Diagnosis code\nA: F41.1\n\nQ: Diagnosis description\nA: Generalized Anxiety Disorder\n\nDiagnosis 2:\nQ: Diagnosis code\nA: F40.10\n\nQ: Diagnosis description\nA: Social Anxiety Disorder\n\nDiagnosis 3:\nQ: Diagnosis code\nA: F45.21\n\nQ: Diagnosis description\nA: Illness Anxiety Disorder\n\n## TREATMENT HISTORY\nNo previous mental health treatment - this is first time seeking help\n\n## MEDICATIONS (CLINICIAN-VERIFIED)\nQ: Current medications\nA: Birth control (oral contraceptive)\n\nQ: Previously trialed psychiatric medications\nA: None - this is patient's first time seeking mental health treatment.\n\n## MENTAL STATUS EXAMINATION\nQ: Appearance\nA: Neat, appropriate dress, good hygiene, appears stated age, somewhat tense posture\n\nQ: Behavior\nA: Cooperative, good eye contact though averts gaze when anxious about topic, fidgets with hands, checks phone multiple times during session\n\nQ: Speech\nA: Normal rate, somewhat soft spoken, articulate\n\nQ: Stated mood\nA: \"Anxious, worried, tired of feeling this way\"\n\nQ: Observed affect\nA: Anxious, mood-congruent, range somewhat restricted, becomes visibly more anxious when discussing social situations or health concerns\n\nQ: Thought process\nA: Linear, organized, some rumination noted, tendency toward catastrophic thinking\n\nQ: Thought content\nA: Denies suicidal or homicidal ideation. Significant health-related obsessions (checking for illness, analyzing symptoms). Social anxiety with rumination about social interactions. Excessive worry across multiple domains. Some checking compulsions (door locks, body checks). No delusions or paranoia.\n\nQ: Perceptual disturbances\nA: Denies hallucinations, heightened awareness of bodily sensations\n\nQ: Cognitive functioning\nA: Alert and oriented x4, attention somewhat impaired by anxiety, memory intact, insight good\n\nQ: Insight\nA: Good - recognizes anxiety is excessive and interfering with life, understands thought patterns are irrational even though can't stop them\n\nQ: Judgment\nA: Good - seeking appropriate treatment, making sound decisions otherwise\n\nQ: Clinical Impressions\nA: 30-year-old female elementary school teacher presenting with longstanding anxiety that has worsened significantly over past 18 months. Meets criteria for Generalized Anxiety Disorder with excessive worry across multiple domains, Soc ial Anxiety Disorder with significant avoidance of social situations, and Illness Anxiety Disorder with excessive health-related checking and reassurance-seeking. GAD-7 score 19 confirms severe anxiety. PHQ-9 score 8 indicates mild depression, likely secondary to chronic anxiety and social isolation. ACE score 1 (bullying) is low. Family history positive for anxiety (mother, grandmother). Patient demonstrates good insight and motivation. No substance use. Functions well occupationally despite anxiety. Primary impairments are in social/relationship domain and quality of life. Good prognosis with CBT and possible medication.\n\nQ: Clinical Recommendations\nA: Recommend: 1) Cognitive Behavioral Therapy (CBT) weekly with focus on exposure therapy for social anxiety, cognitive restructuring for catastrophic thinking, and response prevention for checking behaviors. 2) Consider SSRI trial - educate about medication given health anxiety concerns, start low and go slow. 3) Mindfulness-based strategies for physical symptom tolerance. 4) Psychoeducation about anxiety cycle and how avoidance maintains fear. 5) Gradual exposure hierarchy for social situations. 6) Limit reassurance-seeking and body checking. 7) Consider group therapy for social anxiety once individual therapy establishes foundation. Follow-up in 2 weeks.",
+    "structured": {
+      "chiefComplaint": "I'm tired of being so anxious all the time. I worry about everything - my health, what people think of me, making mistakes at work. It's exhausting and it's holding me back from living my life.",
+      "currentSymptoms": {
+        "workImpact": "moderate",
+        "relationshipImpact": "severe",
+        "selfCareImpact": "moderate",
+        "stressLevel": 7,
+        "sleepQuality": "poor",
+        "missedWorkDays": 0
+      },
+      "dailyLife": {
+        "routineStructure": "structured around work, evenings dominated by worry",
+        "selfCareChallenges": "anxiety disrupts sleep, sometimes too anxious to eat, excessive health checking",
+        "copingMechanisms": "avoidance, reassurance-seeking from mother, symptom googling, repetitive checking - all maladaptive"
+      },
+      "goalsStrengths": {
+        "goals": [
+          "Reduce constant worry",
+          "Be comfortable in social situations",
+          "Stop health anxiety and checking",
+          "Sleep better",
+          "Stop avoidance behaviors"
+        ],
+        "strengths": [
+          "Good teacher who cares about students",
+          "Supportive family",
+          "Educated and intelligent",
+          "Motivated to change",
+          "No substance use",
+          "Good insight about irrationality of worries"
+        ],
+        "motivation": 8,
+        "barriers": "Avoidance habit, social situations genuinely terrifying, health worries feel very real, scared of medication side effects"
+      },
+      "diagnoses": [
+        {
+          "code": "F41.1",
+          "description": "Generalized Anxiety Disorder"
+        },
+        {
+          "code": "F40.10",
+          "description": "Social Anxiety Disorder"
+        },
+        {
+          "code": "F45.21",
+          "description": "Illness Anxiety Disorder"
+        }
+      ],
+      "treatmentHistory": [],
+      "medications": {
+        "current": "Birth control (oral contraceptive)",
+        "previousPsych": "None - first time seeking mental health treatment."
+      },
+      "mse": {
+        "appearance": "Neat, appropriate dress, good hygiene, stated age, tense posture",
+        "behavior": "Cooperative, good eye contact (averts when anxious), fidgets, checks phone multiple times",
+        "speech": "Normal rate, somewhat soft, articulate",
+        "mood": "Anxious, worried, tired of feeling this way",
+        "affect": "Anxious, mood-congruent, restricted range, visibly more anxious discussing social/health topics",
+        "thoughtProcess": "Linear, organized, rumination noted, catastrophic thinking tendency",
+        "thoughtContent": "Denies SI/HI. Health-related obsessions (checking for illness, analyzing symptoms). Social anxiety with rumination. Excessive worry multiple domains. Some checking compulsions. No delusions/paranoia.",
+        "perceptualDisturbances": "None, heightened awareness of bodily sensations",
+        "cognition": "Alert and oriented x4, attention somewhat impaired by anxiety, memory intact, good insight",
+        "insight": "Good - recognizes anxiety is excessive and interfering, understands thoughts irrational even though can't stop",
+        "judgment": "Good - seeking appropriate treatment, sound decisions"
+      },
+      "clinicalImpressions": "30-year-old female elementary school teacher with longstanding anxiety worsened significantly past 18 months. Meets criteria for GAD (excessive worry multiple domains), Social Anxiety Disorder (significant avoidance), and Illness Anxiety Disorder (excessive health checking/reassurance-seeking). GAD-7 19 confirms severe anxiety. PHQ-9 8 mild depression, likely secondary to chronic anxiety and isolation. ACE score 1 (bullying) low. Family history positive for anxiety. Good insight and motivation. No substance use. Functions well occupationally despite anxiety. Primary impairments in social/relationship domain and quality of life. Good prognosis with CBT and possible medication.",
+      "clinicalRecommendations": "1) CBT weekly - exposure therapy for social anxiety, cognitive restructuring, response prevention for checking. 2) Consider SSRI - educate given health anxiety, start low/slow. 3) Mindfulness for physical symptom tolerance. 4) Psychoeducation about anxiety cycle and avoidance. 5) Gradual exposure hierarchy for social situations. 6) Limit reassurance-seeking and checking. 7) Consider group therapy for social anxiety after individual foundation. Follow-up 2 weeks."
+    }
+  },
+  "assessments": {
+    "phq9": {
+      "title": "PHQ-9 (Patient Health Questionnaire-9)",
+      "completedDate": "2025-11-04",
+      "totalScore": 8,
+      "maxScore": 27,
+      "severity": "Mild depression",
+      "responses": [
+        {"number": 1, "question": "Little interest or pleasure in doing things", "answer": "More than half the days", "score": 2},
+        {"number": 2, "question": "Feeling down, depressed, or hopeless", "answer": "Several days", "score": 1},
+        {"number": 3, "question": "Trouble falling/staying asleep, or sleeping too much", "answer": "More than half the days", "score": 2},
+        {"number": 4, "question": "Feeling tired or having little energy", "answer": "More than half the days", "score": 2},
+        {"number": 5, "question": "Poor appetite or overeating", "answer": "Several days", "score": 1},
+        {"number": 6, "question": "Feeling bad about yourself", "answer": "Not at all", "score": 0},
+        {"number": 7, "question": "Trouble concentrating", "answer": "Not at all", "score": 0},
+        {"number": 8, "question": "Moving or speaking slowly", "answer": "Not at all", "score": 0},
+        {"number": 9, "question": "Thoughts of hurting yourself", "answer": "Not at all", "score": 0}
+      ],
+      "interpretation": "Score of 8 indicates mild depression, likely secondary to chronic anxiety and social isolation. Patient's primary concern is anxiety rather than depression."
+    },
+    "gad7": {
+      "title": "GAD-7 (Generalized Anxiety Disorder-7)",
+      "completedDate": "2025-11-04",
+      "totalScore": 19,
+      "maxScore": 21,
+      "severity": "Severe anxiety",
+      "responses": [
+        {"number": 1, "question": "Feeling nervous, anxious, or on edge", "answer": "Nearly every day", "score": 3},
+        {"number": 2, "question": "Not being able to stop or control worrying", "answer": "Nearly every day", "score": 3},
+        {"number": 3, "question": "Worrying too much about different things", "answer": "Nearly every day", "score": 3},
+        {"number": 4, "question": "Trouble relaxing", "answer": "Nearly every day", "score": 3},
+        {"number": 5, "question": "Being so restless that it's hard to sit still", "answer": "More than half the days", "score": 2},
+        {"number": 6, "question": "Becoming easily annoyed or irritable", "answer": "More than half the days", "score": 2},
+        {"number": 7, "question": "Feeling afraid as if something awful might happen", "answer": "Nearly every day", "score": 3}
+      ],
+      "interpretation": "Score of 19 indicates severe generalized anxiety disorder. Patient endorses near-daily anxiety, inability to control worry, excessive worry across domains, difficulty relaxing, restlessness, irritability, and sense of impending doom."
+    },
+    "ace": {
+      "title": "ACE (Adverse Childhood Experiences)",
+      "completedDate": "2025-11-04",
+      "totalScore": 1,
+      "maxScore": 10,
+      "severity": "Low adverse childhood experiences",
+      "responses": [
+        {"number": 1, "question": "Emotional abuse", "answer": "No"},
+        {"number": 2, "question": "Physical abuse", "answer": "No"},
+        {"number": 3, "question": "Sexual abuse", "answer": "No"},
+        {"number": 4, "question": "Emotional neglect", "answer": "Yes - experienced significant bullying in middle school that contributed to social anxiety"},
+        {"number": 5, "question": "Physical neglect", "answer": "No"},
+        {"number": 6, "question": "Parents separated/divorced", "answer": "No"},
+        {"number": 7, "question": "Domestic violence", "answer": "No"},
+        {"number": 8, "question": "Substance abuse in household", "answer": "No"},
+        {"number": 9, "question": "Mental illness in household", "answer": "No"},
+        {"number": 10, "question": "Incarcerated household member", "answer": "No"}
+      ],
+      "interpretation": "ACE score of 1 indicates low childhood adversity. Patient's primary adverse experience was bullying in middle school which likely contributed to development of social anxiety. Otherwise had stable, supportive home environment."
+    }
+  }
+}

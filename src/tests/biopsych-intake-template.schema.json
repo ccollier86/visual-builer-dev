@@ -1,0 +1,1075 @@
+{
+  "id": "biopsych-intake-v1",
+  "name": "Comprehensive Biopsychosocial Intake Assessment",
+  "version": "1.0.0",
+
+  "style": {
+    "font": "'Open Sans', Arial, sans-serif",
+    "color": "#000000",
+    "muted": "#555555",
+    "accent": "#666666",
+    "spacing": 12,
+    "tableDensity": "normal",
+    "print": {
+      "size": "Letter",
+      "margin": "0.75in",
+      "header": true,
+      "footer": true
+    }
+  },
+
+  "prompt": {
+    "system": "You are a clinical documentation specialist producing comprehensive biopsychosocial intake assessments. Return ONLY valid JSON matching the exact structure required. Use clinical, professional language throughout. Base all content on provided patient data, assessment scores, and clinical intake information.",
+    "main": "Generate a comprehensive biopsychosocial SOAP note for this patient. Follow all guidance for each field precisely. Prioritize data sources in this order: 1) Clinical intake from clinician, 2) Prescreen intake from patient, 3) Assessment scores, 4) Clinically appropriate inferences based on presenting patterns.",
+    "rules": [
+      "PERSONALIZATION: Infer content from provided patient data. Do NOT reuse generic examples unless data is completely absent.",
+      "NARRATIVE DEPTH: Each subjective section must be 4-8 sentences minimum. Create substantive paragraphs. If data is limited, expand using clinically appropriate inferences.",
+      "DIAGNOSES: If clinician provides diagnoses in clinical_intake.diagnoses, use EXACTLY those DSM-5 codes and descriptions. Generate only the ICD-10 mapping. If no diagnoses provided, infer 1-3 diagnoses from assessment data.",
+      "ASSESSMENT SCORES: Use full assessment data (all questions and responses) to write strong clinical formulations, not just total scores.",
+      "CONSISTENCY: Keep all details internally consistent with patient data. Do not hallucinate information not present in provided data.",
+      "STANDARDIZED LANGUAGE: For Plan section, use provided standardized text verbatim except where personalization is explicitly marked.",
+      "CLINICAL APPROPRIATENESS: When inferring missing details, use statistically likely patterns for the presenting concerns (e.g., severe depression likely affects sleep, appetite, energy)."
+    ],
+    "jsonOnly": true
+  },
+
+  "layout": [
+    {
+      "id": "header",
+      "type": "header",
+      "children": [
+        {
+          "id": "patient-info",
+          "type": "patientBlock",
+          "title": "PATIENT",
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "patient-name",
+              "description": "Patient full name",
+              "lookup": "patient.name",
+              "targetPath": "header.patient.name"
+            },
+            {
+              "slot": "lookup",
+              "id": "patient-dob",
+              "description": "Patient date of birth",
+              "lookup": "patient.dob",
+              "targetPath": "header.patient.dob"
+            },
+            {
+              "slot": "lookup",
+              "id": "patient-age",
+              "description": "Patient age in years",
+              "lookup": "patient.age",
+              "targetPath": "header.patient.age"
+            },
+            {
+              "slot": "lookup",
+              "id": "patient-gender",
+              "description": "Patient gender",
+              "lookup": "patient.gender",
+              "targetPath": "header.patient.gender"
+            }
+          ]
+        },
+        {
+          "id": "facility-info",
+          "type": "patientBlock",
+          "title": "FACILITY",
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "facility-name",
+              "lookup": "facility.name",
+              "targetPath": "header.facility.name"
+            },
+            {
+              "slot": "lookup",
+              "id": "facility-phone",
+              "lookup": "facility.phone",
+              "targetPath": "header.facility.phone"
+            },
+            {
+              "slot": "lookup",
+              "id": "facility-address",
+              "lookup": "facility.address",
+              "targetPath": "header.facility.address"
+            },
+            {
+              "slot": "computed",
+              "id": "facility-location",
+              "description": "City, State, ZIP",
+              "formula": "facility.city + ', ' + facility.state + ', ' + facility.zip",
+              "targetPath": "header.facility.location"
+            }
+          ]
+        },
+        {
+          "id": "encounter-info",
+          "type": "patientBlock",
+          "title": "ENCOUNTER",
+          "content": [
+            {
+              "slot": "static",
+              "id": "encounter-type",
+              "text": "Comprehensive Biopsychosocial Intake",
+              "targetPath": "header.encounter.type"
+            },
+            {
+              "slot": "lookup",
+              "id": "provider-name",
+              "description": "Provider name with credentials",
+              "lookup": "provider.fullName",
+              "targetPath": "header.encounter.provider"
+            },
+            {
+              "slot": "lookup",
+              "id": "encounter-date",
+              "description": "Date of encounter",
+              "lookup": "encounter.date",
+              "targetPath": "header.encounter.date"
+            },
+            {
+              "slot": "computed",
+              "id": "signature-line",
+              "description": "Electronic signature with timestamp",
+              "formula": "'Electronically signed by ' + provider.fullName + ' at ' + encounter.date + ' ' + encounter.time",
+              "targetPath": "header.encounter.signature"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "chief-complaint",
+      "type": "alertPanel",
+      "title": "Chief Complaint",
+      "props": {
+        "variant": "info"
+      },
+      "content": [
+        {
+          "slot": "ai",
+          "id": "chief-complaint-text",
+          "description": "Patient's chief complaint as direct quote",
+          "outputPath": "chiefComplaint",
+          "source": ["clinical_intake.chiefComplaint"],
+          "guidance": [
+            "Format as direct patient quote in quotation marks",
+            "Use patient's own words from clinical intake",
+            "Keep concise (1-2 sentences maximum)",
+            "Should capture primary presenting concern"
+          ],
+          "constraints": {
+            "required": true,
+            "minWords": 5,
+            "maxWords": 50
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "subjective",
+      "type": "section",
+      "title": "SUBJECTIVE",
+      "children": [
+        {
+          "id": "hpi",
+          "type": "paragraph",
+          "title": "HISTORY OF PRESENT ILLNESS:",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "hpi-narrative",
+              "description": "Comprehensive narrative of presenting illness",
+              "outputPath": "subjective.hpi",
+              "source": [
+                "clinical_intake.chiefComplaint",
+                "clinical_intake.currentSymptoms",
+                "patient_intake.primaryConcerns",
+                "patient_intake.concernOnset",
+                "patient_intake.triggers",
+                "assessments.phq9",
+                "assessments.gad7"
+              ],
+              "guidance": [
+                "Write comprehensive 6-8 sentence narrative covering onset, duration, severity, triggers, impact on functioning, coping attempts, and progression",
+                "If data is sparse, use clinically appropriate inferences based on presenting patterns",
+                "Example: if severe depression mentioned, likely impacts on sleep, appetite, energy are reasonable to include",
+                "Reference specific impacts from clinical data (work missed, relationship strain, self-care challenges)",
+                "Use professional clinical language",
+                "Maintain narrative flow - avoid bullet points"
+              ],
+              "constraints": {
+                "required": true,
+                "minSentences": 6,
+                "maxSentences": 8
+              },
+              "styleHints": {
+                "tone": "clinical, narrative, detailed"
+              }
+            }
+          ]
+        },
+
+        {
+          "id": "past-psych-history",
+          "type": "paragraph",
+          "title": "PAST PSYCHIATRIC HISTORY:",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "past-psych-narrative",
+              "description": "Past psychiatric history including diagnoses, treatments, medications, hospitalizations",
+              "outputPath": "subjective.pastPsychiatricHistory",
+              "source": [
+                "clinical_intake.treatmentHistory",
+                "patient_intake.medicalHistory.pastPsychMeds",
+                "clinical_intake.currentSymptoms",
+                "patient_intake.primaryConcerns"
+              ],
+              "guidance": [
+                "Write 5-7 sentence paragraph covering psychiatric diagnoses, prior treatments, medications, hospitalizations, therapy history, and current treatment status",
+                "If limited history, note 'Patient reports no prior psychiatric treatment' or similar",
+                "Include duration and outcomes of past treatments when available",
+                "Note adherence patterns if mentioned"
+              ],
+              "constraints": {
+                "required": true,
+                "minSentences": 4,
+                "maxSentences": 8
+              }
+            }
+          ]
+        },
+
+        {
+          "id": "previous-medications",
+          "type": "paragraph",
+          "title": "PREVIOUSLY TRIALED MEDICATIONS:",
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "previous-meds-list",
+              "description": "Previously tried psychiatric medications as reported by patient",
+              "lookup": "clinical_intake.medications.previousPsych",
+              "targetPath": "subjective.previouslyTrialedMedications"
+            }
+          ]
+        },
+
+        {
+          "id": "current-medications",
+          "type": "paragraph",
+          "title": "CURRENT MEDICATIONS:",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "current-meds-narrative",
+              "description": "Current medications with dosages and prescribers",
+              "outputPath": "subjective.currentMedications",
+              "source": [
+                "clinical_intake.medications.current"
+              ],
+              "guidance": [
+                "List current medications and what they're prescribed for",
+                "Do NOT include dosages",
+                "Note both psychiatric and non-psychiatric medications",
+                "If no current medications, state 'No current medications'"
+              ],
+              "constraints": {
+                "required": true,
+                "minWords": 10,
+                "maxWords": 150
+              }
+            }
+          ]
+        },
+
+        {
+          "id": "family-psych-history",
+          "type": "paragraph",
+          "title": "FAMILY PSYCHIATRIC HISTORY:",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "family-history-narrative",
+              "description": "Family mental health and substance use history",
+              "outputPath": "subjective.familyPsychiatricHistory",
+              "source": [
+                "patient_intake.familyHistory.mentalHealth",
+                "patient_intake.familyHistory.substanceUse"
+              ],
+              "guidance": [
+                "Write 4-6 sentence paragraph describing family mental health history",
+                "Include both mental health conditions and substance use in family",
+                "Note which family members affected (parents, siblings, extended family)",
+                "Discuss genetic predisposition implications when relevant",
+                "If no family history, state 'Patient denies family history of mental illness or substance use'"
+              ],
+              "constraints": {
+                "required": true,
+                "minSentences": 3,
+                "maxSentences": 7
+              }
+            }
+          ]
+        },
+
+        {
+          "id": "medical-history",
+          "type": "paragraph",
+          "title": "MEDICAL HISTORY:",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "medical-history-narrative",
+              "description": "Medical conditions, allergies, and health status",
+              "outputPath": "subjective.medicalHistory",
+              "source": [
+                "patient_intake.medicalHistory.conditions",
+                "patient_intake.medicalHistory.allergies",
+                "patient_intake.demographics"
+              ],
+              "guidance": [
+                "Write 4-6 sentence paragraph covering medical conditions, medication allergies, and overall health status",
+                "Note chronic conditions and their management",
+                "Include medication allergies with reaction type",
+                "Discuss how medical conditions may interact with psychiatric symptoms",
+                "If no medical conditions, state 'Patient reports no significant medical conditions'"
+              ],
+              "constraints": {
+                "required": true,
+                "minSentences": 3,
+                "maxSentences": 7
+              }
+            }
+          ]
+        },
+
+        {
+          "id": "social-history",
+          "type": "paragraph",
+          "title": "SOCIAL HISTORY:",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "social-history-narrative",
+              "description": "Living situation, relationships, work/education, support system, financial stress",
+              "outputPath": "subjective.socialHistory",
+              "source": [
+                "patient_intake.socialHistory",
+                "clinical_intake.currentSymptoms.relationshipImpact",
+                "clinical_intake.currentSymptoms.workImpact",
+                "clinical_intake.goalsStrengths.strengths"
+              ],
+              "guidance": [
+                "Write 5-7 sentence paragraph covering living situation, relationships, work/education status, support system, and financial stressors",
+                "Include relationship status, children if applicable, employment",
+                "Note quality and size of support network",
+                "Discuss financial stressors and their impact on mental health",
+                "Identify patient strengths when mentioned"
+              ],
+              "constraints": {
+                "required": true,
+                "minSentences": 5,
+                "maxSentences": 8
+              }
+            }
+          ]
+        },
+
+        {
+          "id": "substance-use-history",
+          "type": "paragraph",
+          "title": "SUBSTANCE USE HISTORY:",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "substance-use-narrative",
+              "description": "Detailed substance use patterns, history, and consequences",
+              "outputPath": "subjective.substanceUseHistory",
+              "source": [
+                "patient_intake.substanceUse",
+                "assessments.audit",
+                "assessments.dast10",
+                "clinical_intake.currentSymptoms"
+              ],
+              "guidance": [
+                "Write 5-7 sentence paragraph detailing tobacco, alcohol, and drug use patterns",
+                "Include frequency, quantity, onset, progression",
+                "Note consequences (DUIs, legal issues, health problems, relationship impacts)",
+                "Discuss patient's insight into substance use and motivation for change",
+                "Reference AUDIT and DAST-10 scores to support severity assessment",
+                "If no substance use, state 'Patient denies current or past substance use'"
+              ],
+              "constraints": {
+                "required": true,
+                "minSentences": 4,
+                "maxSentences": 8
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "objective",
+      "type": "section",
+      "title": "OBJECTIVE",
+      "children": [
+        {
+          "id": "mse",
+          "type": "paragraph",
+          "title": "MENTAL STATUS EXAMINATION:",
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "mse-appearance",
+              "description": "Appearance and presentation",
+              "lookup": "clinical_intake.mse.appearance",
+              "targetPath": "objective.mentalStatusExam.appearance"
+            },
+            {
+              "slot": "lookup",
+              "id": "mse-behavior",
+              "description": "Behavior and activity level",
+              "lookup": "clinical_intake.mse.behavior",
+              "targetPath": "objective.mentalStatusExam.behavior"
+            },
+            {
+              "slot": "lookup",
+              "id": "mse-speech",
+              "description": "Speech pattern and quality",
+              "lookup": "clinical_intake.mse.speech",
+              "targetPath": "objective.mentalStatusExam.speech"
+            },
+            {
+              "slot": "lookup",
+              "id": "mse-mood",
+              "description": "Stated mood",
+              "lookup": "clinical_intake.mse.mood",
+              "targetPath": "objective.mentalStatusExam.mood"
+            },
+            {
+              "slot": "lookup",
+              "id": "mse-affect",
+              "description": "Observed affect",
+              "lookup": "clinical_intake.mse.affect",
+              "targetPath": "objective.mentalStatusExam.affect"
+            },
+            {
+              "slot": "lookup",
+              "id": "mse-thought-process",
+              "description": "Thought process and organization",
+              "lookup": "clinical_intake.mse.thoughtProcess",
+              "targetPath": "objective.mentalStatusExam.thoughtProcess"
+            },
+            {
+              "slot": "lookup",
+              "id": "mse-thought-content",
+              "description": "Thought content including SI/HI",
+              "lookup": "clinical_intake.mse.thoughtContent",
+              "targetPath": "objective.mentalStatusExam.thoughtContent"
+            },
+            {
+              "slot": "lookup",
+              "id": "mse-perceptual",
+              "description": "Perceptual disturbances",
+              "lookup": "clinical_intake.mse.perceptualDisturbances",
+              "targetPath": "objective.mentalStatusExam.perceptualDisturbances"
+            },
+            {
+              "slot": "lookup",
+              "id": "mse-cognition",
+              "description": "Cognitive functioning and orientation",
+              "lookup": "clinical_intake.mse.cognition",
+              "targetPath": "objective.mentalStatusExam.cognition"
+            },
+            {
+              "slot": "lookup",
+              "id": "mse-insight",
+              "description": "Level of insight",
+              "lookup": "clinical_intake.mse.insight",
+              "targetPath": "objective.mentalStatusExam.insight"
+            },
+            {
+              "slot": "lookup",
+              "id": "mse-judgment",
+              "description": "Quality of judgment",
+              "lookup": "clinical_intake.mse.judgment",
+              "targetPath": "objective.mentalStatusExam.judgment"
+            }
+          ]
+        },
+
+        {
+          "id": "functional-assessment",
+          "type": "paragraph",
+          "title": "FUNCTIONAL ASSESSMENT:",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "functional-assessment-narrative",
+              "description": "Detailed assessment of functioning across life domains",
+              "outputPath": "objective.functionalAssessment",
+              "source": [
+                "clinical_intake.currentSymptoms",
+                "clinical_intake.dailyLife",
+                "patient_intake.socialHistory"
+              ],
+              "guidance": [
+                "Provide thorough, detailed assessment of functioning across ALL domains with specific examples: work/school performance with concrete impacts, relationship quality and strain patterns, self-care abilities and challenges, social engagement level, independent living skills",
+                "Reference specific impacts from clinical data (exact days missed from work, specific relationship strain examples, particular self-care challenges)",
+                "Include both impaired areas AND maintained strengths despite symptoms",
+                "Use concrete examples of functional impacts in each domain - be specific, not general",
+                "Discuss severity of impairment in each domain with supporting evidence",
+                "Target 6-7 sentences for comprehensive coverage"
+              ],
+              "constraints": {
+                "required": true,
+                "minSentences": 6,
+                "maxSentences": 8
+              },
+              "styleHints": {
+                "tone": "detailed, specific, evidence-based"
+              }
+            }
+          ]
+        },
+
+        {
+          "id": "standardized-scores",
+          "type": "paragraph",
+          "title": "STANDARDIZED ASSESSMENT SCORES:",
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "score-phq9",
+              "description": "PHQ-9 score",
+              "lookup": "assessments.phq9.totalScore",
+              "targetPath": "objective.standardizedScores.phq9"
+            },
+            {
+              "slot": "lookup",
+              "id": "score-gad7",
+              "description": "GAD-7 score",
+              "lookup": "assessments.gad7.totalScore",
+              "targetPath": "objective.standardizedScores.gad7"
+            },
+            {
+              "slot": "lookup",
+              "id": "score-ace",
+              "description": "ACE score",
+              "lookup": "assessments.ace.totalScore",
+              "targetPath": "objective.standardizedScores.ace"
+            },
+            {
+              "slot": "lookup",
+              "id": "score-audit",
+              "description": "AUDIT score (conditionally included)",
+              "lookup": "assessments.audit.totalScore",
+              "targetPath": "objective.standardizedScores.audit"
+            },
+            {
+              "slot": "lookup",
+              "id": "score-dast10",
+              "description": "DAST-10 score (conditionally included)",
+              "lookup": "assessments.dast10.totalScore",
+              "targetPath": "objective.standardizedScores.dast10"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "assessment",
+      "type": "section",
+      "title": "ASSESSMENT",
+      "children": [
+        {
+          "id": "clinical-formulation",
+          "type": "paragraph",
+          "title": "CLINICAL FORMULATION:",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "clinical-formulation-narrative",
+              "description": "Comprehensive clinical formulation integrating all assessment data",
+              "outputPath": "assessment.clinicalFormulation",
+              "source": [
+                "clinical_intake.clinicalImpressions",
+                "assessments",
+                "clinical_intake.currentSymptoms",
+                "patient_intake",
+                "clinical_intake.diagnoses"
+              ],
+              "guidance": [
+                "Synthesize comprehensive, detailed clinical picture integrating ALL available data: presenting problems, psychiatric history, full assessment score details, psychosocial stressors, and protective factors",
+                "Discuss specific interplay between conditions with examples (e.g., how anxiety exacerbates substance use, how trauma history influences current presentation, how PTSD and depression interact)",
+                "Reference specific assessment scores with interpretation to support formulation (e.g., 'PHQ-9 score of 21 confirms severe depression with nearly daily anhedonia and suicidal ideation')",
+                "Identify both risk factors AND protective factors with specific details from data",
+                "Use clinician's Clinical Impressions as foundation if provided - expand on it with assessment data",
+                "Provide depth and clinical reasoning, not just description",
+                "Target 7-8 sentences for thorough, analytical formulation"
+              ],
+              "constraints": {
+                "required": true,
+                "minSentences": 7,
+                "maxSentences": 9
+              },
+              "styleHints": {
+                "tone": "clinical, analytical, comprehensive"
+              }
+            }
+          ]
+        },
+
+        {
+          "id": "risk-assessment",
+          "type": "paragraph",
+          "title": "RISK ASSESSMENT:",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "risk-assessment-narrative",
+              "description": "Comprehensive risk evaluation with specific risk/protective balance",
+              "outputPath": "assessment.riskAssessment",
+              "source": [
+                "clinical_intake.mse.thoughtContent",
+                "clinical_intake.currentSymptoms",
+                "patient_intake.substanceUse",
+                "assessments.phq9.responses",
+                "clinical_intake.goalsStrengths"
+              ],
+              "guidance": [
+                "Comprehensive, thorough risk evaluation covering ALL risk domains: suicidal ideation (current and historical), homicidal ideation, past self-harm history, substance relapse risk factors, crisis plan awareness, support system adequacy, and specific protective factors",
+                "Reference specific data with details: exact SI/HI statements from MSE, PHQ-9 item 9 response with severity, substance use patterns and consequences, any past attempts or ideation with timeline",
+                "Discuss both risk factors AND protective factors with equal detail - provide balanced assessment",
+                "Note patient's safety plan components and emergency contact availability",
+                "Assess immediate vs. long-term risk with rationale for each",
+                "Include monitoring recommendations based on risk level",
+                "Target 6-7 sentences for detailed risk/protective balance discussion"
+              ],
+              "constraints": {
+                "required": true,
+                "minSentences": 6,
+                "maxSentences": 8
+              }
+            }
+          ]
+        },
+
+        {
+          "id": "prognosis",
+          "type": "paragraph",
+          "title": "PROGNOSIS:",
+          "content": [
+            {
+              "slot": "ai",
+              "id": "prognosis-narrative",
+              "description": "Detailed prognosis considering multiple factors",
+              "outputPath": "assessment.prognosis",
+              "source": [
+                "clinical_intake.goalsStrengths.motivation",
+                "clinical_intake.goalsStrengths.strengths",
+                "clinical_intake.treatmentHistory",
+                "assessments",
+                "patient_intake.socialHistory"
+              ],
+              "guidance": [
+                "Detailed, comprehensive prognosis considering ALL relevant factors: symptom severity, chronicity of conditions, prior treatment response history, current motivation for change, support system quality and engagement, psychiatric comorbidities, and practical barriers to treatment",
+                "Discuss both favorable factors (motivation, insight, support, strengths) AND complicating factors (severity, comorbidity, financial barriers, housing instability) with equal depth",
+                "Reference patient's stated motivation level (numeric rating if provided) and specific treatment goals",
+                "Consider specific impact of financial stress level, housing stability, employment status on prognosis and treatment adherence",
+                "Avoid overly optimistic or pessimistic tone - provide realistic, balanced clinical judgment",
+                "Acknowledge uncertainty while providing reasoned clinical opinion",
+                "Target 6-7 sentences discussing multiple prognostic factors with supporting rationale"
+              ],
+              "constraints": {
+                "required": true,
+                "minSentences": 6,
+                "maxSentences": 8
+              }
+            }
+          ]
+        },
+
+        {
+          "id": "diagnostic-impressions",
+          "type": "table",
+          "title": "DIAGNOSTIC IMPRESSIONS:",
+          "props": {
+            "columns": ["ICD-10", "DSM-5 Code", "Description"],
+            "colWidths": ["10%", "12%", "78%"]
+          },
+          "content": [
+            {
+              "slot": "ai",
+              "id": "diagnostic-table",
+              "description": "Diagnostic impressions table - AI generates ICD-10, clinician provides DSM-5 and description",
+              "outputPath": "assessment.diagnosticImpressions[]",
+              "tableMap": [
+                {
+                  "slot": "ai",
+                  "id": "diagnosis-icd10",
+                  "description": "ICD-10-CM code (AI generates mapping from DSM-5)",
+                  "outputPath": "assessment.diagnosticImpressions[].icd10Code",
+                  "guidance": [
+                    "If clinician provided DSM-5 code in clinical_intake.diagnoses, map that DSM-5 code to closest ICD-10-CM equivalent",
+                    "DSM-5 and ICD-10 codes are OFTEN the same (e.g., F33.1 → F33.1) but sometimes differ",
+                    "Use closest ICD-10-CM match for billing/diagnostic purposes"
+                  ]
+                },
+                {
+                  "slot": "lookup",
+                  "id": "diagnosis-dsm5",
+                  "description": "DSM-5 code from clinician (EXACT, no changes)",
+                  "lookup": "clinical_intake.diagnoses[].code",
+                  "targetPath": "assessment.diagnosticImpressions[].dsm5Code"
+                },
+                {
+                  "slot": "lookup",
+                  "id": "diagnosis-description",
+                  "description": "Diagnosis description from clinician (EXACT, no changes)",
+                  "lookup": "clinical_intake.diagnoses[].description",
+                  "targetPath": "assessment.diagnosticImpressions[].description"
+                },
+                {
+                  "slot": "ai",
+                  "id": "diagnosis-criteria",
+                  "description": "Brief supporting rationale from assessment data",
+                  "outputPath": "assessment.diagnosticImpressions[].criteria",
+                  "guidance": [
+                    "Write 1-2 sentence supporting rationale for this diagnosis",
+                    "Reference specific assessment scores, symptoms, or clinical data",
+                    "Keep concise - this is supporting criteria, not full formulation"
+                  ],
+                  "constraints": {
+                    "minWords": 10,
+                    "maxWords": 50
+                  }
+                }
+              ],
+              "source": [
+                "clinical_intake.diagnoses",
+                "assessments",
+                "clinical_intake.currentSymptoms"
+              ],
+              "guidance": [
+                "Generate diagnostic impressions for each diagnosis (number of rows determined by clinical_intake.diagnoses array length, or infer 1-3 if none provided)",
+                "High assessment scores should correspond to diagnoses: PHQ-9 ≥10 suggests depression, GAD-7 ≥10 suggests anxiety, AUDIT ≥8 suggests alcohol use concern, PCL-5 ≥31 suggests PTSD",
+                "Use official DSM-5 diagnosis terminology with appropriate specifiers"
+              ],
+              "aiDeps": [
+                "clinical_intake.diagnoses",
+                "assessments.phq9",
+                "assessments.gad7",
+                "assessments.ace",
+                "assessments.audit",
+                "assessments.dast10"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "plan",
+      "type": "section",
+      "title": "PLAN",
+      "children": [
+        {
+          "id": "interventions-recommended",
+          "type": "list",
+          "title": "INTERVENTIONS RECOMMENDED:",
+          "props": {
+            "ordered": true
+          },
+          "content": [
+            {
+              "slot": "static",
+              "id": "interventions-list",
+              "description": "Standardized intervention recommendations",
+              "text": "Interventions Recommended",
+              "targetPath": "plan.interventionsRecommended[]",
+              "listItems": [
+                {
+                  "slot": "static",
+                  "id": "intervention-1",
+                  "text": "Medical Management: Referral to primary care physician for medical conditions and psychiatric evaluation for potential pharmacological intervention for presenting symptoms.",
+                  "targetPath": "plan.interventionsRecommended[0]"
+                },
+                {
+                  "slot": "static",
+                  "id": "intervention-2",
+                  "text": "Individual Psychotherapy: Regular individual therapy sessions to address identified issues. Treatment should incorporate appropriate evidence-based approaches.",
+                  "targetPath": "plan.interventionsRecommended[1]"
+                },
+                {
+                  "slot": "static",
+                  "id": "intervention-3",
+                  "text": "Psychoeducation: Comprehensive education regarding diagnoses, substance use recovery, relapse prevention strategies, medication management, coping skills development, and healthy lifestyle choices.",
+                  "targetPath": "plan.interventionsRecommended[2]"
+                },
+                {
+                  "slot": "static",
+                  "id": "intervention-4",
+                  "text": "Group Therapy: Participation in psychoeducation groups focusing on diagnosis understanding, medication management, coping skills, substance use education, mental health awareness, and recovery principles.",
+                  "targetPath": "plan.interventionsRecommended[3]"
+                },
+                {
+                  "slot": "static",
+                  "id": "intervention-5",
+                  "text": "Case Management Services: Case management to assist with vocational rehabilitation, educational opportunities, stable housing maintenance, and transportation resources.",
+                  "targetPath": "plan.interventionsRecommended[4]"
+                },
+                {
+                  "slot": "static",
+                  "id": "intervention-6",
+                  "text": "Peer Support Services: Connection with certified peer recovery specialists who can provide lived experience perspective and motivation for sustained recovery.",
+                  "targetPath": "plan.interventionsRecommended[5]"
+                }
+              ]
+            }
+          ]
+        },
+
+        {
+          "id": "coordination-of-care",
+          "type": "paragraph",
+          "title": "COORDINATION OF CARE:",
+          "content": [
+            {
+              "slot": "computed",
+              "id": "coordination-intro",
+              "description": "Personalized intro with patient name and pronouns",
+              "formula": "'I discussed the importance of integrated care with ' + patient.name + ' and ' + patient.pronouns.subject + ' agreed that coordinated services would be beneficial for ' + patient.pronouns.possessive + ' recovery. To ensure comprehensive treatment, coordination among the following services should be established:'",
+              "targetPath": "plan.coordinationOfCare.intro"
+            },
+            {
+              "slot": "computed",
+              "id": "pcp-coordination",
+              "description": "PCP coordination computed from available PCP data",
+              "formula": "patient_intake.providers.pcp ? 'Will obtain appropriate releases from patient and contact patient\\'s PCP (' + patient_intake.providers.pcp.name + ' at ' + patient_intake.providers.pcp.practice + ', ' + patient_intake.providers.pcp.phone + ') to establish care coordination efforts. Regular communication protocols will be established to coordinate medical and psychiatric care.' : 'Patient states they will bring PCP contact information at follow-up appointment. Obtain ROI and establish communication protocols with primary care provider to coordinate medical and psychiatric care.'",
+              "targetPath": "plan.coordinationOfCare.items[0].description"
+            },
+            {
+              "slot": "static",
+              "id": "case-management-coordination",
+              "text": "Case Management Services: Engage case management for navigating social services, employment, and housing resources. Obtain ROI and establish communication protocols with assigned case manager.",
+              "targetPath": "plan.coordinationOfCare.items[1]"
+            },
+            {
+              "slot": "static",
+              "id": "vocational-coordination",
+              "text": "Vocational Services: Refer to vocational rehabilitation and explore local transportation assistance programs. Obtain ROI and establish communication protocols with vocational counselor to address employment barriers.",
+              "targetPath": "plan.coordinationOfCare.items[2]"
+            }
+          ]
+        },
+
+        {
+          "id": "follow-up-plan",
+          "type": "list",
+          "title": "FOLLOW-UP PLAN:",
+          "props": {
+            "ordered": true
+          },
+          "content": [
+            {
+              "slot": "static",
+              "id": "followup-list",
+              "description": "Standardized follow-up schedule",
+              "text": "Follow-Up Plan",
+              "targetPath": "plan.followUpPlan[]",
+              "listItems": [
+                {
+                  "slot": "static",
+                  "id": "followup-1",
+                  "text": "Outpatient Therapy: Regular outpatient follow-up with clinician for individual psychotherapy and psychoeducation.",
+                  "targetPath": "plan.followUpPlan[0]"
+                },
+                {
+                  "slot": "static",
+                  "id": "followup-2",
+                  "text": "Peer Support Services: Regular attendance at peer support services for recovery support and social connection.",
+                  "targetPath": "plan.followUpPlan[1]"
+                },
+                {
+                  "slot": "static",
+                  "id": "followup-3",
+                  "text": "Case Management: Regular case management sessions for resource coordination and barrier resolution.",
+                  "targetPath": "plan.followUpPlan[2]"
+                },
+                {
+                  "slot": "static",
+                  "id": "followup-4",
+                  "text": "Psychiatric Services: Psychiatric appointment for medication evaluation and ongoing medication management as indicated.",
+                  "targetPath": "plan.followUpPlan[3]"
+                },
+                {
+                  "slot": "static",
+                  "id": "followup-5",
+                  "text": "Group Therapy: Group therapy attendance for psychoeducation focusing on diagnosis understanding, medication management, coping skills, substance use education, mental health awareness, and recovery principles.",
+                  "targetPath": "plan.followUpPlan[4]"
+                },
+                {
+                  "slot": "static",
+                  "id": "followup-6",
+                  "text": "Safety Monitoring: Periodic monitoring call for safety check and PHQ-9 administration to track symptom progression.",
+                  "targetPath": "plan.followUpPlan[5]"
+                },
+                {
+                  "slot": "static",
+                  "id": "followup-7",
+                  "text": "Drug Screening: Recommend drug screening given current diagnosis and continued drug testing to be determined by medical provider.",
+                  "targetPath": "plan.followUpPlan[6]"
+                },
+                {
+                  "slot": "static",
+                  "id": "followup-8",
+                  "text": "Treatment Plan Review: Comprehensive treatment planning to be completed every 90 days with multidisciplinary team input.",
+                  "targetPath": "plan.followUpPlan[7]"
+                },
+                {
+                  "slot": "static",
+                  "id": "followup-9",
+                  "text": "Progress Monitoring: Standardized testing to be performed quarterly to monitor patient progress and adjust interventions accordingly.",
+                  "targetPath": "plan.followUpPlan[8]"
+                }
+              ]
+            }
+          ]
+        },
+
+        {
+          "id": "crisis-safety-plan",
+          "type": "list",
+          "title": "CRISIS SAFETY PLAN:",
+          "props": {
+            "ordered": true
+          },
+          "content": [
+            {
+              "slot": "static",
+              "id": "crisis-list",
+              "description": "Standardized crisis safety plan items",
+              "text": "Crisis Safety Plan",
+              "targetPath": "plan.crisisSafetyPlan.items[]",
+              "listItems": [
+                {
+                  "slot": "static",
+                  "id": "crisis-1",
+                  "text": "Warning Signs Recognition: Increased irritability, social withdrawal, expressions of hopelessness, renewed substance use urges, significant changes in sleep or appetite, isolation from support systems.",
+                  "targetPath": "plan.crisisSafetyPlan.items[0]"
+                },
+                {
+                  "slot": "static",
+                  "id": "crisis-2",
+                  "text": "Internal Coping Strategies: Engage in healthy activities, practice mindfulness and grounding exercises, utilize breathing techniques, journal thoughts and feelings, connect with sober peers, review recovery materials.",
+                  "targetPath": "plan.crisisSafetyPlan.items[1]"
+                },
+                {
+                  "slot": "static",
+                  "id": "crisis-3",
+                  "text": "Social Support Contacts: Contact supportive peers or family, notify designated support persons, utilize peer support networks.",
+                  "targetPath": "plan.crisisSafetyPlan.items[2]"
+                },
+                {
+                  "slot": "static",
+                  "id": "crisis-4",
+                  "text": "Professional Support: Contact treating therapist, reach out to case manager, contact prescribing clinician for medication concerns.",
+                  "targetPath": "plan.crisisSafetyPlan.items[3]"
+                },
+                {
+                  "slot": "static",
+                  "id": "crisis-5",
+                  "text": "Crisis Resources: National Suicide & Crisis Lifeline: 988 (24/7), local crisis intervention team, emergency department if immediate safety concern, mobile crisis response team.",
+                  "targetPath": "plan.crisisSafetyPlan.items[4]"
+                },
+                {
+                  "slot": "static",
+                  "id": "crisis-6",
+                  "text": "Safety Environment: Remove access to means of self-harm, avoid high-risk situations or triggers, utilize structured living/supports.",
+                  "targetPath": "plan.crisisSafetyPlan.items[5]"
+                },
+                {
+                  "slot": "ai",
+                  "id": "crisis-7-reasons-for-living",
+                  "description": "Reasons for living - MUST be inferred from patient data",
+                  "outputPath": "plan.crisisSafetyPlan.items[6].description",
+                  "source": [
+                    "clinical_intake.goalsStrengths.goals",
+                    "clinical_intake.goalsStrengths.strengths",
+                    "patient_intake.socialHistory",
+                    "patient_intake"
+                  ],
+                  "guidance": [
+                    "Infer patient's reasons for living from their data",
+                    "Common sources: love for children/family, desire to improve, personal strengths, relationships, goals",
+                    "Example: 'Patient values his role as a caring father and is motivated by his desire to be a positive presence in his daughters\\' lives'",
+                    "Make it personal and specific to THIS patient",
+                    "1-2 sentences"
+                  ],
+                  "constraints": {
+                    "required": true,
+                    "minWords": 15,
+                    "maxWords": 60
+                  }
+                }
+              ]
+            },
+            {
+              "slot": "computed",
+              "id": "crisis-plan-note",
+              "description": "Crisis plan agreement note with patient name",
+              "formula": "'Note: ' + patient.name + ' has agreed to this crisis safety plan as stated. This plan should be regularly monitored, reviewed, and updated during individual therapy sessions to ensure its continued relevance and effectiveness.'",
+              "targetPath": "plan.crisisSafetyPlan.note"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "signature",
+      "type": "signatureBlock",
+      "content": [
+        {
+          "slot": "lookup",
+          "id": "rendered-by",
+          "description": "Provider name",
+          "lookup": "provider.fullName",
+          "targetPath": "signature.renderedBy"
+        },
+        {
+          "slot": "lookup",
+          "id": "supervised-by",
+          "description": "Supervisor name",
+          "lookup": "supervisor.name",
+          "targetPath": "signature.supervisedBy"
+        },
+        {
+          "slot": "computed",
+          "id": "supervisor-attestation",
+          "description": "Supervisor attestation with credentials and license",
+          "formula": "'I, ' + supervisor.name + ', ' + supervisor.credentials + ', License #' + supervisor.licenseNumber + ', declare this information to be accurate and complete.'",
+          "targetPath": "signature.attestation"
+        },
+        {
+          "slot": "static",
+          "id": "accuracy-statement",
+          "text": "The above information is a true and accurate representation to the best of my knowledge.",
+          "targetPath": "signature.accuracyStatement"
+        }
+      ]
+    }
+  ]
+}

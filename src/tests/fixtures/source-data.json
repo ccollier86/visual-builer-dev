@@ -1,0 +1,43 @@
+{
+  "patient": {
+    "name": "Michael Rodriguez",
+    "dob": "1985-03-15",
+    "mrn": "MRN-789456"
+  },
+  "visit": {
+    "date": "2024-01-15",
+    "facility": "Owensboro",
+    "provider": "Anna Wakeland LPCC"
+  },
+  "assessments": {
+    "current": {
+      "PHQ9": 12,
+      "GAD7": 8
+    },
+    "previous": {
+      "PHQ9": 18,
+      "GAD7": 14
+    }
+  },
+  "diagnoses": [
+    {
+      "dsm5": { "code": "296.32" },
+      "description": "Major Depressive Disorder, Recurrent, Moderate"
+    }
+  ],
+  "transcript": {
+    "current_session": {
+      "text": "Patient reports improved mood and energy...",
+      "segments": [
+        {
+          "timestamp": 45,
+          "text": "I've been feeling a lot better lately"
+        },
+        {
+          "timestamp": 50,
+          "text": "The medication is really helping"
+        }
+      ]
+    }
+  }
+}

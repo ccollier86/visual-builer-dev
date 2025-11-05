@@ -1,0 +1,258 @@
+{
+	"$id": "https://catalyst/specs/note-template.schema.json",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Catalyst Note Template (MVP, comprehensive)",
+	"type": "object",
+	"description": "Single-file template describing layout, styles, prompt hints, and content slots (ai/lookup/computed/static/verbatim). Supports sections, subsections, paragraphs, lists, and tables.",
+	"properties": {
+		"id": { "type": "string", "minLength": 1 },
+		"name": { "type": "string", "minLength": 1 },
+		"version": { "type": "string", "minLength": 1 },
+
+		"style": {
+			"type": "object",
+			"description": "Minimal design tokens used by the renderer to build screen + print CSS.",
+			"properties": {
+				"font": { "type": "string", "minLength": 1 },
+				"color": {
+					"type": "string",
+					"minLength": 1,
+					"description": "Primary text color (hex or CSS color)."
+				},
+				"muted": { "type": "string", "description": "Secondary text color." },
+				"accent": { "type": "string", "minLength": 1 },
+				"spacing": { "type": "number", "minimum": 0 },
+				"tableDensity": { "enum": ["compact", "normal", "spacious"], "default": "compact" },
+				"print": {
+					"type": "object",
+					"properties": {
+						"size": { "enum": ["Letter", "A4"], "default": "Letter" },
+						"margin": { "type": "string", "default": "0.75in" },
+						"header": { "type": "boolean", "default": true },
+						"footer": { "type": "boolean", "default": true }
+					},
+					"additionalProperties": false
+				}
+			},
+			"required": ["font", "color", "accent", "spacing"],
+			"additionalProperties": false
+		},
+
+		"prompt": {
+			"type": "object",
+			"description": "MVP single-call prompting primitives.",
+			"properties": {
+				"system": { "type": "string", "minLength": 1 },
+				"main": { "type": "string", "minLength": 1 },
+				"rules": { "type": "array", "items": { "type": "string" } },
+				"jsonOnly": { "type": "boolean", "default": true }
+			},
+			"required": ["system", "main"],
+			"additionalProperties": false
+		},
+
+		"layout": {
+			"type": "array",
+			"description": "Ordered block components composing the note.",
+			"items": { "$ref": "#/$defs/component" },
+			"minItems": 1
+		}
+	},
+
+	"required": ["id", "name", "version", "style", "prompt", "layout"],
+	"additionalProperties": false,
+
+	"$defs": {
+		"component": {
+			"type": "object",
+			"description": "A renderable block. Components may nest via `children` to form subsections.",
+			"properties": {
+				"id": { "type": "string", "minLength": 1 },
+				"type": {
+					"enum": [
+						"header",
+						"footer",
+						"section",
+						"paragraph",
+						"list",
+						"table",
+						"patientBlock",
+						"signatureBlock",
+						"alertPanel"
+					]
+				},
+				"title": { "type": "string" },
+				"props": { "$ref": "#/$defs/props" },
+
+				"content": {
+					"type": "array",
+					"description": "Content items bound to this component. For lists/tables, see `listItems`/`tableMap` on items.",
+					"items": { "$ref": "#/$defs/contentItem" }
+				},
+
+				"children": {
+					"type": "array",
+					"description": "Nested components (subsections or grouped blocks).",
+					"items": { "$ref": "#/$defs/component" }
+				}
+			},
+			"required": ["id", "type"],
+			"additionalProperties": false
+		},
+
+		"props": {
+			"type": "object",
+			"description": "Component-specific display hints.",
+			"properties": {
+				"ordered": { "type": "boolean", "description": "For list: true=ol, false=ul." },
+				"columns": {
+					"type": "array",
+					"description": "For table: visible column headers (order = mapping order).",
+					"items": { "type": "string" }
+				},
+				"colWidths": {
+					"type": "array",
+					"description": "For table: optional width hints like '25%', 'auto'.",
+					"items": { "type": "string" }
+				},
+				"variant": {
+					"type": "string",
+					"description": "Visual variant (e.g., alertPanel).",
+					"enum": ["default", "info", "warning", "critical"]
+				},
+				"hideTitle": { "type": "boolean", "default": false }
+			},
+			"additionalProperties": true
+		},
+
+		"contentItem": {
+			"type": "object",
+			"description": "Defines where a piece of content comes from and how it should be constrained.",
+			"properties": {
+				"slot": {
+					"enum": ["static", "ai", "lookup", "computed", "verbatim"],
+					"description": "How the content is sourced."
+				},
+				"id": { "type": "string", "minLength": 1 },
+				"description": { "type": "string" },
+
+				"text": { "type": "string", "description": "Literal static text if slot=static." },
+
+				"source": {
+					"type": "array",
+					"description": "Context sources for ai (e.g., transcript.current_session, static.treatment_plan).",
+					"items": { "type": "string" }
+				},
+
+				"outputPath": {
+					"type": "string",
+					"description": "JSON path in the AI output for this slot when slot=ai (e.g., assessment.narrative or plan.homework[].text)."
+				},
+
+				"targetPath": {
+					"type": "string",
+					"description": "JSON path where NON-AI values will appear in the final payload (lookup/computed/static/verbatim). Use [] for arrays."
+				},
+
+				"lookup": {
+					"type": "string",
+					"description": "Path into provided static data when slot=lookup (e.g., static.vitals or static.diagnoses[].dsm5.code)."
+				},
+
+				"formula": {
+					"type": "string",
+					"description": "Expression for slot=computed. Example: \"static.assessments.current.PHQ9 - static.assessments.previous.PHQ9\"."
+				},
+				"format": {
+					"type": "string",
+					"description": "Optional format hint for computed results.",
+					"enum": ["plain", "deltaScore", "percent"]
+				},
+				"resultType": {
+					"type": "string",
+					"description": "Explicit computed result type (MVP inference).",
+					"enum": ["string", "number", "boolean", "object", "array"]
+				},
+
+				"verbatimRef": {
+					"type": "string",
+					"description": "Pointer to an exact quote (e.g., transcript:visit_123#t=40-55) when slot=verbatim."
+				},
+
+				"constraints": {
+					"type": "object",
+					"description": "Acceptable bounds for text-like outputs (applies mostly to ai).",
+					"properties": {
+						"required": { "type": "boolean", "default": false },
+						"enum": { "type": "array", "items": { "type": "string" } },
+						"pattern": { "type": "string" },
+						"minWords": { "type": "integer", "minimum": 0 },
+						"maxWords": { "type": "integer", "minimum": 1 },
+						"minSentences": { "type": "integer", "minimum": 0 },
+						"maxSentences": { "type": "integer", "minimum": 1 }
+					},
+					"additionalProperties": false
+				},
+
+				"listItems": {
+					"type": "array",
+					"description": "For list components: each item's content slot (can itself be ai/lookup/computed/static/verbatim).",
+					"items": { "$ref": "#/$defs/contentItem" }
+				},
+
+				"tableMap": {
+					"type": "array",
+					"description": "For table components: column→slot mapping in the SAME order as `props.columns`.",
+					"items": { "$ref": "#/$defs/contentItem" }
+				},
+
+				"guidance": {
+					"type": "array",
+					"description": "Optional per-AI-field author hints to influence content.",
+					"items": { "type": "string" }
+				},
+				"aiDeps": {
+					"type": "array",
+					"description": "Optional explicit dependencies (NAS paths) this AI field should consider.",
+					"items": { "type": "string" }
+				},
+				"styleHints": {
+					"type": "object",
+					"description": "Optional tone/format hints for the composer.",
+					"additionalProperties": true
+				}
+			},
+			"required": ["slot", "id"],
+			"allOf": [
+				{
+					"if": { "properties": { "slot": { "const": "ai" } }, "required": ["slot"] },
+					"then": { "required": ["outputPath"] }
+				},
+				{
+					"if": {
+						"properties": { "slot": { "enum": ["lookup", "computed", "static", "verbatim"] } },
+						"required": ["slot"]
+					},
+					"then": { "required": ["targetPath"] }
+				},
+				{
+					"if": { "properties": { "slot": { "const": "lookup" } }, "required": ["slot"] },
+					"then": { "required": ["lookup"] }
+				},
+				{
+					"if": { "properties": { "slot": { "const": "computed" } }, "required": ["slot"] },
+					"then": { "required": ["formula"] }
+				},
+				{
+					"if": { "properties": { "slot": { "const": "static" } }, "required": ["slot"] },
+					"then": { "required": ["text"] }
+				},
+				{
+					"if": { "properties": { "slot": { "const": "verbatim" } }, "required": ["slot"] },
+					"then": { "required": ["verbatimRef"] }
+				}
+			],
+			"additionalProperties": false
+		}
+	}
+}

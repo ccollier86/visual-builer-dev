@@ -1,0 +1,124 @@
+{
+	"$id": "https://catalyst/specs/design-tokens.schema.json",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Catalyst Note Design Tokens",
+	"type": "object",
+	"description": "Minimal, portable design tokens used to generate note.css and note.print.css. Stable across renderer and PDF.",
+	"properties": {
+		"id": { "type": "string", "minLength": 1 },
+		"version": { "type": "string", "minLength": 1 },
+
+		"typography": {
+			"type": "object",
+			"description": "Type scale derives all font sizes and line heights.",
+			"properties": {
+				"fontFamily": { "type": "string", "minLength": 1 },
+				"baseSizePx": { "type": "number", "minimum": 10, "maximum": 20 },
+				"scale": { "type": "number", "minimum": 1.05, "maximum": 1.35 },
+				"lineHeight": { "type": "number", "minimum": 1.2, "maximum": 1.8 },
+				"monospaceFamily": {
+					"type": "string",
+					"default": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
+				}
+			},
+			"required": ["fontFamily", "baseSizePx", "scale", "lineHeight"],
+			"additionalProperties": false
+		},
+
+		"color": {
+			"type": "object",
+			"description": "Accessible color palette for text and accents.",
+			"properties": {
+				"text": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^[a-zA-Z]+$" },
+				"muted": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^[a-zA-Z]+$" },
+				"accent": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^[a-zA-Z]+$" },
+				"border": { "type": "string", "default": "#e5e7eb" },
+				"background": { "type": "string", "default": "#ffffff" }
+			},
+			"required": ["text", "muted", "accent"],
+			"additionalProperties": false
+		},
+
+		"spacing": {
+			"type": "object",
+			"description": "Base spacing unit and derived steps.",
+			"properties": {
+				"unitPx": { "type": "number", "minimum": 2, "maximum": 24 },
+				"scale": { "type": "number", "minimum": 1.0, "maximum": 1.6 }
+			},
+			"required": ["unitPx", "scale"],
+			"additionalProperties": false
+		},
+
+		"table": {
+			"type": "object",
+			"description": "Density & borders for tables.",
+			"properties": {
+				"density": {
+					"type": "string",
+					"enum": ["compact", "normal", "spacious"],
+					"default": "compact"
+				},
+				"borders": { "type": "string", "enum": ["none", "row", "cell"], "default": "row" },
+				"striped": { "type": "boolean", "default": false }
+			},
+			"additionalProperties": false
+		},
+
+		"list": {
+			"type": "object",
+			"description": "Bullet/number style hints.",
+			"properties": {
+				"bulletStyle": {
+					"type": "string",
+					"enum": ["disc", "circle", "square"],
+					"default": "disc"
+				},
+				"numberStyle": {
+					"type": "string",
+					"enum": ["decimal", "lower-alpha", "upper-roman"],
+					"default": "decimal"
+				}
+			},
+			"additionalProperties": false
+		},
+
+		"layout": {
+			"type": "object",
+			"description": "Page layout and block spacing.",
+			"properties": {
+				"sectionGap": { "type": "number", "minimum": 0, "maximum": 64, "default": 16 },
+				"paragraphGap": { "type": "number", "minimum": 0, "maximum": 48, "default": 8 },
+				"headerShowTitle": { "type": "boolean", "default": true }
+			},
+			"additionalProperties": false
+		},
+
+		"print": {
+			"type": "object",
+			"description": "Print/PDF controls.",
+			"properties": {
+				"pageSize": { "type": "string", "enum": ["Letter", "A4"], "default": "Letter" },
+				"margin": { "type": "string", "default": "0.75in" },
+				"showHeader": { "type": "boolean", "default": true },
+				"showFooter": { "type": "boolean", "default": true },
+				"monochrome": { "type": "boolean", "default": false }
+			},
+			"additionalProperties": false
+		},
+
+		"brand": {
+			"type": "object",
+			"description": "Brand artifacts referenced at render time.",
+			"properties": {
+				"logoUrl": { "type": "string" },
+				"headerHtml": { "type": "string" },
+				"footerHtml": { "type": "string" }
+			},
+			"additionalProperties": false
+		}
+	},
+
+	"required": ["id", "version", "typography", "color", "spacing", "table", "print"],
+	"additionalProperties": false
+}

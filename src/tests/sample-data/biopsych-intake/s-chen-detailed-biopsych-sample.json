@@ -1,0 +1,373 @@
+{
+  "patient": {
+    "id": "patient-demo-002",
+    "name": "Sarah Chen",
+    "firstName": "Sarah",
+    "lastName": "Chen",
+    "dob": "1992-03-22",
+    "age": 33,
+    "gender": "female",
+    "pronouns": "she/her",
+    "mrn": "MRN-78946"
+  },
+  "facility": {
+    "id": "facility-owensboro",
+    "name": "Owensboro",
+    "phone": "(270) 215-4454",
+    "address": "1102 Triplett Street, Suite 2300",
+    "city": "Owensboro",
+    "state": "KY",
+    "zip": "42303"
+  },
+  "provider": {
+    "id": "provider-002",
+    "name": "Anna Wakeland",
+    "credentials": "LPCC",
+    "fullName": "Anna Wakeland LPCC"
+  },
+  "supervisor": {
+    "name": "Neil Jariwala",
+    "credentials": "M.D., Psychiatrist",
+    "licenseNumber": "53374",
+    "licenseState": "KY"
+  },
+  "encounter": {
+    "date": "2025-11-04",
+    "time": "10:00",
+    "type": "Comprehensive Biopsychosocial Intake",
+    "appointmentId": "appt-demo-002"
+  },
+  "patient_intake": {
+    "narrative": "Virtual Consult MD\nIntake Document\n\nNovember 4, 2025 • Owensboro\n\nDEMOGRAPHICS\nWhat is your first name?\nSarah\n\nWhat is your last name?\nChen\n\nWhat is your date of birth?\n1992-03-22\n\nSocial Security Number?\n***-**-7834\n\nWhat is your gender identity?\nfemale\n\nWhat are your pronouns?\nshe/her\n\nWhat is your race?\nasian\n\nWhat is your ethnicity?\nchinese-american\n\nWhat is your primary language?\nenglish\n\nNeed interpreter services?\nNo, but my parents primarily speak Mandarin at home\n\nPRIMARY CONCERNS\nTop concerns?\nAnxiety/Worry, Panic attacks, Perfectionism/High achievement pressure, Difficulty sleeping, Physical symptoms (headaches, stomach issues), Family/cultural pressure\n\nWhen did these concerns start?\nchildhood-adolescence\n\nCan you describe in detail when and how these concerns began?\nI've always been an anxious person for as long as I can remember. Growing up, I was the 'good daughter' - straight A's, piano competitions, got into a top university. But the anxiety got much worse during college when I started having panic attacks during exams. I thought it would get better after graduation, but working as a software engineer at a startup has actually made it worse. The imposter syndrome is overwhelming. I feel like I'm constantly waiting to be 'found out' as a fraud, even though logically I know I'm good at my job. The panic attacks have increased from maybe once a month in college to 2-3 times per week now. I also developed really bad insomnia about 2 years ago - my mind just races at night thinking about work deadlines, mistakes I might have made, difficult conversations I need to have. I've tried meditation apps, exercise, journaling, but nothing seems to help for more than a few days.\n\nTriggers?\nWork stress/deadlines, High expectations from family, Social situations (especially networking events), Financial decisions, Conflict or disappointing others, Being evaluated or judged\n\nCan you give specific examples of recent triggering situations?\nLast week I had a panic attack during a code review meeting when a senior engineer questioned my approach to a problem. I felt my heart racing, couldn't breathe, had to excuse myself to the bathroom. I was so embarrassed. Another example: my parents keep asking when I'm going to get married and buy a house like my older brother. Every family dinner becomes this interrogation that makes me feel like I'm failing at life even though I have a good career. Also, I was recently promoted to senior engineer but instead of feeling proud, I just feel terrified that I won't be able to meet expectations. I've been having nightmares about making a critical mistake that crashes our entire system.\n\nCONTACT INFORMATION\nWhat is your phone number?\n(502) 555-9201\n\nWhat is your email address?\nsarah.chen.dev@email.com\n\nWhat is your street address?\n487 Maple Heights Apartment 3B\n\nCity?\nOwensboro\n\nState?\nKY\n\nZIP Code?\n42301\n\nEmergency Contact Name?\nEmily Chen\n\nRelationship?\nOlder sister\n\nEmergency Contact Phone?\n(502) 555-8873\n\nWhy did you choose this person as your emergency contact?\nMy sister Emily is the only person in my family who really understands my anxiety and doesn't judge me for it. She went through something similar in her 20s and has been really supportive. My parents mean well but they're from a generation and culture where mental health struggles are seen as weakness or lack of discipline.\n\nINSURANCE\nWhat type of insurance do you have?\nprivate\n\nInsurance provider?\nAnthem Blue Cross Blue Shield (through employer)\n\nPolicy ID?\nABC123456789\n\nGroup number?\nTECH2025\n\nMEDICATION ALLERGIES\nDo you have any medication allergies?\nNo known medication allergies. However, I am very sensitive to caffeine (even small amounts cause jitteriness and increased anxiety) and alcohol makes my anxiety worse the next day.\n\nCURRENT MEDICATIONS\nMedication name?\nBirth control (Sprintec)\n\nDosage?\nDaily\n\nPrescribed for?\nContraception and cycle regulation\n\nHow long have you been taking this?\n5 years, no issues\n\nMedication name?\nVitamin D supplement\n\nDosage?\n2000 IU daily\n\nPrescribed for?\nDoctor said I was deficient during last physical\n\nAre you taking any over-the-counter supplements or herbs?\nMagnesium glycinate (400mg before bed - I read it helps with anxiety and sleep), L-theanine (200mg as needed for anxiety - mixed results), Ashwagandha (tried for 3 months, didn't notice any difference), Fish oil (for general health)\n\nPAST PSYCHIATRIC MEDICATIONS\nMedication name?\nLexapro (escitalopram)\n\nDosage?\n10mg daily\n\nDuration?\n6 months during senior year of college\n\nReason discontinued?\nIt helped with the panic attacks but I gained 15 pounds and felt emotionally 'flat' - like I couldn't feel joy or excitement about anything. Also had sexual side effects that were really bothersome. My doctor said we could try a different SSRI but I was graduating and wanted to see if I could manage without medication.\n\nMedication name?\nXanax (alprazolam)\n\nDosage?\n0.25mg as needed\n\nDuration?\n3 months (college health center prescribed)\n\nReason discontinued?\nIt worked really well for panic attacks but I was worried about becoming dependent on it. I also didn't like the way it made me feel kind of foggy. The doctor wanted to transition me to an SSRI instead.\n\nHave you tried therapy before?\nYes, twice. First time was in college through the university counseling center - saw someone for about 8 sessions. It was okay but not great, we mostly just talked about stress management. Second time was 2 years ago, found a therapist through my insurance. We did CBT for anxiety which was more helpful - I learned some good techniques for challenging anxious thoughts. But I stopped going after about 4 months because it was hard to fit into my work schedule and honestly I felt like I had 'learned the tools' and should be able to do it on my own. Looking back, I probably should have continued.\n\nMEDICAL CONDITIONS\nConditions you have?\nMigraines (since age 16, about 2-3 per month, usually stress-triggered), IBS (irritable bowel syndrome - symptoms are definitely worse when I'm anxious), TMJ (I clench my jaw a lot, especially at night), History of iron-deficiency anemia (currently managed with diet)\n\nPlease describe your migraines in detail:\nThey usually start with visual disturbances (aura) - I see zigzag lines or spots. Then comes the throbbing pain, usually on the right side of my head. Light and sound become unbearable. I get nauseous and sometimes vomit. They can last anywhere from 4 hours to 2 days. I can usually feel one coming on when I'm really stressed or haven't slept well. I've identified triggers: stress, lack of sleep, skipping meals, bright screens for too long, my menstrual cycle (I get one almost every month right before my period starts).\n\nPlease describe your IBS symptoms:\nIt's really embarrassing to talk about but I have a lot of stomach cramping, urgent diarrhea, and bloating - especially in the mornings before work or before important meetings. It's like my gut knows I'm anxious before my brain fully registers it. I've had to call in sick to work several times because the symptoms were so bad I couldn't leave the bathroom. I've tried various diets (low FODMAP, eliminating dairy, gluten-free) with some improvement but the symptoms always come back when I'm stressed.\n\nSAFETY ASSESSMENT\nCurrent suicidal thoughts?\nNo, absolutely not. I have never had suicidal thoughts. Even when my anxiety is at its worst, I want to feel better, not stop existing.\n\nThoughts of harming others?\nNo, never.\n\nSpecific plan for self-harm?\nNo\n\nCurrently safe?\nYes, completely safe. My anxiety makes me afraid of many things but I've never felt unsafe or had any desire to hurt myself.\n\nEmergency contact available?\nYes - my sister Emily lives about 30 minutes away and I can always call her. I also have a couple close friends from college who check in on me regularly.\n\nHave you ever experienced trauma or abuse?\nNot in the traditional sense. I wasn't physically or sexually abused. But I do think there was some emotional pressure growing up - very high expectations, feeling like I always had to be perfect, getting compared to other kids whose parents were in my parents' social circle. My dad has a temper and would yell when I got less than an A. My mom would cry and say I was disappointing the family. That kind of thing. I know they love me and wanted the best for me, but it definitely contributed to my anxiety and perfectionism.\n\nHEALTHCARE PROVIDERS\nDo you have a primary care provider?\nYes\n\nPCP Name?\nDr. Jennifer Walsh\n\nPCP Practice?\nOwensboro Internal Medicine\n\nPCP Phone?\n(270) 555-1800\n\nLast visit?\n3 months ago for annual physical - everything came back normal except vitamin D was low\n\nDo you have a therapist/counselor?\nNot currently - that's why I'm here. I saw someone 2 years ago but haven't been in active treatment since then.\n\nDo you have a psychiatrist?\nNo, never seen a psychiatrist. The Lexapro I tried in college was prescribed by my PCP.\n\nSOCIAL & LIFESTYLE\nCurrent living arrangement?\nRenting a 1-bedroom apartment by myself\n\nHousing stability?\nVery stable - rent is affordable, I make good money as a software engineer. Lease is up for renewal in 6 months and I'll probably renew.\n\nHow do you like living alone?\nHonestly, it's a bit isolating. I moved here from California for this job 18 months ago and haven't really made close friends yet. I like having my own space and not having to deal with roommate drama, but sometimes I go entire weekends barely speaking to anyone in person. That's not great for my mental health.\n\nRelationship status?\nSingle, not dating\n\nCan you tell me more about your relationship history?\nI dated someone seriously in college for 2 years but we broke up after graduation when he moved to New York and I went to grad school in California. Since then I've been on various dating apps but nothing has really clicked. I think my anxiety makes dating really hard - I overthink everything (did I say something stupid? why haven't they texted back? what if they don't like me?). I also work long hours and don't have much energy for dating. My parents keep pressuring me about this which makes me feel even more anxious about it.\n\nChildren?\nNo children. Sometimes I worry that I'm running out of time (I'm 33) but I'm not even in a relationship and I'm not sure I'm mentally healthy enough to be a good parent right now.\n\nSocial support network?\nLimited here in Kentucky. My sister Emily lives in Louisville (about 2 hours away), we text almost daily and see each other once a month or so. I have 2-3 close friends from college who live in other states - we do video calls and text but it's not the same as having local support. At work I'm friendly with my colleagues but haven't formed any deep friendships. I'm pretty introverted and my anxiety makes it hard to put myself out there socially.\n\nEmployment status?\nFull-time, Senior Software Engineer\n\nEmployer?\nTechVenture Solutions (startup, about 80 employees)\n\nHow long at current job?\n18 months, just got promoted 3 months ago\n\nHow do you feel about your work?\nIt's complicated. On one hand, I'm good at what I do and I like the creative problem-solving aspect of coding. The pay is great ($115k) and the benefits are good. But the startup culture is intense - long hours, high pressure, constant deadlines, always the threat that we might run out of funding. I feel like I'm always 'on' and can never fully relax. The promotion to senior engineer should feel like an accomplishment but instead it just feels like more pressure and more ways I could fail. I've been working 50-60 hour weeks and I know it's not sustainable but I'm terrified of falling behind or appearing incompetent.\n\nHighest education completed?\nBachelor's degree in Computer Science from UC Berkeley, 3.8 GPA (would have been 4.0 but I had a panic attack during one final exam and got a B+ in that class)\n\nAny student loan debt?\n$45,000 remaining (originally $80,000). I've been aggressively paying it down but it still stresses me out.\n\nFinancial stress level?\nModerate - I make good money but I also have student loans, expensive rent, and I send money to my parents occasionally to help with their expenses. I worry a lot about money even though objectively I'm financially stable. I grew up with immigrant parents who were always worried about money so I think I inherited some of that anxiety.\n\nMilitary service?\nNo\n\nLegal issues?\nNone whatsoever. I'm probably overly rule-following due to my anxiety.\n\nSUBSTANCE USE\nDo you smoke or use tobacco?\nNo, never tried it. The thought of any substance that might make my anxiety worse terrifies me.\n\nHow often do you drink alcohol?\nRarely - maybe 1-2 drinks per month at social events. I avoid alcohol because it makes my anxiety significantly worse the next day (even just one glass of wine gives me 'hangxiety'). It also doesn't mix well with my birth control and triggers my IBS.\n\nConcerns about drinking?\nNo concerns - I barely drink.\n\nHave you used recreational drugs in the past year?\nI tried marijuana edibles twice hoping it would help with anxiety, but it actually made it much worse - increased my heart rate and made me feel paranoid. Never doing that again.\n\nCaffeine use?\nThis is probably my biggest issue. I was drinking 3-4 cups of coffee per day to stay alert during long work hours. But I realized it was making my anxiety and physical symptoms much worse. I've cut back to half-caf in the mornings only, but I really struggle with fatigue without the caffeine.\n\nFAMILY HISTORY\nFamily mental health history?\nMother has anxiety (never formally diagnosed or treated, but definitely there - she worries constantly). Sister Emily was diagnosed with GAD and depression in her 20s, she's on medication and doing well now. Father has no diagnosed mental health conditions but I suspect he may have some depression - he can be very irritable and withdrawn. Maternal grandmother had what the family called 'nervous breakdowns' but was never formally treated (mental health stigma in that generation).\n\nFamily substance use history?\nNo substance abuse in my immediate family. My parents rarely drink alcohol. One uncle on my father's side has struggled with alcohol but I don't know details.\n\nTRAUMA HISTORY\nChildhood trauma?\nNo physical or sexual abuse. However, I do think there was emotional trauma from the constant pressure to achieve and be perfect. Feeling like love was conditional on my performance. Getting yelled at for any mistake or grade less than an A. Being compared unfavorably to other children. Watching my parents stress about money and feeling guilty for costing them anything. Cultural pressure to excel and make the family proud. Fear of disappointing my parents. I know this might sound minor compared to what others have experienced, but my therapist in college said this could be considered developmental trauma.\n\nAdult trauma?\nNo major traumas. The worst thing was probably the breakup with my college boyfriend which was painful but not traumatic. I did experience some microaggressions and casual sexism in my male-dominated field (tech) which has been uncomfortable but not what I would call trauma.\n\nWORK/DAILY FUNCTIONING\nHow are symptoms affecting your work/school?\nSignificantly. I'm still performing well enough that my boss promoted me, but I'm working way more hours than I should need to because my anxiety makes me second-guess everything and check my work obsessively. I have trouble concentrating when I'm anxious. I've called in sick 4-5 times in the past 6 months due to panic attacks or IBS flare-ups. I avoid speaking up in meetings because I'm afraid of saying something wrong. The code reviews make me incredibly anxious. I procrastinate on tasks that feel overwhelming which then creates deadline pressure.\n\nHow are symptoms affecting your relationships?\nI've become more isolated. I cancel plans with friends when my anxiety is bad. I avoid dating because it feels too stressful. I get irritable with my family when they pressure me about marriage/house-buying. I don't let people get close because I'm afraid they'll judge me or see me as weak.\n\nHow are symptoms affecting your self-care?\nWhen my anxiety is really bad, I fall into unhealthy patterns: skipping meals (which triggers migraines), not exercising even though I know it helps, staying up too late doom-scrolling on my phone, isolating myself. I also over-exercise sometimes as a way to cope with anxiety (compulsively running 5+ miles even when I'm exhausted). I've been better lately about eating regularly and trying to get 7 hours of sleep but it's a constant struggle.\n\nHow are symptoms affecting your social life?\nI don't really have one. I'm too anxious for most social situations. Networking events make me panic. I declined three different invitations to social events last month because I was too anxious. I spend most of my free time alone in my apartment.\n\nHOBBIES & INTERESTS (BEFORE SYMPTOMS)\nWhat did you enjoy before anxiety took over?\n- Reading (I used to read 2-3 books per month, now I can barely focus on a page)\n- Baking (I loved trying complex recipes, now it feels like too much mental effort)\n- Hiking and nature photography (helped me relax, but I haven't gone in months)\n- Playing piano (classically trained for 15 years, don't play anymore because it reminds me of competition pressure)\n- Video games (casual gaming was fun, now even that feels stressful)\n- Spending time with friends (don't have local friends to spend time with anymore)\n\nWhat do you currently do for enjoyment/relaxation?\nHonestly? Not much. I watch Netflix mindlessly. I scroll social media which probably makes my anxiety worse. I occasionally FaceTime my sister. Sometimes I'll bake something simple like cookies but I don't enjoy it like I used to. Mostly I just try to survive the work week.\n\nGOALS FOR TREATMENT\n1. Stop having panic attacks or at least have them much less frequently and be able to manage them when they do happen.\n\n2. Sleep better - fall asleep within 30 minutes and stay asleep through the night without racing thoughts.\n\n3. Feel less anxious on a daily basis - I don't need to be anxiety-free (I know that's not realistic) but I want to get to a point where anxiety doesn't control my life.\n\n4. Stop procrastinating and second-guessing myself at work - be able to trust my skills and feel confident.\n\n5. Have energy and motivation to do things I used to enjoy - read books, bake, go hiking, maybe make some friends here.\n\n6. Develop healthier relationship with my family - set boundaries with my parents about marriage/life timeline pressure without feeling guilty.\n\n7. Maybe eventually feel ready to try dating again, but that feels far off right now.\n\n8. Figure out if medication might help this time - I'm more open to trying it again than I was in college.\n\nSTRENGTHS\n- Highly intelligent and capable (even though my anxiety makes me doubt this)\n- Strong work ethic and dedication\n- Self-aware - I understand my patterns and triggers pretty well\n- Good problem-solver (great at debugging code, need to apply this to my mental health)\n- Financially stable and good with money management\n- Have tried many self-help strategies (meditation, exercise, journaling, therapy before) - I'm committed to getting better\n- Supportive sister who understands mental health\n- No substance abuse issues\n- Willing to try medication again despite previous bad experience\n- Articulate and able to express my feelings\n- Want to get better - high motivation for treatment",
+    "structured": {
+      "demographics": {
+        "firstName": "Sarah",
+        "lastName": "Chen",
+        "dob": "1992-03-22",
+        "ssn": "***-**-7834",
+        "gender": "female",
+        "pronouns": "she/her",
+        "race": "asian",
+        "ethnicity": "chinese-american",
+        "primaryLanguage": "english",
+        "interpreterNeeded": false
+      },
+      "primaryConcerns": [
+        "Anxiety/Worry",
+        "Panic attacks",
+        "Perfectionism/High achievement pressure",
+        "Difficulty sleeping",
+        "Physical symptoms (headaches, stomach issues)",
+        "Family/cultural pressure"
+      ],
+      "concernOnset": "childhood-adolescence",
+      "triggers": [
+        "Work stress/deadlines",
+        "High expectations from family",
+        "Social situations",
+        "Financial decisions",
+        "Conflict or disappointing others",
+        "Being evaluated or judged"
+      ],
+      "substanceUse": {
+        "tobacco": "never",
+        "alcohol": "rarely (1-2 drinks per month)",
+        "concernsAboutDrinking": false,
+        "marijuana": "tried twice, made anxiety worse",
+        "caffeine": "reduced from 3-4 cups to half-caf in AM only"
+      },
+      "medicalHistory": {
+        "conditions": [
+          "Migraines (2-3 per month, stress-triggered)",
+          "IBS (anxiety-related)",
+          "TMJ (jaw clenching)",
+          "History of iron-deficiency anemia (managed)"
+        ],
+        "allergies": ["None - sensitive to caffeine"],
+        "currentMedications": [
+          {"name": "Sprintec", "for": "Birth control"},
+          {"name": "Vitamin D", "for": "Deficiency"},
+          {"name": "Magnesium glycinate", "for": "Anxiety/sleep (OTC)"},
+          {"name": "L-theanine", "for": "Anxiety as needed (OTC)"}
+        ],
+        "pastPsychMeds": ["Lexapro", "Xanax"]
+      },
+      "socialHistory": {
+        "living": "Alone in 1-bedroom apartment",
+        "housingStability": "Very stable",
+        "relationshipStatus": "Single, not dating",
+        "children": "None",
+        "employment": "Full-time Senior Software Engineer at TechVenture Solutions",
+        "education": "Bachelor's in Computer Science, UC Berkeley, 3.8 GPA",
+        "financialStress": "Moderate (student loans $45k, but stable income)",
+        "supportNetwork": "Limited - sister 2hrs away, friends out of state, few local connections"
+      },
+      "familyHistory": {
+        "mentalHealth": "Mother: anxiety (untreated), Sister: GAD and depression (treated), Maternal grandmother: 'nervous breakdowns'",
+        "substanceUse": "One uncle with alcohol issues"
+      },
+      "traumaHistory": {
+        "childhood": "High parental expectations, performance-based love, emotional pressure, yelling for mistakes, cultural/achievement pressure",
+        "adult": "Painful breakup, workplace microaggressions/sexism in tech"
+      },
+      "providers": {
+        "pcp": {
+          "name": "Dr. Jennifer Walsh",
+          "practice": "Owensboro Internal Medicine",
+          "phone": "(270) 555-1800"
+        }
+      }
+    }
+  },
+  "clinical_intake": {
+    "qaText": "=== CLINICAL INTAKE RESPONSES ===\nGenerated: 11/04/2025, 10:00:00 AM\n\n## CHIEF COMPLAINT\nQ: What brings you in today? (Chief complaint)\nA: I'm having panic attacks 2-3 times per week and my anxiety is completely out of control. I can't sleep, I can't focus at work, and I feel like I'm just barely holding it together. I need help before I completely fall apart.\n\n## CURRENT SYMPTOMS & IMPACT\nQ: How are symptoms impacting your work/school?\nA: Severe impact - working 50-60 hour weeks because anxiety makes me check everything obsessively, called in sick 4-5 times in past 6 months for panic attacks/IBS, avoiding speaking in meetings, procrastinating on overwhelming tasks then panicking about deadlines\n\nQ: How are symptoms impacting your relationships?\nA: Severe impact - isolated, no local close friends, canceling plans frequently, avoiding dating entirely, getting irritable with family over pressure about marriage/house\n\nQ: How are symptoms impacting your self-care?\nA: Moderate to severe impact - skipping meals (triggers migraines), inconsistent sleep (racing thoughts at night), sometimes over-exercising compulsively to manage anxiety, doom-scrolling instead of healthy coping\n\nQ: How are symptoms impacting your social life?\nA: Severe impact - declined 3 social invitations last month due to anxiety, networking events cause panic, spending most free time isolated in apartment\n\nQ: Current stress level (1-10)?\nA: 8/10 on average, spikes to 10/10 during panic attacks\n\nQ: How would you rate your sleep quality?\nA: Very poor - takes 1-2 hours to fall asleep due to racing thoughts, wake up 2-3 times per night, averaging 5 hours per night\n\nQ: How many days have you missed from work/school in the past month?\nA: 2 days (panic attack and severe IBS flare-up)\n\nQ: Can you describe a recent panic attack in detail?\nA: Last week during code review meeting. Senior engineer questioned my approach. Suddenly felt like I couldn't breathe, heart racing over 120bpm (I checked my smartwatch later), chest felt tight, felt dizzy and lightheaded, thought I might pass out, hands shaking, sweating, overwhelming sense of dread. Had to excuse myself to bathroom. Took 20 minutes to calm down. Was humiliated and left work early that day.\n\nQ: How often are you having panic attacks?\nA: 2-3 times per week for the past 3 months. Before that it was more like 2-3 times per month. They're getting more frequent and more intense.\n\nQ: What physical symptoms do you experience regularly?\nA: Daily: muscle tension especially jaw and shoulders, frequent headaches, stomach cramping and urgency (IBS), fatigue despite not sleeping well. Several times per week: heart palpitations, shortness of breath, dizziness, nausea. During panic attacks: all of the above plus sweating, trembling, chest pain, feeling like I'm dying.\n\n## DAILY LIFE & SELF-CARE\nQ: How structured is your daily routine?\nA: Moderately structured around work (wake up 6:30am, work 8am-6pm or later, try to sleep by midnight) but everything else is chaotic and inconsistent. Skip breakfast often, lunch at desk, dinner is often takeout at 8pm. No consistent exercise routine anymore.\n\nQ: What self-care challenges are you facing?\nA: Main challenges: Can't fall asleep because my mind races with worries about work mistakes, tomorrow's tasks, life timeline pressure from parents. When I do sleep it's poor quality. I skip meals because I'm anxious or busy, then get a headache and get more anxious. I know exercise helps my anxiety but I'm too exhausted after work. When I do exercise, sometimes I overdo it compulsively (running 5+ miles when I'm already exhausted) because I'm trying to outrun my anxiety. I isolate myself when I'm anxious which makes me more anxious. I doom-scroll social media instead of doing things I know would actually help.\n\nQ: Describe your typical sleep schedule\nA: Try to go to bed around 11:30pm-midnight but lie awake for 1-2 hours with racing thoughts. Mind goes through everything: Did I make a mistake in my code? What if that bug I fixed wasn't actually fixed? What if my boss regrets promoting me? What if I'm behind on my student loan payments? Why don't I have a boyfriend like my brother has a wife? Am I ever going to get married? What if I die alone? Then I finally fall asleep around 1-2am and wake up at 3am and 5am, then alarm at 6:30am. Wake up exhausted. Drink coffee (half-caf now) to function.\n\nQ: How do you cope with difficult emotions currently?\nA: Unhealthy coping: avoiding, procrastinating, isolating myself, doom-scrolling, occasionally over-exercising compulsively, canceling plans. Healthier attempts that don't work consistently: meditation apps (can't focus), journaling (too tired), breathing exercises (help slightly during panic but don't prevent them), trying to challenge anxious thoughts (I know the CBT techniques but can't make myself believe the rational thoughts).\n\nQ: What have you tried that has helped even a little?\nA: The Lexapro I took in college did help reduce panic attacks frequency, but the side effects were too much. Therapy with CBT techniques gave me some useful tools. Reducing caffeine has helped slightly. Talking to my sister helps me feel less alone. Very occasionally I'll have a day where I feel okay and I'll bake something or go for a walk and that feels good, but it's rare.\n\n## GOALS & STRENGTHS\nQ: What are your top 3 treatment goals?\nA: 1) Stop having panic attacks or at least reduce to less than once per month and be able to manage them better when they happen. 2) Sleep through the night - fall asleep within 30 minutes and not wake up with racing thoughts. 3) Feel generally less anxious day-to-day so I can focus at work, have energy for a social life, maybe try dating eventually.\n\nQ: What personal strengths can you build on?\nA: I'm really self-aware about my patterns and triggers. I'm intelligent and good at problem-solving (even if I can't apply it to my own anxiety). I have a good job and financial stability. My sister is really supportive. I've tried therapy before and learned from it. I'm very motivated to get better - I don't want to live like this anymore.\n\nQ: On a scale of 1-10, how motivated are you for change?\nA: 9/10 - I'm desperate to feel better. I'm even willing to try medication again despite having side effects before, because I can't keep living like this.\n\nQ: What has prevented you from getting help before?\nA: After my last therapist 2 years ago I thought I had 'learned enough tools' and should be able to manage on my own. I think that was my perfectionism talking - like I should be able to fix this myself. Also therapy was hard to schedule around work. I kept thinking 'I'll deal with this later when things calm down at work' but things never calm down. Finally had a wake-up call when I had a panic attack during that code review - I realized this isn't going away on its own.\n\nQ: What are your fears or concerns about treatment?\nA: I'm scared medication will cause weight gain or sexual side effects again. I'm scared therapy will be expensive and time-consuming and maybe not even help. I'm scared my boss will find out I'm getting mental health treatment and think I'm not capable. I'm scared my parents will find out and be disappointed that their daughter is 'weak.' But honestly I'm more scared of continuing to live like this.\n\n## DIAGNOSES\nDiagnosis 1:\nQ: Diagnosis code (ICD-10/DSM-5)\nA: F41.0\n\nQ: Diagnosis description\nA: Panic Disorder\n\nDiagnosis 2:\nQ: Diagnosis code (ICD-10/DSM-5)\nA: F41.1\n\nQ: Diagnosis description\nA: Generalized Anxiety Disorder\n\n## TREATMENT HISTORY\nTreatment 1:\nQ: Type of treatment\nA: Mental Health - Therapy during college (8 sessions, stress management focus, somewhat helpful), Therapy 2 years ago (4 months CBT, helpful but discontinued), Lexapro for 6 months (effective but discontinued due to side effects), Xanax for 3 months (effective but worried about dependence)\n\n## MEDICATIONS (CLINICIAN-VERIFIED)\nQ: Current medications (clinician-verified)\nA: Sprintec (birth control), Vitamin D 2000 IU daily\n\nQ: Previously trialed psychiatric medications\nA: Lexapro (escitalopram) 10mg daily for 6 months during college - patient reports it significantly reduced panic attack frequency from 3-4 per week to 1-2 per month, but caused 15-pound weight gain, emotional blunting ('couldn't feel joy or excitement'), and sexual side effects (decreased libido, difficulty with arousal/orgasm). Discontinued by patient choice without taper when graduating college. Xanax (alprazolam) 0.25mg PRN for 3 months - patient reports it was very effective for acute panic attacks, provided relief within 15-20 minutes, but she felt 'foggy' and was concerned about developing dependence after reading about benzodiazepine risks online. Discontinued by patient choice with provider agreement to trial SSRI instead (which was the Lexapro mentioned above).\n\nQ: Current supplements or over-the-counter remedies\nA: Patient is taking several supplements for anxiety: Magnesium glycinate 400mg before bed (reports possible mild improvement in sleep), L-theanine 200mg as needed for anxiety (reports mixed results, sometimes helps slightly, sometimes no effect), Fish oil daily (for general health). Previously tried Ashwagandha for 3 months (no noticeable effect).\n\n## MENTAL STATUS EXAMINATION\nQ: Appearance and presentation\nA: Well-groomed, professionally dressed (business casual), appears stated age, good hygiene, makeup applied, appears alert but tired (dark circles under eyes)\n\nQ: Behavior and activity level\nA: Cooperative, good eye contact (occasionally breaks when discussing emotional topics), sits somewhat rigidly with tense posture, fidgets with hands and picks at cuticles, occasionally shifts in seat, appears restless, tearful once when discussing feeling overwhelmed\n\nQ: Speech pattern and quality\nA: Normal rate and volume, articulate and organized, occasionally speaks quickly when anxious about topic, no slurring or stuttering, good vocabulary, insightful\n\nQ: Stated mood\nA: 'Anxious, overwhelmed, exhausted, but also a little hopeful that maybe treatment will help this time'\n\nQ: Observed affect\nA: Anxious and worried, occasionally tearful, range is somewhat constricted, appropriate to content, becomes visibly more anxious when discussing panic attacks and work stress (increased fidgeting, rapid speech)\n\nQ: Thought process/organization\nA: Linear and highly organized, goal-directed, no tangentiality, perhaps overly detailed at times (gives very thorough explanations), demonstrates good insight and self-awareness, able to identify patterns and triggers\n\nQ: Thought content\nA: Denies current or past suicidal ideation - states 'I've never wanted to die, I want to feel better.' Denies homicidal ideation. Primary thought content involves excessive worry and rumination about work performance, fear of negative evaluation, worry about disappointing parents, concerns about life timeline (marriage, children), fear of panic attacks occurring in public or work situations (anticipatory anxiety), some health anxiety related to physical symptoms of panic. No obsessions or compulsions meeting criteria for OCD, though patient does describe 'checking my work obsessively' which is better characterized as anxiety-driven perfectionism. No paranoia or delusions.\n\nQ: Perceptual disturbances (hallucinations/illusions)\nA: Denies any hallucinations (auditory, visual, tactile). Denies illusions. No dissociative symptoms. During panic attacks reports feeling 'unreal' or 'like I'm watching myself from outside my body' which is consistent with derealization/depersonalization during acute panic but not a persistent perceptual disturbance.\n\nQ: Cognitive functioning and orientation\nA: Alert and oriented x4 (person, place, time, situation). Attention and concentration are impaired by anxiety - reports difficulty focusing when anxious, mind going blank during panic, trouble concentrating on complex coding tasks. Memory appears intact for recent and remote events - provides detailed history with specific examples and timelines. Executive functioning appears strong - holds demanding job as senior software engineer, manages finances well, demonstrates abstract thinking and problem-solving abilities during session.\n\nQ: Level of insight\nA: Excellent insight - highly self-aware about anxiety patterns, triggers, unhelpful coping mechanisms, and need for treatment. Able to distinguish between anxious thoughts and reality. Recognizes that anxiety is disproportionate to actual threats. Understands connection between physical symptoms and anxiety. Motivated for change.\n\nQ: Quality of judgment\nA: Good overall judgment - seeking appropriate treatment, making sound financial decisions, maintaining employment, recognizing need for help before crisis point. Some impaired judgment in areas affected by anxiety (avoiding social situations, procrastinating at work, discontinuing medications prematurely). Generally risk-averse to the point of being overly cautious.\n\nQ: Clinical Impressions\nA: Patient presents as a highly intelligent, articulate, and self-aware 33-year-old woman with longstanding anxiety that has significantly worsened over the past year. She meets full criteria for Panic Disorder with increasing frequency and severity of panic attacks (2-3 per week currently, up from baseline of 2-3 per month), along with significant anticipatory anxiety and worry about having panic attacks. She also meets criteria for Generalized Anxiety Disorder with excessive, difficult-to-control worry across multiple domains (work performance, family expectations, relationships, finances, health). Her anxiety is causing significant functional impairment across work (procrastination, avoidance, sick days), social (isolation, avoidance), and self-care (sleep disturbance, irregular eating) domains. Assessment scores confirm severe anxiety (GAD-7: 18) and moderate depression (PHQ-9: 14, primarily neurovegetative symptoms secondary to anxiety rather than primary mood disorder). Notable anxiety-related medical comorbidities include migraines, IBS, and TMJ from jaw clenching. Cultural factors are relevant - high-achieving Chinese-American background with significant parental pressure and expectations, some generational stigma about mental health treatment. Patient's insight and motivation are significant strengths. Previous partial response to Lexapro suggests she may benefit from pharmacotherapy with attention to side effect management and possibly trying a different SSRI or SNRI. History of effective but brief use of Xanax suggests she might benefit from having a short-term PRN anxiolytic available while longer-term treatment takes effect, with close monitoring for dependence. Strong indication for resuming evidence-based psychotherapy, particularly CBT or ACT for anxiety and panic. Patient is appropriate for outpatient treatment with good safety profile (no suicidal ideation, good support system, stable housing/employment). Primary barriers to treatment adherence may include perfectionistic tendencies ('should be able to fix this myself'), time constraints from demanding job, and fears about side effects. Case conceptualization: Anxiety likely has developmental origins in high-pressure childhood environment with performance-based love and cultural achievement expectations. This created perfectionistic and anxious cognitive style. Anxiety was manageable with high structure (school) but worsened significantly with college stress, somewhat improved post-graduation, then worsened again with job relocation, social isolation, increased work demands, and ongoing family pressure. Physical symptoms (panic attacks, insomnia, IBS, migraines) are both caused by and perpetuate anxiety in a vicious cycle. Current life stressors (demanding startup job, recent promotion, social isolation in new city, age-related pressure about marriage/family, student loan debt) are maintaining factors.\n\nQ: Clinical Recommendations\nA: Recommend comprehensive treatment approach: 1) Psychiatric medication evaluation - given previous partial response to Lexapro, consider trial of different SSRI with potentially lower side effect profile (sertraline or escitalopram at lower dose with slower titration to minimize side effects) or SNRI (venlafaxine or duloxetine). Patient is open to medication trial. Discuss strategies for managing potential side effects including weight/sexual side effects. Consider short-term use of PRN anxiolytic (hydroxyzine as non-addictive option, or very limited supply of low-dose benzodiazepine with close monitoring) for acute panic while waiting for SSRI to reach therapeutic effect. Also consider propranolol PRN for physical symptoms of panic. 2) Resume individual psychotherapy with evidence-based approach - CBT for panic and GAD (interoceptive exposure, cognitive restructuring), or ACT (acceptance and commitment therapy) which may be good fit given her perfectionistic tendencies. Weekly sessions initially. 3) Sleep hygiene and possible short-term sleep aid (trazodone at low dose, gabapentin, or hydroxyzine) to break the insomnia cycle while implementing behavioral strategies. 4) Encourage gradual reduction of work hours if possible - 50-60 hour weeks are not sustainable and perpetuate anxiety. May need provider note for workplace accommodations under ADA if anxiety continues to impair functioning. 5) Care coordination with PCP Dr. Walsh regarding migraines and IBS (both strongly anxiety-related). 6) Encourage rebuilding social connections - may benefit from anxiety support group or social activities to reduce isolation. 7) Psychoeducation about anxiety cycle and how avoidance maintains fear. 8) Long-term may benefit from exploring family-of-origin issues and cultural pressures in therapy. 9) Close monitoring initially - reassess in 2 weeks after starting medication, weekly therapy initially. 10) Patient expressed interest in trying medication again despite previous side effects, which is positive indicator for treatment engagement. Good prognosis with appropriate treatment given high insight, motivation, previous partial response to treatment, stable support system, and absence of complicating factors like substance abuse.\n\n=== END OF CLINICAL INTAKE ===",
+    "structured": {
+      "chiefComplaint": "I'm having panic attacks 2-3 times per week and my anxiety is completely out of control. I can't sleep, I can't focus at work, and I feel like I'm just barely holding it together. I need help before I completely fall apart.",
+      "currentSymptoms": {
+        "workImpact": "severe",
+        "relationshipImpact": "severe",
+        "selfCareImpact": "moderate-to-severe",
+        "socialLifeImpact": "severe",
+        "stressLevel": 8,
+        "sleepQuality": "very poor",
+        "missedWorkDays": 2
+      },
+      "dailyLife": {
+        "routineStructure": "moderately structured around work, chaotic otherwise",
+        "selfCareChallenges": "racing thoughts prevent sleep, skipping meals triggers migraines, too exhausted for exercise or compulsively over-exercising, isolating when anxious, doom-scrolling",
+        "sleepSchedule": "bed 11:30pm-midnight, lies awake 1-2hrs with racing thoughts, falls asleep 1-2am, wakes at 3am and 5am, alarm 6:30am, averages 5 hours",
+        "copingMechanisms": "avoiding, procrastinating, isolating, doom-scrolling, over-exercising, canceling plans, attempted meditation/journaling/breathing exercises with limited success"
+      },
+      "goalsStrengths": {
+        "goals": [
+          "Stop or drastically reduce panic attacks (less than once per month)",
+          "Sleep through the night with less racing thoughts",
+          "Reduce daily anxiety to functional level, have energy for social life and dating"
+        ],
+        "strengths": [
+          "Highly self-aware about patterns and triggers",
+          "Intelligent and good problem-solver",
+          "Good job and financial stability",
+          "Supportive sister",
+          "Previous therapy experience with learning",
+          "Very motivated to get better"
+        ],
+        "motivation": 9,
+        "barriers": "Perfectionism ('should fix this myself'), hard to schedule around work, kept waiting for things to calm down, scared of medication side effects and therapy cost/time commitment"
+      },
+      "diagnoses": [
+        {
+          "code": "F41.0",
+          "description": "Panic Disorder"
+        },
+        {
+          "code": "F41.1",
+          "description": "Generalized Anxiety Disorder"
+        }
+      ],
+      "treatmentHistory": [
+        {
+          "type": "Mental Health",
+          "details": "College therapy (8 sessions stress management), Therapy 2 years ago (4 months CBT), Lexapro 6 months (effective, side effects), Xanax 3 months (effective, worried about dependence)"
+        }
+      ],
+      "medications": {
+        "current": "Sprintec (birth control), Vitamin D 2000 IU daily, Magnesium glycinate 400mg, L-theanine 200mg PRN",
+        "previousPsych": "Lexapro 10mg 6 months (reduced panic attacks significantly but weight gain, emotional blunting, sexual side effects), Xanax 0.25mg PRN 3 months (very effective for acute panic, felt foggy, worried about dependence)"
+      },
+      "mse": {
+        "appearance": "Well-groomed, professionally dressed, appears stated age, good hygiene, alert but appears tired with dark circles",
+        "behavior": "Cooperative, good eye contact, tense posture, fidgets with hands and picks cuticles, restless, tearful once discussing overwhelm",
+        "speech": "Normal rate and volume, articulate and organized, occasionally rapid when anxious, good vocabulary, insightful",
+        "mood": "Anxious, overwhelmed, exhausted, but hopeful about treatment",
+        "affect": "Anxious and worried, occasionally tearful, somewhat constricted range, appropriate to content, visibly more anxious discussing panic/work",
+        "thoughtProcess": "Linear and highly organized, goal-directed, overly detailed at times, demonstrates excellent insight and self-awareness",
+        "thoughtContent": "Denies SI/HI (states 'never wanted to die, want to feel better'). Excessive worry about work performance, fear of negative evaluation, disappointing parents, life timeline concerns, anticipatory anxiety about panic attacks, some health anxiety. No obsessions/compulsions/paranoia/delusions.",
+        "perceptualDisturbances": "No hallucinations or illusions. Reports derealization/depersonalization during panic attacks only (feels 'unreal' or 'watching self from outside') - consistent with acute panic, not persistent.",
+        "cognition": "Alert and oriented x4. Attention and concentration impaired by anxiety. Memory intact for recent and remote events with detailed recall. Executive functioning strong - demanding job, good financial management, abstract thinking.",
+        "insight": "Excellent - highly self-aware about anxiety patterns, triggers, unhelpful coping, need for treatment. Distinguishes anxious thoughts from reality. Motivated for change.",
+        "judgment": "Good overall - seeking appropriate treatment, sound financial decisions, maintaining employment. Some impaired judgment in areas affected by anxiety (avoidance, procrastination, premature medication discontinuation). Generally overly cautious/risk-averse."
+      },
+      "clinicalImpressions": "Highly intelligent, articulate, self-aware 33-year-old woman with longstanding anxiety significantly worsened over past year. Meets full criteria for Panic Disorder (2-3 attacks/week, up from 2-3/month) with significant anticipatory anxiety. Also meets criteria for Generalized Anxiety Disorder with excessive difficult-to-control worry across multiple domains (work, family expectations, relationships, finances, health). Severe functional impairment across work (procrastination, avoidance, sick days), social (isolation, avoidance), and self-care (sleep disturbance, irregular eating). GAD-7 score 18 confirms severe anxiety. PHQ-9 score 14 indicates moderate depression, primarily neurovegetative symptoms secondary to anxiety rather than primary mood disorder. Anxiety-related medical comorbidities: migraines, IBS, TMJ. Cultural factors relevant: high-achieving Chinese-American background with significant parental pressure, some generational mental health stigma. Developmental origins likely in high-pressure childhood with performance-based love and cultural achievement expectations, creating perfectionistic and anxious cognitive style. Anxiety worsened with college stress, improved post-graduation, worsened again with job relocation, social isolation, increased work demands, ongoing family pressure. Physical symptoms perpetuate anxiety in vicious cycle. Current stressors: demanding startup job, recent promotion, social isolation, age-related family pressure about marriage, student loan debt. Previous partial response to Lexapro suggests pharmacotherapy benefit with attention to side effect management. Insight and motivation are significant strengths. Appropriate for outpatient treatment with excellent safety profile.",
+      "clinicalRecommendations": "Comprehensive treatment: 1) Psychiatric medication - trial different SSRI with lower side effect profile (sertraline or escitalopram at lower dose with slow titration) or SNRI (venlafaxine/duloxetine). Discuss side effect management strategies. Consider PRN anxiolytic (hydroxyzine non-addictive option, or limited low-dose benzodiazepine with close monitoring, or propranolol for physical panic symptoms) while waiting for SSRI therapeutic effect. 2) Resume individual psychotherapy with evidence-based approach - CBT for panic/GAD (interoceptive exposure, cognitive restructuring) or ACT (good fit for perfectionism). Weekly initially. 3) Address sleep - hygiene protocol plus possible short-term sleep aid (low-dose trazodone, gabapentin, or hydroxyzine). 4) Work hours reduction if possible - 50-60hr weeks unsustainable. May need provider note for ADA accommodations if indicated. 5) Care coordination with PCP Dr. Walsh for anxiety-related migraines/IBS. 6) Rebuild social connections - consider anxiety support group or social activities. 7) Psychoeducation about anxiety cycle and how avoidance maintains fear. 8) Long-term therapy explore family-of-origin issues and cultural pressures. 9) Close monitoring - reassess 2 weeks after medication start, weekly therapy initially. Good prognosis with appropriate treatment given high insight, motivation, previous partial treatment response, stable support, no substance abuse complications."
+    }
+  },
+  "assessments": {
+    "phq9": {
+      "title": "PHQ-9 (Patient Health Questionnaire-9)",
+      "completedDate": "2025-11-04",
+      "totalScore": 14,
+      "maxScore": 27,
+      "severity": "Moderate depression",
+      "responses": [
+        {
+          "number": 1,
+          "question": "Little interest or pleasure in doing things",
+          "answer": "More than half the days",
+          "score": 2
+        },
+        {
+          "number": 2,
+          "question": "Feeling down, depressed, or hopeless",
+          "answer": "More than half the days",
+          "score": 2
+        },
+        {
+          "number": 3,
+          "question": "Trouble falling/staying asleep, or sleeping too much",
+          "answer": "Nearly every day",
+          "score": 3
+        },
+        {
+          "number": 4,
+          "question": "Feeling tired or having little energy",
+          "answer": "Nearly every day",
+          "score": 3
+        },
+        {
+          "number": 5,
+          "question": "Poor appetite or overeating",
+          "answer": "Several days",
+          "score": 1
+        },
+        {
+          "number": 6,
+          "question": "Feeling bad about yourself - or that you are a failure or have let yourself or your family down",
+          "answer": "More than half the days",
+          "score": 2
+        },
+        {
+          "number": 7,
+          "question": "Trouble concentrating on things, such as reading the newspaper or watching television",
+          "answer": "Several days",
+          "score": 1
+        },
+        {
+          "number": 8,
+          "question": "Moving or speaking so slowly that other people could have noticed, or the opposite - being so fidgety or restless that you have been moving around a lot more than usual",
+          "answer": "Not at all",
+          "score": 0
+        },
+        {
+          "number": 9,
+          "question": "Thoughts that you would be better off dead, or of hurting yourself in some way",
+          "answer": "Not at all",
+          "score": 0
+        }
+      ],
+      "interpretation": "Score of 14 indicates moderate depression. Patient's depression appears largely secondary to chronic anxiety and its functional impacts (sleep disturbance, fatigue, isolation, feelings of failure). No suicidal ideation. Primary neurovegetative symptoms are insomnia and fatigue."
+    },
+    "gad7": {
+      "title": "GAD-7 (Generalized Anxiety Disorder-7)",
+      "completedDate": "2025-11-04",
+      "totalScore": 18,
+      "maxScore": 21,
+      "severity": "Severe anxiety",
+      "responses": [
+        {
+          "number": 1,
+          "question": "Feeling nervous, anxious, or on edge",
+          "answer": "Nearly every day",
+          "score": 3
+        },
+        {
+          "number": 2,
+          "question": "Not being able to stop or control worrying",
+          "answer": "Nearly every day",
+          "score": 3
+        },
+        {
+          "number": 3,
+          "question": "Worrying too much about different things",
+          "answer": "Nearly every day",
+          "score": 3
+        },
+        {
+          "number": 4,
+          "question": "Trouble relaxing",
+          "answer": "Nearly every day",
+          "score": 3
+        },
+        {
+          "number": 5,
+          "question": "Being so restless that it's hard to sit still",
+          "answer": "More than half the days",
+          "score": 2
+        },
+        {
+          "number": 6,
+          "question": "Becoming easily annoyed or irritable",
+          "answer": "More than half the days",
+          "score": 2
+        },
+        {
+          "number": 7,
+          "question": "Feeling afraid as if something awful might happen",
+          "answer": "More than half the days",
+          "score": 2
+        }
+      ],
+      "interpretation": "Score of 18 indicates severe generalized anxiety disorder. Patient endorses near-daily anxiety, inability to control worry, excessive worry across domains, difficulty relaxing, frequent restlessness and irritability, and sense of impending doom. Consistent with clinical presentation of GAD."
+    },
+    "ace": {
+      "title": "ACE (Adverse Childhood Experiences)",
+      "completedDate": "2025-11-04",
+      "totalScore": 3,
+      "maxScore": 10,
+      "severity": "Moderate adverse childhood experiences",
+      "responses": [
+        {
+          "number": 1,
+          "question": "Did a parent or other adult in the household often or very often swear at you, insult you, put you down, or humiliate you?",
+          "answer": "Yes - father would yell harshly when I got less than an A, mother would cry and say I was disappointing the family"
+        },
+        {
+          "number": 2,
+          "question": "Did a parent or other adult in the household often or very often push, grab, slap, or throw something at you, or ever hit you so hard that you had marks or were injured?",
+          "answer": "No"
+        },
+        {
+          "number": 3,
+          "question": "Did an adult or person at least 5 years older than you ever touch or fondle you or have you touch their body in a sexual way, or attempt or actually have oral, anal, or vaginal intercourse with you?",
+          "answer": "No"
+        },
+        {
+          "number": 4,
+          "question": "Did you often or very often feel that no one in your family loved you or thought you were important or special?",
+          "answer": "Yes - felt like love was conditional on my performance and achievements"
+        },
+        {
+          "number": 5,
+          "question": "Did you often or very often feel that your family didn't look out for each other, feel close to each other, or support each other?",
+          "answer": "No - family was close but there was a lot of pressure"
+        },
+        {
+          "number": 6,
+          "question": "Were your parents ever separated or divorced?",
+          "answer": "No"
+        },
+        {
+          "number": 7,
+          "question": "Was your mother or stepmother often or very often pushed, grabbed, slapped, or had something thrown at her, or sometimes, often, or very often kicked, bitten, hit with a fist, or hit with something hard?",
+          "answer": "No"
+        },
+        {
+          "number": 8,
+          "question": "Did you live with anyone who was a problem drinker or alcoholic, or who used street drugs?",
+          "answer": "No"
+        },
+        {
+          "number": 9,
+          "question": "Was a household member depressed or mentally ill, or did a household member attempt suicide?",
+          "answer": "Yes - mother had untreated anxiety, grandmother had 'nervous breakdowns'"
+        },
+        {
+          "number": 10,
+          "question": "Did a household member go to prison?",
+          "answer": "No"
+        }
+      ],
+      "interpretation": "Score of 3 indicates moderate adverse childhood experiences. Patient endorses emotional abuse (harsh criticism, conditional love), emotional neglect (feeling unloved unless achieving), and household mental illness (mother's anxiety, grandmother's breakdowns). While ACE score is not in 'high' range, the specific pattern of high parental expectations and performance-based love has clearly contributed to patient's anxiety and perfectionism. Research shows even moderate ACE scores increase risk for anxiety disorders in adulthood."
+    }
+  }
+}

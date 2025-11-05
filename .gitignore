@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+bun.lockb
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Serena & Claude
+.serena/
+
+.claude/
+.claude/node_modules/
+
+docs/
+reference/
+.serena/
+
+dev_notes/
+CLAUDE.md 

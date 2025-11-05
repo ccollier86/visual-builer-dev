@@ -1,0 +1,296 @@
+{
+  "patient": {
+    "id": "patient-demo-004",
+    "name": "Tasha Patel",
+    "firstName": "Tasha",
+    "lastName": "Patel",
+    "dob": "1985-06-14",
+    "age": 40,
+    "gender": "female",
+    "pronouns": "she/her",
+    "mrn": "MRN-78948"
+  },
+  "facility": {
+    "id": "facility-owensboro",
+    "name": "Owensboro",
+    "phone": "(270) 215-4454",
+    "address": "1102 Triplett Street, Suite 2300",
+    "city": "Owensboro",
+    "state": "KY",
+    "zip": "42303"
+  },
+  "provider": {
+    "id": "provider-004",
+    "name": "Anna Wakeland",
+    "credentials": "LPCC",
+    "fullName": "Anna Wakeland LPCC"
+  },
+  "supervisor": {
+    "name": "Neil Jariwala",
+    "credentials": "M.D., Psychiatrist",
+    "licenseNumber": "53374",
+    "licenseState": "KY"
+  },
+  "encounter": {
+    "date": "2025-11-04",
+    "time": "15:30",
+    "type": "Comprehensive Biopsychosocial Intake",
+    "appointmentId": "appt-demo-004"
+  },
+  "patient_intake": {
+    "narrative": "Virtual Consult MD\nIntake Document\n\nNovember 4, 2025 • Owensboro\n\nDEMOGRAPHICS\nWhat is your first name?\nTasha\n\nWhat is your last name?\nPatel\n\nWhat is your date of birth?\n1985-06-14\n\nWhat is your gender identity?\nfemale\n\nWhat are your pronouns?\nshe/her\n\nWhat is your race?\nasian-indian\n\nPRIMARY CONCERNS\nTop concerns?\nAlcohol use, Prescription medication misuse (painkillers), Anxiety, Depression, Chronic pain\n\nWhen did these concerns start?\nAlcohol use started socially in 20s, became problematic after car accident 4 years ago when prescribed pain medication. Anxiety and depression worsened alongside substance use.\n\nTriggers?\nChronic pain from car accident, Work stress as nurse, Relationship problems with husband, Financial stress, Shame about substance use\n\nCONTACT INFORMATION\nWhat is your phone number?\n(270) 555-7621\n\nWhat is your email address?\ntpatel.rn@email.com\n\nEmergency Contact Name?\nRaj Patel\n\nRelationship?\nHusband\n\nEmergency Contact Phone?\n(270) 555-7622\n\nINSURANCE\nWhat type of insurance do you have?\nprivate (employer health insurance through hospital)\n\nMEDICATION ALLERGIES\nDo you have any medication allergies?\nNo known drug allergies\n\nCURRENT MEDICATIONS\nMedication name?\nGabapentin\n\nPrescribed for?\nChronic pain and nerve damage from car accident\n\nMedication name?\nIbuprofen\n\nPrescribed for?\nPain management\n\nPreviously on opioid pain medication?\nYes - was prescribed Percocet after car accident, became dependent, now trying to manage pain without opioids\n\nPAST PSYCHIATRIC MEDICATIONS\nMedication name?\nZoloft\n\nDuration?\n1 year\n\nReason discontinued?\nStarted drinking more heavily while on it, felt like it wasn't working, stopped taking it\n\nMedication name?\nAtivan\n\nDuration?\n6 months\n\nReason discontinued?\nBecame dependent on it, was taking more than prescribed, doctor stopped prescribing it\n\nMEDICAL CONDITIONS\nConditions you have?\nChronic pain syndrome from car accident (lumbar spine injury), History of opioid use disorder (currently not using opioids but craving), Anxiety disorder, Depression\n\nSAFETY ASSESSMENT\nCurrent suicidal thoughts?\nHave had passive thoughts like 'everyone would be better off without me' when drinking heavily, but no active plan\n\nThoughts of harming others?\nNo\n\nSpecific plan for self-harm?\nNo\n\nCurrently safe?\nYes, but concerned about my drinking getting worse\n\nEmergency contact available?\nYes - husband Raj, though our relationship is strained due to my substance use\n\nCurrently in treatment?\nNo, this is my first time seeking integrated mental health and substance use treatment\n\nHEALTHCARE PROVIDERS\nDo you have a primary care provider?\nYes\n\nPCP Name?\nDr. Michael Torres\n\nPCP Practice?\nOwensboro Medical Group\n\nPCP Phone?\n(270) 555-4100\n\nDo you have a substance use disorder provider?\nNo, but I know I need help with my drinking and prescription medication issues\n\nSOCIAL & LIFESTYLE\nCurrent living arrangement?\nLiving with husband in house we own\n\nHousing stability?\nStable\n\nRelationship status?\nMarried for 12 years, currently strained due to my substance use and his frustration\n\nChildren?\nTwo children, ages 9 and 7, they live with us\n\nSocial support network?\nLimited - lost touch with most friends due to shame about drinking, husband is frustrated with me, sister lives out of state\n\nEmployment status?\nFull-time registered nurse at Owensboro Regional Hospital (ICU), on thin ice due to calling in sick\n\nHighest education completed?\nBachelor of Science in Nursing\n\nFinancial stress level?\nModerate - good household income but I've been hiding spending on alcohol from my husband\n\nLegal issues?\nNone currently, but worried about losing my nursing license if substance use discovered\n\nSUBSTANCE USE\nDo you smoke or use tobacco?\nNo\n\nHow often do you drink alcohol?\nDaily for the past 2 years, getting worse\n\nDrinks per occasion?\nUsually 3-4 glasses of wine on weeknights after kids go to bed, 5-7 on weekends. Sometimes more. Have been hiding bottles in my closet.\n\nConcerns about drinking?\nYes - I know I have a problem. Started as a way to manage pain and stress, now I can't seem to stop. Husband threatened to leave if I don't get help.\n\nHave you used recreational drugs?\nNo recreational drugs, but I was dependent on prescription opioids (Percocet) after my car accident. Had to taper off with medical supervision last year after taking them for 3 years. Still have cravings.\n\nSubstance use history?\nI never had substance issues before my car accident 4 years ago. Was prescribed Percocet for severe back pain. Within 6 months I was taking more than prescribed. Went through withdrawal when I tried to stop. Doctor helped me taper off last year. Started drinking wine to cope with lingering pain and anxiety after stopping the pain pills. The drinking has progressively gotten worse. I've tried to cut back on my own multiple times but can't make it more than a few days.\n\nFAMILY HISTORY\nFamily mental health history?\nFather has untreated depression and drinks heavily (alcoholic). Mother has anxiety. Brother had substance abuse issues in his 20s but is now in recovery.\n\nFamily substance use history?\nFather is alcoholic, brother was addicted to drugs but sober 10 years now\n\nTRAUMA HISTORY\nChildhood trauma?\nGrew up with father who was emotionally distant and drank heavily, some verbal abuse when he was drunk, financial instability in family\n\nAdult trauma?\nCar accident 4 years ago was traumatic - I was T-boned by drunk driver, significant injuries, chronic pain since then. Also emotional trauma from becoming dependent on prescription opioids and the shame around that.\n\nWORK/DAILY FUNCTIONING\nHow is work affected by symptoms?\nCalled in sick 6 times in past 2 months (mostly due to hangovers), harder to focus during 12-hour shifts, worried about making a mistake with patients, avoiding coworkers because I'm afraid they'll smell alcohol on me\n\nHow are relationships affected?\nMarriage is falling apart - husband says he doesn't recognize me anymore, I snap at my kids when I'm withdrawing or hungover, avoid family gatherings out of shame, isolated from friends\n\nHow is self-care affected?\nDrinking interferes with sleep quality, not eating well, not exercising, personal hygiene has slipped sometimes, spending money on alcohol I can't afford\n\nGOALS FOR TREATMENT\n1. Stop drinking and address my alcohol dependence before I lose my family or my job\n2. Learn to manage chronic pain without substances\n3. Address underlying anxiety and depression that I've been self-medicating\n4. Repair relationship with my husband and be a better mother\n5. Keep my nursing license and career\n\nSTRENGTHS\n- Motivated by fear of losing family and career\n- Intelligent and educated (RN degree)\n- Husband willing to support recovery if I commit to treatment\n- Brother who is in recovery can provide peer support\n- Financial stability and health insurance to access treatment\n- No legal consequences yet (window to intervene)",
+    "structured": {
+      "demographics": {
+        "firstName": "Tasha",
+        "lastName": "Patel",
+        "dob": "1985-06-14",
+        "gender": "female",
+        "pronouns": "she/her",
+        "race": "asian-indian"
+      },
+      "primaryConcerns": [
+        "Alcohol use",
+        "Prescription medication misuse",
+        "Anxiety",
+        "Depression",
+        "Chronic pain"
+      ],
+      "concernOnset": "past-4-years",
+      "triggers": [
+        "Chronic pain from car accident",
+        "Work stress as ICU nurse",
+        "Relationship problems with husband",
+        "Financial stress",
+        "Shame about substance use"
+      ],
+      "substanceUse": {
+        "tobacco": "no",
+        "alcohol": "daily, 3-4 glasses wine weeknights, 5-7 weekends, hiding bottles",
+        "concernsAboutDrinking": true,
+        "opioidHistory": "Was dependent on Percocet 3 years after car accident, tapered off last year, still has cravings",
+        "currentOpioidUse": false
+      },
+      "medicalHistory": {
+        "conditions": [
+          "Chronic pain syndrome (lumbar spine injury from car accident)",
+          "History of opioid use disorder",
+          "Anxiety disorder",
+          "Depression"
+        ],
+        "allergies": [],
+        "currentMedications": [
+          {"name": "Gabapentin", "for": "Chronic pain and nerve damage"},
+          {"name": "Ibuprofen", "for": "Pain management"}
+        ],
+        "pastPsychMeds": ["Zoloft", "Ativan"]
+      },
+      "socialHistory": {
+        "living": "With husband and 2 children in owned home",
+        "housingStability": "Stable",
+        "relationshipStatus": "Married 12 years, currently strained",
+        "children": "Two children ages 9 and 7",
+        "employment": "Full-time RN at Owensboro Regional Hospital ICU",
+        "education": "Bachelor of Science in Nursing",
+        "financialStress": "Moderate",
+        "supportNetwork": "Limited - husband frustrated, lost touch with friends, sister out of state"
+      },
+      "familyHistory": {
+        "mentalHealth": "Father: depression (untreated) and alcoholic, Mother: anxiety, Brother: substance abuse (now in recovery)",
+        "substanceUse": "Father: alcoholic, Brother: drugs (sober 10 years)"
+      },
+      "traumaHistory": {
+        "childhood": "Father emotionally distant, drank heavily, verbal abuse when drunk, financial instability",
+        "adult": "Car accident 4 years ago (T-boned by drunk driver), significant injuries, chronic pain, opioid dependence and shame"
+      },
+      "providers": {
+        "pcp": {
+          "name": "Dr. Michael Torres",
+          "practice": "Owensboro Medical Group",
+          "phone": "(270) 555-4100"
+        }
+      }
+    }
+  },
+  "clinical_intake": {
+    "qaText": "=== CLINICAL INTAKE RESPONSES ===\nGenerated: 11/04/2025, 3:30:00 PM\n\n## CHIEF COMPLAINT\nQ: What brings you in today?\nA: My husband gave me an ultimatum - get help for my drinking or he's taking the kids and leaving. I don't want to lose my family. I also can't afford to lose my nursing license. I know I have a problem.\n\n## CURRENT SYMPTOMS & IMPACT\nQ: How are symptoms impacting your work?\nA: Severe impact - called in sick 6 times in 2 months, mostly hangovers. Sometimes I'm still slightly impaired when I show up for my shift. I work in ICU so I could hurt someone. I'm terrified of that.\n\nQ: How are symptoms impacting your relationships?\nA: Severe impact - my marriage is falling apart, I'm irritable with my kids especially when I'm hungover, I've isolated from all my friends out of shame\n\nQ: How are symptoms impacting your self-care?\nA: Severe impact - drinking interferes with sleep, not eating properly, gained 20 pounds, sometimes don't shower before work, spending money on alcohol I hide from my husband\n\nQ: Current stress level (1-10)?\nA: 9/10 - I'm afraid of losing everything\n\nQ: Sleep quality?\nA: Terrible - I pass out from drinking but wake up at 3am sweating and anxious, then can't fall back asleep\n\nQ: Days missed from work in past month?\nA: 3 days\n\nQ: Tell me about your drinking pattern\nA: It started as 1-2 glasses of wine to help with pain and stress after my car accident. Over the past 2 years it's escalated to 3-4 glasses every night, more on weekends. I'm hiding bottles in my closet. I drink after my kids go to bed. Sometimes I wake up and don't fully remember putting them to bed. I've tried to stop on my own several times - I can make it maybe 3 days then the anxiety and cravings are overwhelming. I'm afraid I'm physically dependent now because I get shaky and sweaty when I try to stop.\n\nQ: Have you experienced withdrawal symptoms?\nA: Yes - when I try to stop I get shaky hands, sweating, anxiety that feels unbearable, irritability, nausea. That's part of why I keep drinking.\n\nQ: Tell me about your history with prescription pain medication\nA: After my car accident I was prescribed Percocet. It helped with pain and also made me feel calm and happy for the first time in years. Within 6 months I was taking more than prescribed. I'd run out early and experience withdrawal. I was doctor shopping, lying to my prescriber. Finally my PCP confronted me and helped me taper off last year. It was hell. After I stopped the opioids, I started drinking more to cope with the pain and the cravings. Looking back, I just traded one substance for another.\n\nQ: Current cravings for opioids?\nA: Yes, daily. Especially when my back pain flares up. I think about them all the time. But I'm too afraid to use them again because I know where that road leads. The alcohol felt 'safer' but now I'm dependent on that too.\n\n## DAILY LIFE & SELF-CARE\nQ: Describe your typical day\nA: Wake up around 6am feeling terrible (hangover). Get kids ready for school while trying to hide how bad I feel. Go to work, struggle through 12-hour shift. Come home exhausted. Make dinner for family. Put kids to bed. As soon as they're asleep, I pour wine. Tell myself it's just one glass to relax. End up drinking the whole bottle. Pass out around 11pm. Wake up at 3am with anxiety and guilt. Can't fall back asleep. Repeat.\n\nQ: How do you cope with pain now that you're not on opioids?\nA: Poorly. I take gabapentin and ibuprofen but they don't really help. The alcohol numbs it temporarily. I know I need to find better pain management solutions but everything hurts and I'm so tired.\n\nQ: How do you cope with stress and emotions?\nA: I drink. That's my only coping mechanism now. I used to exercise, spend time with friends, have hobbies. Now it's just work, kids, drink, sleep.\n\n## GOALS & STRENGTHS\nQ: What are your top treatment goals?\nA: 1) Stop drinking before I lose my family or hurt a patient at work. 2) Learn to manage my chronic pain without substances. 3) Address the anxiety and depression I've been self-medicating. 4) Save my marriage and be a good mother again. 5) Keep my nursing license.\n\nQ: What personal strengths can you build on?\nA: I'm intelligent and educated - I know intellectually what I need to do. I have a lot to lose which motivates me. My husband is willing to support me if I commit to treatment. My brother went through recovery and can help. I have good insurance and can afford treatment.\n\nQ: Motivation for change (1-10)?\nA: 10/10 - I'm terrified of losing my family and my career. I don't want to die from this.\n\nQ: What barriers do you anticipate?\nA: Chronic pain is a big one - I need better pain management solutions. Work stress - 12-hour ICU shifts are brutal. Fear of withdrawal symptoms. Shame about admitting I have a problem. Worried about stigma if people at work find out.\n\n## DIAGNOSES\nDiagnosis 1:\nQ: Diagnosis code\nA: F10.20\n\nQ: Diagnosis description\nA: Alcohol Use Disorder, Severe\n\nDiagnosis 2:\nQ: Diagnosis code\nA: F11.20\n\nQ: Diagnosis description\nA: Opioid Use Disorder, in sustained remission (history of)\n\nDiagnosis 3:\nQ: Diagnosis code\nA: F41.1\n\nQ: Diagnosis description\nA: Generalized Anxiety Disorder\n\nDiagnosis 4:\nQ: Diagnosis code\nA: F33.1\n\nQ: Diagnosis description\nA: Major Depressive Disorder, Moderate\n\n## TREATMENT HISTORY\nTreatment 1:\nQ: Type of treatment\nA: Mental Health - Tried Zoloft for 1 year, discontinued because drinking increased while on it. Ativan for 6 months, became dependent and was taking more than prescribed, doctor discontinued.\n\nTreatment 2:\nQ: Type of treatment\nA: Medical - Medically supervised taper off Percocet last year with PCP\n\n## MEDICATIONS (CLINICIAN-VERIFIED)\nQ: Current medications\nA: Gabapentin (dose not specified, for chronic pain), Ibuprofen as needed\n\nQ: Previously trialed psychiatric medications\nA: Zoloft for 1 year (stopped due to increased drinking while on medication, felt ineffective). Ativan for 6 months (developed dependence, was taking more than prescribed, provider discontinued). History of Percocet for 3 years post-accident (developed opioid use disorder, completed medically supervised taper last year).\n\n## MENTAL STATUS EXAMINATION\nQ: Appearance\nA: Professional appearance, well-groomed for appointment, appears slightly older than stated age, appears fatigued\n\nQ: Behavior\nA: Cooperative and engaged, good eye contact, tearful at times when discussing family situation, mildly tremulous hands noted\n\nQ: Speech\nA: Normal rate and volume, coherent, articulate\n\nQ: Stated mood\nA: \"Scared, ashamed, desperate\"\n\nQ: Observed affect\nA: Anxious and dysphoric, tearful, appropriate to content\n\nQ: Thought process\nA: Linear and goal-directed, no disorganization\n\nQ: Thought content\nA: Denies current suicidal ideation but endorses past passive thoughts when drinking heavily ('everyone would be better off without me'). Denies homicidal ideation. Significant shame and guilt about substance use. Preoccupied with fear of losing family and career. No paranoia or delusions.\n\nQ: Perceptual disturbances\nA: Denies hallucinations currently. Reports mild withdrawal symptoms when not drinking (shakiness, sweating) suggesting physical dependence.\n\nQ: Cognitive functioning\nA: Alert and oriented x4, attention and concentration intact, memory intact for recent and remote events\n\nQ: Insight\nA: Good to excellent - fully recognizes severity of alcohol use disorder and need for treatment, understands connection between substances and mental health symptoms\n\nQ: Judgment\nA: Currently good - seeking appropriate treatment, recognizes risks of continued use\n\nQ: Clinical Impressions\nA: 40-year-old female RN presenting with severe alcohol use disorder that developed in context of chronic pain management following traumatic car accident. History of opioid use disorder (Percocet) for which she completed supervised taper last year, now substituting alcohol to manage pain, anxiety, and opioid cravings. Assessment scores confirm severe alcohol use disorder (AUDIT: 31), low-moderate drug use (DAST-10: 4, reflecting past opioid use and ongoing cravings), moderate-to-severe depression (PHQ-9: 16), and severe anxiety (GAD-7: 17). Reports withdrawal symptoms when attempting to stop drinking (tremor, sweating, anxiety, nausea) suggesting physiological dependence and need for medically supervised detox consideration. Family history strongly positive for substance use (father alcoholic, brother in recovery) and mental health issues. Childhood exposure to father's alcoholism is risk factor. Significant stressors include high-stress occupation (ICU nurse), strained marriage, parenting responsibilities, chronic pain, and fear of professional consequences. Patient demonstrates excellent insight and motivation (10/10), multiple protective factors (education, family, employment, insurance), but faces significant barriers (chronic pain, high-stress job, physical dependence on alcohol). High risk for continued use without intensive intervention but good prognosis with appropriate treatment given insight and motivation.\n\nQ: Clinical Recommendations\nA: Recommend comprehensive integrated treatment: 1) Medical evaluation for potential need for medically supervised detox given withdrawal symptoms - coordinate with PCP Dr. Torres, may need short-term medical detox or medication-assisted management of withdrawal (benzodiazepine taper, thiamine supplementation). 2) Medication-assisted treatment for alcohol use disorder - consider naltrexone or acamprosate once medically cleared, discuss risks/benefits. 3) Psychiatric medication evaluation - likely benefit from SSRI or SNRI for comorbid anxiety/depression, but must be careful given history of Ativan dependence (avoid benzodiazepines long-term). 4) Intensive outpatient program (IOP) for substance use - 3x week minimum given severity, include group therapy, relapse prevention, recovery skills. 5) Individual therapy weekly - trauma-informed approach addressing car accident trauma, shame, pain management, relapse prevention. 6) Pain management consultation - multimodal pain management without opioids or alcohol, may need physiatry or pain specialist referral. 7) Marriage/family therapy once patient stabilizes - husband's support is critical protective factor. 8) Peer support strongly encouraged - AA, SMART Recovery, or specialty groups for healthcare professionals (RN recovery groups exist). 9) Close monitoring for suicide risk given passive ideation history - safety planning. 10) Coordination with employer/nursing board may be necessary if drinking affects work - many states have confidential monitoring programs for nurses in recovery that allow license retention. 11) Case management for coordination of complex treatment needs. 12) Address ACE score impact (score of 4) - childhood exposure to father's alcoholism has contributed to current presentation. Very close follow-up needed - weekly initially, reassess after 2-4 weeks. High priority case given risk to patient safety, family, and potential risk to patients in her care.",
+    "structured": {
+      "chiefComplaint": "My husband gave me an ultimatum - get help for my drinking or he's taking the kids and leaving. I don't want to lose my family. I also can't afford to lose my nursing license. I know I have a problem.",
+      "currentSymptoms": {
+        "workImpact": "severe",
+        "relationshipImpact": "severe",
+        "selfCareImpact": "severe",
+        "stressLevel": 9,
+        "sleepQuality": "very poor",
+        "missedWorkDays": 3
+      },
+      "dailyLife": {
+        "routineStructure": "structured around work and children, but drinking dominates evenings",
+        "selfCareChallenges": "drinking disrupts sleep, poor diet, weight gain, sometimes skips showering, hiding spending on alcohol",
+        "copingMechanisms": "drinking alcohol (primary maladaptive coping), used to exercise and have hobbies but no longer does"
+      },
+      "goalsStrengths": {
+        "goals": [
+          "Stop drinking before losing family or hurting patient at work",
+          "Manage chronic pain without substances",
+          "Address underlying anxiety and depression",
+          "Save marriage and be good mother",
+          "Keep nursing license"
+        ],
+        "strengths": [
+          "Intelligent and educated (RN)",
+          "High motivation due to fear of losses",
+          "Husband willing to support recovery",
+          "Brother in recovery can provide peer support",
+          "Good insurance and financial access to treatment"
+        ],
+        "motivation": 10,
+        "barriers": "Chronic pain, work stress (12-hour ICU shifts), fear of withdrawal, shame, stigma concerns at work"
+      },
+      "diagnoses": [
+        {
+          "code": "F10.20",
+          "description": "Alcohol Use Disorder, Severe"
+        },
+        {
+          "code": "F11.20",
+          "description": "Opioid Use Disorder, in sustained remission"
+        },
+        {
+          "code": "F41.1",
+          "description": "Generalized Anxiety Disorder"
+        },
+        {
+          "code": "F33.1",
+          "description": "Major Depressive Disorder, Moderate"
+        }
+      ],
+      "treatmentHistory": [
+        {
+          "type": "Mental Health",
+          "details": "Zoloft 1 year (discontinued, drinking increased), Ativan 6 months (developed dependence, provider discontinued)"
+        },
+        {
+          "type": "Substance Use",
+          "details": "Medically supervised taper off Percocet last year"
+        }
+      ],
+      "medications": {
+        "current": "Gabapentin (chronic pain), Ibuprofen PRN",
+        "previousPsych": "Zoloft 1 year (stopped due to increased drinking, felt ineffective). Ativan 6 months (developed dependence, taking more than prescribed, discontinued by provider). Percocet 3 years post-accident (developed opioid use disorder, completed supervised taper last year)."
+      },
+      "mse": {
+        "appearance": "Professional, well-groomed, appears slightly older than age, fatigued",
+        "behavior": "Cooperative, engaged, good eye contact, tearful discussing family, mildly tremulous hands",
+        "speech": "Normal rate and volume, coherent, articulate",
+        "mood": "Scared, ashamed, desperate",
+        "affect": "Anxious and dysphoric, tearful, appropriate to content",
+        "thoughtProcess": "Linear, goal-directed, no disorganization",
+        "thoughtContent": "Denies current SI, past passive thoughts when drinking heavily. Denies HI. Significant shame/guilt about substance use. Preoccupied with fear of losing family/career. No paranoia/delusions.",
+        "perceptualDisturbances": "Denies hallucinations. Reports mild withdrawal symptoms when not drinking (shakiness, sweating) suggesting physical dependence.",
+        "cognition": "Alert and oriented x4, attention and concentration intact, memory intact",
+        "insight": "Good to excellent - fully recognizes severity of alcohol use disorder, need for treatment, connection between substances and mental health",
+        "judgment": "Currently good - seeking appropriate treatment, recognizes risks of continued use"
+      },
+      "clinicalImpressions": "40-year-old female RN with severe alcohol use disorder developed in context of chronic pain management post-car accident. History of opioid use disorder (completed taper last year), now using alcohol to manage pain, anxiety, opioid cravings. AUDIT 31 confirms severe alcohol use disorder. DAST-10 4 reflects past opioid use and ongoing cravings. PHQ-9 16 moderate-to-severe depression. GAD-7 17 severe anxiety. Reports withdrawal symptoms (tremor, sweating, anxiety, nausea) suggesting physiological dependence requiring medically supervised detox consideration. Strong family history of substance use (father alcoholic, brother in recovery) and mental health issues. ACE score 4 with childhood exposure to father's alcoholism. Significant stressors: high-stress ICU nursing job, strained marriage, parenting, chronic pain, fear of professional consequences. Excellent insight and motivation (10/10), multiple protective factors (education, family, employment, insurance), but significant barriers (chronic pain, high-stress job, physical dependence). High risk without intensive intervention but good prognosis with appropriate treatment.",
+      "clinicalRecommendations": "Comprehensive integrated treatment: 1) Medical evaluation for medically supervised detox given withdrawal symptoms - coordinate with PCP, may need detox or medication-assisted withdrawal management. 2) Medication-assisted treatment for alcohol use disorder (naltrexone or acamprosate). 3) Psychiatric medication for comorbid anxiety/depression (SSRI/SNRI, avoid benzos long-term given Ativan dependence history). 4) Intensive outpatient program 3x/week minimum - group therapy, relapse prevention. 5) Individual therapy weekly - trauma-informed, pain management, relapse prevention. 6) Pain management consultation - multimodal approach without opioids/alcohol. 7) Marriage/family therapy once stabilized. 8) Peer support (AA, SMART Recovery, healthcare professional recovery groups). 9) Close suicide risk monitoring - safety planning. 10) Coordination with employer/nursing board - confidential monitoring programs for nurses in recovery. 11) Case management for complex needs coordination. 12) Address ACE impact. Weekly follow-up initially, reassess in 2-4 weeks. High priority case."
+    }
+  },
+  "assessments": {
+    "phq9": {
+      "title": "PHQ-9 (Patient Health Questionnaire-9)",
+      "completedDate": "2025-11-04",
+      "totalScore": 16,
+      "maxScore": 27,
+      "severity": "Moderately severe depression",
+      "responses": [
+        {"number": 1, "question": "Little interest or pleasure in doing things", "answer": "Nearly every day", "score": 3},
+        {"number": 2, "question": "Feeling down, depressed, or hopeless", "answer": "More than half the days", "score": 2},
+        {"number": 3, "question": "Trouble falling/staying asleep, or sleeping too much", "answer": "Nearly every day", "score": 3},
+        {"number": 4, "question": "Feeling tired or having little energy", "answer": "Nearly every day", "score": 3},
+        {"number": 5, "question": "Poor appetite or overeating", "answer": "More than half the days", "score": 2},
+        {"number": 6, "question": "Feeling bad about yourself", "answer": "Nearly every day", "score": 3},
+        {"number": 7, "question": "Trouble concentrating", "answer": "Not at all", "score": 0},
+        {"number": 8, "question": "Moving or speaking slowly", "answer": "Not at all", "score": 0},
+        {"number": 9, "question": "Thoughts of hurting yourself", "answer": "Not at all", "score": 0}
+      ],
+      "interpretation": "Score of 16 indicates moderately severe depression. Patient endorses daily anhedonia, insomnia, fatigue, feelings of worthlessness, with frequent low mood and appetite changes. Depression is closely linked to substance use and chronic pain."
+    },
+    "gad7": {
+      "title": "GAD-7 (Generalized Anxiety Disorder-7)",
+      "completedDate": "2025-11-04",
+      "totalScore": 17,
+      "maxScore": 21,
+      "severity": "Severe anxiety",
+      "responses": [
+        {"number": 1, "question": "Feeling nervous, anxious, or on edge", "answer": "Nearly every day", "score": 3},
+        {"number": 2, "question": "Not being able to stop or control worrying", "answer": "Nearly every day", "score": 3},
+        {"number": 3, "question": "Worrying too much about different things", "answer": "Nearly every day", "score": 3},
+        {"number": 4, "question": "Trouble relaxing", "answer": "Nearly every day", "score": 3},
+        {"number": 5, "question": "Being so restless that it's hard to sit still", "answer": "More than half the days", "score": 2},
+        {"number": 6, "question": "Becoming easily annoyed or irritable", "answer": "More than half the days", "score": 2},
+        {"number": 7, "question": "Feeling afraid as if something awful might happen", "answer": "Several days", "score": 1}
+      ],
+      "interpretation": "Score of 17 indicates severe anxiety. Patient has been self-medicating anxiety with alcohol. Anxiety worsens during withdrawal attempts."
+    },
+    "ace": {
+      "title": "ACE (Adverse Childhood Experiences)",
+      "completedDate": "2025-11-04",
+      "totalScore": 4,
+      "maxScore": 10,
+      "severity": "Moderate to high adverse childhood experiences",
+      "responses": [
+        {"number": 1, "question": "Emotional abuse", "answer": "Yes - father's verbal abuse when drunk"},
+        {"number": 2, "question": "Physical abuse", "answer": "No"},
+        {"number": 3, "question": "Sexual abuse", "answer": "No"},
+        {"number": 4, "question": "Emotional neglect", "answer": "Yes - father emotionally distant"},
+        {"number": 5, "question": "Physical neglect", "answer": "No"},
+        {"number": 6, "question": "Parents separated/divorced", "answer": "No"},
+        {"number": 7, "question": "Domestic violence", "answer": "No"},
+        {"number": 8, "question": "Substance abuse in household", "answer": "Yes - father alcoholic"},
+        {"number": 9, "question": "Mental illness in household", "answer": "Yes - father depression, mother anxiety"},
+        {"number": 10, "question": "Incarcerated household member", "answer": "No"}
+      ],
+      "interpretation": "ACE score of 4 indicates moderate to high childhood adversity. Exposure to father's alcoholism and associated verbal abuse, emotional neglect. Research shows ACE scores of 4+ significantly increase risk for substance use disorders in adulthood. Patient's alcohol use disorder likely influenced by childhood experiences."
+    },
+    "audit": {
+      "title": "AUDIT (Alcohol Use Disorders Identification Test)",
+      "completedDate": "2025-11-04",
+      "totalScore": 31,
+      "maxScore": 40,
+      "severity": "Severe alcohol use disorder - very high risk",
+      "responses": [
+        {"number": 1, "question": "How often do you have a drink containing alcohol?", "answer": "4 or more times a week", "score": 4},
+        {"number": 2, "question": "How many drinks on a typical day?", "answer": "7-9", "score": 3},
+        {"number": 3, "question": "How often do you have six or more drinks on one occasion?", "answer": "Daily or almost daily", "score": 4},
+        {"number": 4, "question": "How often unable to stop drinking once started?", "answer": "Daily or almost daily", "score": 4},
+        {"number": 5, "question": "How often failed to do what was expected because of drinking?", "answer": "Weekly", "score": 3},
+        {"number": 6, "question": "How often needed morning drink after heavy session?", "answer": "Monthly", "score": 2},
+        {"number": 7, "question": "How often feeling of guilt or remorse after drinking?", "answer": "Daily or almost daily", "score": 4},
+        {"number": 8, "question": "How often unable to remember night before because of drinking?", "answer": "Weekly", "score": 2},
+        {"number": 9, "question": "Have you or someone else been injured because of your drinking?", "answer": "Yes, during the last year", "score": 4},
+        {"number": 10, "question": "Has relative/friend/doctor been concerned about your drinking?", "answer": "Yes, during the last year", "score": 4}
+      ],
+      "interpretation": "Score of 31 indicates severe alcohol use disorder with very high risk. Patient reports daily drinking with inability to control consumption, frequent binges, daily guilt, weekly blackouts, work impairment, withdrawal symptoms, and concerns from husband and healthcare provider. Physiological dependence evident from withdrawal symptoms. Requires immediate intensive treatment and medical monitoring for safe withdrawal."
+    },
+    "dast10": {
+      "title": "DAST-10 (Drug Abuse Screening Test)",
+      "completedDate": "2025-11-04",
+      "totalScore": 4,
+      "maxScore": 10,
+      "severity": "Low to moderate drug use concerns",
+      "responses": [
+        {"number": 1, "question": "Used drugs other than for medical reasons?", "answer": "Yes - misused prescribed Percocet", "score": 1},
+        {"number": 2, "question": "Abuse more than one drug at a time?", "answer": "No - only opioids", "score": 0},
+        {"number": 3, "question": "Unable to stop using drugs when you want to?", "answer": "Yes - was unable to stop Percocet on own, needed medical taper", "score": 1},
+        {"number": 4, "question": "Blackouts or flashbacks as result of drug use?", "answer": "No", "score": 0},
+        {"number": 5, "question": "Feel bad or guilty about drug use?", "answer": "Yes - significant shame about opioid dependence", "score": 1},
+        {"number": 6, "question": "Spouse/parents complain about drug involvement?", "answer": "Yes - husband was very concerned about Percocet misuse", "score": 1},
+        {"number": 7, "question": "Neglected family because of drug use?", "answer": "No - but came close", "score": 0},
+        {"number": 8, "question": "Engaged in illegal activities to obtain drugs?", "answer": "No - was doctor shopping but not illegal purchase", "score": 0},
+        {"number": 9, "question": "Experienced withdrawal symptoms?", "answer": "No formal withdrawal now, but did during taper", "score": 0},
+        {"number": 10, "question": "Medical problems as result of drug use?", "answer": "No", "score": 0}
+      ],
+      "interpretation": "Score of 4 indicates low to moderate substance use concerns related to past prescription opioid misuse. Patient successfully completed medically supervised taper off Percocet last year and reports she is not currently using opioids, though she experiences ongoing cravings. Primary current substance use concern is severe alcohol use disorder. Patient demonstrates insight about having 'traded one substance for another' - using alcohol to manage opioid cravings and pain. Risk for relapse to opioid use remains given chronic pain and daily cravings."
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+	"$id": "https://catalyst/specs/non-ai-output.meta.schema.json",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Non-AI Structured Output (NAS) — Meta Schema",
+	"type": "object",
+	"description": "Validates a generated, per-template JSON Schema that defines EXACTLY what non-AI fields (lookup/computed/static/verbatim) must provide.",
+	"properties": {
+		"$id": { "type": "string" },
+		"$schema": { "type": "string", "const": "https://json-schema.org/draft/2020-12/schema" },
+		"title": { "type": "string" },
+		"description": { "type": "string" },
+
+		"type": { "type": "string", "const": "object" },
+		"additionalProperties": { "type": "boolean" },
+
+		"properties": {
+			"type": "object",
+			"description": "Top-level fields for non-AI data (lookup, computed, static, verbatim).",
+			"additionalProperties": {
+				"$ref": "#/$defs/node"
+			}
+		},
+
+		"required": {
+			"type": "array",
+			"items": { "type": "string" },
+			"uniqueItems": true
+		}
+	},
+
+	"required": ["$schema", "type", "properties", "additionalProperties"],
+
+	"$defs": {
+		"node": {
+			"oneOf": [
+				{ "$ref": "#/$defs/objectNode" },
+				{ "$ref": "#/$defs/arrayNode" },
+				{ "$ref": "#/$defs/stringNode" },
+				{ "$ref": "#/$defs/numberNode" },
+				{ "$ref": "#/$defs/booleanNode" }
+			]
+		},
+
+		"objectNode": {
+			"type": "object",
+			"properties": {
+				"type": { "type": "string", "const": "object" },
+				"additionalProperties": { "type": "boolean" },
+				"properties": { "type": "object", "additionalProperties": { "$ref": "#/$defs/node" } },
+				"required": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+			},
+			"required": ["type", "properties"],
+			"additionalProperties": true
+		},
+
+		"arrayNode": {
+			"type": "object",
+			"properties": {
+				"type": { "type": "string", "const": "array" },
+				"items": { "$ref": "#/$defs/node" },
+				"minItems": { "type": "integer", "minimum": 0 },
+				"maxItems": { "type": "integer", "minimum": 0 }
+			},
+			"required": ["type", "items"],
+			"additionalProperties": true
+		},
+
+		"stringNode": {
+			"type": "object",
+			"properties": {
+				"type": { "type": "string", "const": "string" },
+				"enum": { "type": "array", "items": { "type": "string" } },
+				"pattern": { "type": "string" },
+
+				"x-minWords": { "type": "integer", "minimum": 0 },
+				"x-maxWords": { "type": "integer", "minimum": 1 },
+				"x-minSentences": { "type": "integer", "minimum": 0 },
+				"x-maxSentences": { "type": "integer", "minimum": 1 }
+			},
+			"required": ["type"],
+			"additionalProperties": true
+		},
+
+		"numberNode": {
+			"type": "object",
+			"properties": {
+				"type": { "type": "string", "const": "number" },
+				"minimum": { "type": "number" },
+				"maximum": { "type": "number" }
+			},
+			"required": ["type"],
+			"additionalProperties": true
+		},
+
+		"booleanNode": {
+			"type": "object",
+			"properties": {
+				"type": { "type": "string", "const": "boolean" }
+			},
+			"required": ["type"],
+			"additionalProperties": true
+		}
+	}
+}
