@@ -68,7 +68,7 @@ async function main() {
     const result = await runPipeline({
       template: exampleTemplate,
       sourceData: exampleSourceData,
-      tokens: defaultTokens,
+      tokens: defaultTokens as DesignTokens,
       options: {
         validateSteps: true,
         provenance: true
