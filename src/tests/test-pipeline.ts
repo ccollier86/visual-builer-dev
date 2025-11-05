@@ -10,7 +10,8 @@
 
 import { runPipeline } from '../pipeline';
 import exampleTemplate from '../pipeline/examples/example-template.json';
-import defaultTokens from '../tokens/defaults/default-tokens.json';
+import defaultTokens from '../tokens/defaults/default-tokens.json' assert { type: 'json' };
+import type { DesignTokens } from '../tokens/types';
 
 async function main() {
   console.log('🚀 Testing MVP Core Pipeline...\n');
