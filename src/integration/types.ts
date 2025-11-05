@@ -48,3 +48,13 @@ export const DEFAULT_RETRY_CONFIG: RetryConfig = {
   maxDelayMs: 8000,
   retryableStatusCodes: [429, 500, 502, 503, 504],
 };
+
+/**
+ * Default generation options
+ */
+export const DEFAULT_OPTIONS: Required<GenerationOptions> = {
+  model: 'gpt-5',
+  temperature: 0.7,
+  maxTokens: 4000,
+  retries: 3,
+};
