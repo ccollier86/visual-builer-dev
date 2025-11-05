@@ -31,41 +31,60 @@ export function renderNoteHTML(inputs: FactoryInputs): string {
 
   const chunks: string[] = [];
   chunks.push(`<!DOCTYPE html>`);
-  chunks.push(`<article class="note" lang="${escapeHtml(lang)}">`);
+  chunks.push(`<html lang="${escapeHtml(lang)}">`);
+  chunks.push(`<head>`);
+  chunks.push(`<meta charset="utf-8">`);
+  chunks.push(`<meta name="viewport" content="width=device-width, initial-scale=1.0">`);
+  chunks.push(`<title>${escapeHtml(template.name)}</title>`);
+  chunks.push(`</head>`);
+  chunks.push(`<body class="note-body">`);
+  chunks.push(`<div class="note-container">`);
+  chunks.push(`<article class="note">`);
 
-  // Optional header
-  const headerHtml =
+  const brandHeader =
     options?.brandOverrides?.headerHtml || tokens?.brand?.headerHtml || "";
-  const logoUrl =
+  const brandLogo =
     options?.brandOverrides?.logoUrl || tokens?.brand?.logoUrl || "";
 
-  if (headerHtml || logoUrl) {
-    chunks.push(`<header class="note-header">`);
-    if (logoUrl) {
-      chunks.push(`<img alt="Logo" class="note-logo" src="${escapeAttr(logoUrl)}">`);
+  if (brandHeader || brandLogo) {
+    chunks.push(`<header class="note-brand-header">`);
+    if (brandLogo) {
+      chunks.push(
+        `<img alt="Logo" class="note-brand-logo" src="${escapeAttr(brandLogo)}">`
+      );
     }
-    if (headerHtml) chunks.push(headerHtml);
+    if (brandHeader) {
+      chunks.push(brandHeader);
+    }
     chunks.push(`</header>`);
   }
 
-  // Render layout components
   for (const component of template.layout) {
-    renderComponent(chunks, component, payload, tokens, idPrefix, 0, collectedRefs);
+    renderComponent(
+      chunks,
+      component,
+      payload,
+      tokens,
+      idPrefix,
+      0,
+      collectedRefs
+    );
   }
 
-  // Optional footer
-  const footerHtml =
+  const brandFooter =
     options?.brandOverrides?.footerHtml || tokens?.brand?.footerHtml || "";
-  if (footerHtml) {
-    chunks.push(`<footer class="note-footer">${footerHtml}</footer>`);
+  if (brandFooter) {
+    chunks.push(`<footer class="note-brand-footer">${brandFooter}</footer>`);
   }
 
-  // Optional provenance appendix
   if (options?.provenance && collectedRefs.size > 0) {
     chunks.push(renderProvenance(collectedRefs));
   }
 
   chunks.push(`</article>`);
+  chunks.push(`</div>`);
+  chunks.push(`</body>`);
+  chunks.push(`</html>`);
   return chunks.join("");
 }
 
