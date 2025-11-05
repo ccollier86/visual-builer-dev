@@ -77,7 +77,7 @@ export class NASBuilder implements INASBuilder {
 
           // Process nested tableMap
           if (item.tableMap) {
-            for (const colItem of item.tableMap) {
+            for (const colItem of Object.values(item.tableMap)) {
               this.resolveItem(colItem, component.id, context, resolved, warnings);
             }
           }
