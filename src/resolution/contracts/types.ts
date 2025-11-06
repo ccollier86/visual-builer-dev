@@ -33,9 +33,14 @@ export interface SourceData {
  * Resolution context passed to all resolvers
  */
 export interface ResolutionContext {
-  template: NoteTemplate;  // Validated note template
-  sourceData: SourceData;  // Raw input data
-  nasSchema: DerivedSchema;          // Target NAS schema
+  /** Validated note template */
+  template: NoteTemplate;
+  /** Raw input data provided by the host application */
+  sourceData: SourceData;
+  /** Target NAS schema derived from the template */
+  nasSchema: DerivedSchema;
+  /** Partial NAS snapshot built so far (read-only to preserve purity) */
+  partialNas: Readonly<NasSnapshot>;
 }
 
 /**
@@ -65,6 +70,7 @@ export interface ResolutionWarning {
   slotId: string;
   slotType: string;
   path: string;
+  severity: ResolutionWarningSeverity;
   reason:
     | 'missing_source'
     | 'formula_error'
@@ -72,7 +78,10 @@ export interface ResolutionWarning {
     | 'type_mismatch'
     | 'unresolved_slot';
   message: string;
+  details?: unknown;
 }
+
+export type ResolutionWarningSeverity = 'info' | 'warning' | 'error';
 
 /**
  * Details describing a slot that remained unresolved without existing warnings.
