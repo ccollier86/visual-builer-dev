@@ -22,10 +22,10 @@ export {
   type PipelineTokenDiagnosticsEvent,
   type PipelineCompleteEvent,
   type PipelineErrorEvent,
-} from './types';
-
-export {
-  createPipelineInstrumentation,
+  type LoggerEventMap,
+  type LoggerEventPayload,
   type PipelineInstrumentation,
   type PipelineInstrumentationConfig,
-} from './instrumentation';
+} from './types';
+
+export { createPipelineInstrumentation } from './instrumentation';

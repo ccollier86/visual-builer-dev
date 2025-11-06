@@ -723,6 +723,15 @@
                   "id": "diagnosis-icd10",
                   "description": "ICD-10-CM code (AI generates mapping from DSM-5)",
                   "outputPath": "assessment.diagnosticImpressions[].icd10Code",
+                  "aiDeps": ["assessment.diagnosticImpressions"],
+                  "source": [
+                    "clinical_intake.structured.diagnoses",
+                    "assessments.phq9",
+                    "assessments.gad7",
+                    "assessments.ace",
+                    "assessments.audit",
+                    "assessments.dast10"
+                  ],
                   "constraints": {
                     "required": true
                   },
@@ -773,17 +782,28 @@
                   "id": "diagnosis-criteria",
                   "description": "Brief supporting rationale from assessment data",
                   "outputPath": "assessment.diagnosticImpressions[].criteria",
+                  "aiDeps": ["assessment.diagnosticImpressions"],
+                  "source": [
+                    "clinical_intake.structured.diagnoses",
+                    "assessments.phq9",
+                    "assessments.gad7",
+                    "assessments.ace",
+                    "assessments.audit",
+                    "assessments.dast10",
+                    "clinical_intake.structured.currentSymptoms"
+                  ],
                   "guidance": [
-                    "Write 1-2 sentence supporting rationale for this diagnosis",
-                    "Reference specific assessment scores, symptoms, or clinical data",
-                    "Keep concise - this is supporting criteria, not full formulation",
-                    "Maintain the same diagnosis order as clinical_intake.structured.diagnoses",
-                    "Provide rationale for every diagnosis; do not leave this field empty or generic"
+                    "Map the patient presentation to DSM-5 diagnostic criteria for this disorder. Explicitly cite criterion letters or numbered requirements that are satisfied (e.g., “Criterion A – …”, “Criterion B(3) – …”).",
+                    "Use only clinician interview data, reported symptoms, behaviours, functional impacts, precipitating events, and risk factors gathered from the intake. Assessment scores may be mentioned at the end for severity context but cannot be the primary justification.",
+                    "If data suggests a required criterion is not met or information is missing, clearly state the uncertainty. Do not assume patient reports cover all criteria unless explicitly stated in the intake.",
+                    "Maintain the same diagnosis order as clinical_intake.structured.diagnoses and provide a distinct rationale for each diagnosis. Avoid generic statements that could apply to any patient."
                   ],
                   "constraints": {
                     "required": true,
-                    "minWords": 5,
-                    "maxWords": 50
+                    "minWords": 40,
+                    "maxWords": 140,
+                    "minSentences": 2,
+                    "maxSentences": 4
                   },
                   "styleHints": {
                     "tableCell": {

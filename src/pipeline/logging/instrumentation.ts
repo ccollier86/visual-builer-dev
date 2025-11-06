@@ -25,57 +25,15 @@ import {
   type PipelineTokenDiagnosticsEvent,
   type PipelineCompleteEvent,
   type PipelineErrorEvent,
+  type LoggerEventMap,
+  type LoggerEventPayload,
+  type PipelineInstrumentation,
+  type PipelineInstrumentationConfig,
 } from './types';
-
-type LoggerEventMap = {
-  onStart: PipelineStartEvent;
-  onSchemasDerived: PipelineSchemasEvent;
-  onResolution: PipelineResolutionEvent;
-  onPromptComposed: PipelinePromptEvent;
-  onAIRequest: PipelineAIRequestEvent;
-  onAIResponse: PipelineAIResponseEvent;
-  onAIDiagnostic: PipelineAIDiagnosticEvent;
-  onMergeCompleted: PipelineMergeEvent;
-  onRender: PipelineRenderEvent;
-  onStageTiming: PipelineStageTimingEvent;
-  onTokenDiagnostics: PipelineTokenDiagnosticsEvent;
-  onComplete: PipelineCompleteEvent;
-  onError: PipelineErrorEvent;
-};
-
-type LoggerEventPayload<K extends keyof LoggerEventMap> = Omit<LoggerEventMap[K], keyof PipelineBaseEvent>;
 
 interface LoggerContext extends Omit<PipelineBaseEvent, 'timestamp'> {}
 
 const DEFAULT_CAPTURE_PROMPT_METADATA = true;
-
-/**
- * Public instrumentation contract used by the pipeline orchestrator.
- */
-export interface PipelineInstrumentation {
-  capturePromptMetadata: boolean;
-  start(): void;
-  schemasDerived(event: LoggerEventPayload<'onSchemasDerived'>): void;
-  resolution(event: LoggerEventPayload<'onResolution'>): void;
-  promptComposed(event: LoggerEventPayload<'onPromptComposed'>): void;
-  aiRequest(event: LoggerEventPayload<'onAIRequest'>): void;
-  aiResponse(event: LoggerEventPayload<'onAIResponse'>): void;
-  aiDiagnostic(event: LoggerEventPayload<'onAIDiagnostic'>): void;
-  mergeCompleted(event: LoggerEventPayload<'onMergeCompleted'>): void;
-  render(event: LoggerEventPayload<'onRender'>): void;
-  stageTiming(event: LoggerEventPayload<'onStageTiming'>): void;
-  tokenDiagnostics(event: LoggerEventPayload<'onTokenDiagnostics'>): void;
-  complete(event: LoggerEventPayload<'onComplete'>): void;
-  error(error: PipelineError): void;
-}
-
-/**
- * Configuration required to bootstrap instrumentation for a pipeline run.
- */
-export interface PipelineInstrumentationConfig {
-  template: NoteTemplate;
-  options: PipelineOptions;
-}
 
 /**
  * Creates an instrumentation adapter that emits structured events to the provided logger.

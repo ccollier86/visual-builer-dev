@@ -5,6 +5,8 @@
  * Responsibility: Provide reusable utilities for template lint rules.
  */
 
+import type { TemplateLintIssue, LintSeverity } from '../types';
+
 export const KNOWN_STYLE_HINT_KEYS = new Set<string>(['tone', 'tableCell']);
 
 /**
@@ -17,4 +19,36 @@ export interface LintContext {
   componentId: string;
   /** Column labels for the nearest table, used to validate cell mappings. */
   tableColumns?: string[];
+}
+
+/**
+ * Helper for recording lint issues with consistent metadata.
+ */
+export function reportLintIssue(
+  report: (issue: TemplateLintIssue) => void,
+  issue: TemplateLintIssue
+): void {
+  report(issue);
+}
+
+export function buildTemplateLintIssue(
+  code: string,
+  message: string,
+  severity: LintSeverity,
+  context: LintContext,
+  slotId?: string
+): TemplateLintIssue {
+  const issue: TemplateLintIssue = {
+    code,
+    message,
+    severity,
+    componentId: context.componentId,
+    path: context.componentPath,
+  };
+
+  if (slotId) {
+    issue.slotId = slotId;
+  }
+
+  return issue;
 }

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, mock } from 'bun:test';
+import { beforeEach, describe, expect, it } from 'bun:test';
 import type { NoteTemplate } from '../../derivation/types';
 import type { SourceData } from '../../resolution';
 import type { DesignTokens } from '../../tokens/types';
@@ -7,44 +7,34 @@ import type { AIPayload } from '../../types/payloads';
 
 const integrationCallLog: unknown[] = [];
 
-// Mock the integration layer so we can assert logging without performing real API calls.
-mock.module('../../integration', () => {
+function createFakeOpenAIClient() {
   return {
-    createOpenAIClient: () => ({}),
-    generateWithSchema: async (
-      _client: unknown,
-      _bundle: unknown,
-      validator: (data: AIPayload) => { ok: boolean; errors: unknown[]; warnings: unknown[] },
-      _options?: unknown
-    ) => {
-      const output: AIPayload = {
-        assessment: { summary: 'Mocked assessment summary.' },
-      };
-
-      const validation = validator(output);
-      if (!validation.ok) {
-        throw new Error(
-          `Mock generator produced invalid payload: ${JSON.stringify(validation.errors)}`
-        );
-      }
-
-      integrationCallLog.push({ prompt: _bundle });
-
-      return {
-        output,
-        usage: {
-          promptTokens: 12,
-          completionTokens: 6,
-          totalTokens: 18,
-        },
-        model: 'mock-gpt-audit',
-        responseId: 'resp-audit-123',
-        promptId: 'prompt-audit-456',
-        warnings: [],
-      };
+    responses: {
+      create: async (requestBody: unknown) => {
+        integrationCallLog.push(requestBody);
+        return {
+          id: 'resp-audit-123',
+          object: 'response',
+          created: Date.now(),
+          model: 'mock-gpt-audit',
+          status: 'completed',
+          output: [],
+          output_text: JSON.stringify({
+            assessment: { summary: 'Mocked assessment summary.' },
+          }),
+          usage: {
+            input_tokens: 12,
+            output_tokens: 6,
+            total_tokens: 18,
+          },
+          prompt: {
+            id: 'prompt-audit-456',
+          },
+        };
+      },
     },
-  };
-});
+  } as const;
+}
 
 import {
 	runPipeline,
@@ -173,6 +163,7 @@ describe('runPipeline logging adapter', () => {
       options: {
         logger,
         verbose: false,
+        openaiClient: createFakeOpenAIClient() as any,
         generationOptions: {
           model: 'gpt-4o-mini',
           temperature: 0,

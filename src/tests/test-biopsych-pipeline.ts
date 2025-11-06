@@ -126,6 +126,14 @@ async function main() {
 		if (error instanceof Error) {
 			console.error('   Message:', error.message);
 			console.error('   Stack:', error.stack);
+			const cause = (error as { cause?: unknown }).cause;
+			if (cause !== undefined) {
+				try {
+					console.error('   Cause:', JSON.stringify(cause, null, 2));
+				} catch {
+					console.error('   Cause:', cause);
+				}
+			}
 		}
 		process.exit(1);
 	}

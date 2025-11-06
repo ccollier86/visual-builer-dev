@@ -5,6 +5,7 @@
  * Responsibility: Define structured logging events and logger contract
  */
 
+import type { NoteTemplate } from '../../derivation/types';
 import type { PromptBundle } from '../../composition/types';
 import type { DesignTokens } from '../../tokens/types';
 import type { GenerationOptions, GenerationResult } from '../../integration/types';
@@ -115,6 +116,49 @@ export interface PipelineCompleteEvent extends PipelineBaseEvent {
 
 export interface PipelineErrorEvent extends PipelineBaseEvent {
   error: PipelineError;
+}
+
+export type LoggerEventMap = {
+  onStart: PipelineStartEvent;
+  onSchemasDerived: PipelineSchemasEvent;
+  onResolution: PipelineResolutionEvent;
+  onPromptComposed: PipelinePromptEvent;
+  onAIRequest: PipelineAIRequestEvent;
+  onAIResponse: PipelineAIResponseEvent;
+  onAIDiagnostic: PipelineAIDiagnosticEvent;
+  onMergeCompleted: PipelineMergeEvent;
+  onRender: PipelineRenderEvent;
+  onStageTiming: PipelineStageTimingEvent;
+  onTokenDiagnostics: PipelineTokenDiagnosticsEvent;
+  onComplete: PipelineCompleteEvent;
+  onError: PipelineErrorEvent;
+};
+
+export type LoggerEventPayload<K extends keyof LoggerEventMap> = Omit<
+  LoggerEventMap[K],
+  keyof PipelineBaseEvent
+>;
+
+export interface PipelineInstrumentation {
+  capturePromptMetadata: boolean;
+  start(): void;
+  schemasDerived(event: LoggerEventPayload<'onSchemasDerived'>): void;
+  resolution(event: LoggerEventPayload<'onResolution'>): void;
+  promptComposed(event: LoggerEventPayload<'onPromptComposed'>): void;
+  aiRequest(event: LoggerEventPayload<'onAIRequest'>): void;
+  aiResponse(event: LoggerEventPayload<'onAIResponse'>): void;
+  aiDiagnostic(event: LoggerEventPayload<'onAIDiagnostic'>): void;
+  mergeCompleted(event: LoggerEventPayload<'onMergeCompleted'>): void;
+  render(event: LoggerEventPayload<'onRender'>): void;
+  stageTiming(event: LoggerEventPayload<'onStageTiming'>): void;
+  tokenDiagnostics(event: LoggerEventPayload<'onTokenDiagnostics'>): void;
+  complete(event: LoggerEventPayload<'onComplete'>): void;
+  error(error: PipelineError): void;
+}
+
+export interface PipelineInstrumentationConfig {
+  template: NoteTemplate;
+  options: PipelineOptions;
 }
 
 const NOOP_LOGGER: PipelineLogger = Object.freeze({});

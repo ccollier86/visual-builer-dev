@@ -1,43 +1,7 @@
-import { describe, expect, it, mock } from 'bun:test';
+import { describe, expect, it } from 'bun:test';
 import type { NoteTemplate } from '../../derivation/types';
 import type { DesignTokens } from '../../tokens/types';
 import defaultTokensRaw from '../../tokens/defaults/default-tokens.json';
-import type { AIPayload } from '../../types/payloads';
-
-// Mock the integration layer so the pipeline never calls the real OpenAI client.
-mock.module('../../integration', () => {
-  return {
-    createOpenAIClient: () => ({}),
-    generateWithSchema: async (
-      _client: unknown,
-      _bundle: unknown,
-      validator: (data: AIPayload) => { ok: boolean; errors: unknown[]; warnings: unknown[] },
-      _options?: unknown
-    ) => {
-      const output: AIPayload = {
-        assessment: { summary: 'Patient Jane Doe presents with stable mood.' },
-      };
-
-      const validation = validator(output);
-      if (!validation.ok) {
-        throw new Error(
-          `Mock generator produced invalid payload: ${JSON.stringify(validation.errors)}`
-        );
-      }
-
-      return {
-        output,
-        usage: {
-          promptTokens: 10,
-          completionTokens: 5,
-          totalTokens: 15,
-        },
-        model: 'mock-gpt',
-        warnings: [],
-      };
-    },
-  };
-});
 
 import { runPipeline } from '../../pipeline';
 import type { SourceData } from '../../resolution';
@@ -94,6 +58,28 @@ const tokens = defaultTokensRaw as DesignTokens;
 
 describe('Pipeline integration (strict mode)', () => {
   it('runs end-to-end with strict guards and produces merged payload', async () => {
+    const fakeOpenAIClient = {
+      responses: {
+        create: async () => ({
+          id: 'resp-integration-001',
+          object: 'response',
+          created: Date.now(),
+          model: 'mock-gpt',
+          status: 'completed',
+          output: [],
+          output_text: JSON.stringify({
+            assessment: { summary: 'Patient Jane Doe presents with stable mood.' },
+          }),
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+            total_tokens: 15,
+          },
+          prompt: {},
+        }),
+      },
+    } as const;
+
     const result = await runPipeline({
       template,
       sourceData,
@@ -105,6 +91,7 @@ describe('Pipeline integration (strict mode)', () => {
           promptLint: { failOnWarning: true },
         },
         verbose: true,
+        openaiClient: fakeOpenAIClient as any,
       },
     });
 
