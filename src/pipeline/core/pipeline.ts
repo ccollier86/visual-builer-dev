@@ -34,6 +34,7 @@ import type {
 	PipelineWarnings,
 } from '../types';
 import { findMergeConflicts, mergePayloads } from './merger';
+import { createPipelineError, logVerbose } from './helpers';
 import { isMockGenerationEnabled, resolveMockGeneration } from './mock-generation';
 
 function cloneTokens(tokens: DesignTokens): DesignTokens {
@@ -171,22 +172,22 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 	const startTime = Date.now();
 
 	try {
-		const pipelineWarnings: PipelineWarnings = {};
-		// Step 1: Validate template
-		log(options, 'Step 1/8: Validating note template...');
+	const pipelineWarnings: PipelineWarnings = {};
+	// Step 1: Validate template
+	logVerbose(options, 'Step 1/8: Validating note template...');
 		const templateResult = validateNoteTemplate(input.template);
 		if (!templateResult.ok) {
-			throw createError('Template validation failed', 'template-validation', templateResult.errors);
+			throw createPipelineError('Template validation failed', 'template-validation', templateResult.errors);
 		}
 
 		const templateLint = lintNoteTemplate(input.template);
 		if (templateLint.errors.length > 0) {
-			throw createError('Template lint failed', 'template-lint', templateLint.errors);
+			throw createPipelineError('Template lint failed', 'template-lint', templateLint.errors);
 		}
 
 		if (templateLint.warnings.length > 0) {
 			if (options.guards?.templateLint?.failOnWarning) {
-				throw createError(
+				throw createPipelineError(
 					'Template lint warnings present',
 					'template-lint-warning',
 					templateLint.warnings
@@ -196,15 +197,15 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			pipelineWarnings.template = templateLint.warnings;
 		}
 
-		// Step 2: Derive AIS schema (AI Structured Output)
-		log(options, 'Step 2/8: Deriving AIS schema...');
+	// Step 2: Derive AIS schema (AI Structured Output)
+	logVerbose(options, 'Step 2/8: Deriving AIS schema...');
 		const ais = deriveAIS(input.template);
 
 		// Validate AIS schema structure against meta-schema
 		if (validate) {
 			const aisSchemaResult = validateAIS(ais);
 			if (!aisSchemaResult.ok) {
-				throw createError(
+				throw createPipelineError(
 					'Derived AIS schema failed validation',
 					'ais-schema-validation',
 					aisSchemaResult.errors
@@ -212,12 +213,12 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			}
 		}
 
-		// Step 3: Derive NAS schema (Non-AI Snapshot)
-		log(options, 'Step 3/8: Deriving NAS schema...');
+	// Step 3: Derive NAS schema (Non-AI Snapshot)
+	logVerbose(options, 'Step 3/8: Deriving NAS schema...');
 		const nas = deriveNAS(input.template);
 
-		// Step 4: Merge to RPS schema (Render Payload)
-		log(options, 'Step 4/8: Merging to RPS schema...');
+	// Step 4: Merge to RPS schema (Render Payload)
+	logVerbose(options, 'Step 4/8: Merging to RPS schema...');
 		const rps = mergeToRPS(
 			ais,
 			nas,
@@ -232,8 +233,8 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			rpsSchema: rps,
 		});
 
-		// Step 5: Resolve NAS data from source
-		log(options, 'Step 5/8: Resolving NAS data from source...');
+	// Step 5: Resolve NAS data from source
+	logVerbose(options, 'Step 5/8: Resolving NAS data from source...');
 
 		const { createNASBuilder } = await import('../../resolution');
 		const nasBuilder = createNASBuilder();
@@ -251,13 +252,13 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 		if (resolutionResult.warnings.length > 0) {
 			const fatalWarnings = resolutionResult.warnings.filter((w) => w.severity === 'error');
 			if (fatalWarnings.length > 0) {
-				throw createError('Resolution produced fatal warnings', 'resolution-error', fatalWarnings);
+				throw createPipelineError('Resolution produced fatal warnings', 'resolution-error', fatalWarnings);
 			}
 
 			const nonFatalWarnings = resolutionResult.warnings.filter((w) => w.severity !== 'error');
 			if (nonFatalWarnings.length > 0) {
 				if (options.guards?.resolution?.failOnWarning) {
-					throw createError(
+					throw createPipelineError(
 						'Resolution produced warnings',
 						'resolution-warnings',
 						nonFatalWarnings
@@ -268,10 +269,10 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			}
 		}
 
-		log(options, `Resolved ${resolutionResult.resolved.length} fields`);
+	logVerbose(options, `Resolved ${resolutionResult.resolved.length} fields`);
 
-		// Step 6: Compose prompt bundle
-		log(options, 'Step 6/8: Composing prompt bundle...');
+	// Step 6: Compose prompt bundle
+	logVerbose(options, 'Step 6/8: Composing prompt bundle...');
 		const promptResult = composePrompt({
 			template: input.template,
 			aiSchema: ais,
@@ -285,12 +286,12 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 		const lintErrors = lintResult.errors.filter((err) => err.check !== 'coverage');
 
 		if (lintErrors.length > 0) {
-			throw createError('Prompt bundle validation failed', 'prompt-lint', lintErrors);
+			throw createPipelineError('Prompt bundle validation failed', 'prompt-lint', lintErrors);
 		}
 
 		if (lintResult.warnings.length > 0) {
 			if (options.guards?.promptLint?.failOnWarning) {
-				throw createError(
+				throw createPipelineError(
 					'Prompt bundle warnings present',
 					'prompt-lint-warning',
 					lintResult.warnings
@@ -312,15 +313,15 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			warnings: lintResult.warnings.length > 0 ? lintResult.warnings : undefined,
 		});
 
-		// Step 7: Generate AI output via OpenAI (or approved mock)
-		log(options, 'Step 7/8: Generating AI output...');
+	// Step 7: Generate AI output via OpenAI (or approved mock)
+	logVerbose(options, 'Step 7/8: Generating AI output...');
 
 		const aiOutputValidator = getAIOutputValidator(ais);
 		const mockProvider = options.mockGeneration;
 		const mockFeatureEnabled = isMockGenerationEnabled();
 
 		if (mockProvider && !mockFeatureEnabled) {
-			throw createError(
+			throw createPipelineError(
 				'Mock generation requested but PIPELINE_ENABLE_MOCK_AI flag is disabled',
 				'mock-generation-disabled'
 			);
@@ -336,7 +337,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 		let aiResponseMocked = false;
 
 		if (mockProvider && mockFeatureEnabled) {
-			log(options, 'Using mock AI generation result (PIPELINE_ENABLE_MOCK_AI=true)');
+			logVerbose(options, 'Using mock AI generation result (PIPELINE_ENABLE_MOCK_AI=true)');
 			try {
 				const { generation: mockGeneration } = await resolveMockGeneration({
 					provider: mockProvider,
@@ -350,7 +351,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 				generation = mockGeneration;
 				aiResponseMocked = true;
 			} catch (error) {
-				throw createError('Mock generation provider failed', 'mock-generation-invalid', error);
+				throw createPipelineError('Mock generation provider failed', 'mock-generation-invalid', error);
 			}
 		} else {
 			// Override API key if provided (set temporarily in env)
@@ -392,7 +393,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 		const aiWarnings = generation.warnings ?? [];
 		if (aiWarnings.length > 0) {
 			if (options.guards?.validation?.failOnWarning) {
-				throw createError(
+				throw createPipelineError(
 					'AI output produced validation warnings',
 					'ai-validation-warning',
 					aiWarnings
@@ -415,13 +416,12 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 				throw createError('AI output validation failed', 'ai-validation', aisResult.errors);
 			}
 
-			if (aisResult.warnings.length > 0 && !pipelineWarnings.validation) {
-				pipelineWarnings.validation = aisResult.warnings;
-			}
+		if (aisResult.warnings.length > 0 && !pipelineWarnings.validation) {
+			pipelineWarnings.validation = aisResult.warnings;
 		}
+	}
 
-		// Step 8: Merge AI output + NAS data
-		log(options, 'Step 8/8: Merging AI output with NAS data...');
+	logVerbose(options, 'Step 8/8: Merging AI output with NAS data...');
 
 		// Check for conflicts (should never happen with proper schemas)
 		if (validate) {
@@ -460,7 +460,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			cssHash: css.hash,
 		});
 
-		log(options, 'Pipeline complete!');
+	logVerbose(options, 'Pipeline complete!');
 
 		const warnings = Object.keys(pipelineWarnings).length > 0 ? pipelineWarnings : undefined;
 
@@ -484,10 +484,10 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			nasSnapshot: resolvedNasData,
 		};
 	} catch (error) {
-		const pipelineError =
-			error && typeof error === 'object' && 'step' in error
-				? (error as PipelineError)
-				: createError('Pipeline execution failed', 'unknown', error);
+	const pipelineError =
+		error && typeof error === 'object' && 'step' in error
+			? (error as PipelineError)
+			: createPipelineError('Pipeline execution failed', 'unknown', error);
 
 		instrumentation.error(pipelineError);
 
