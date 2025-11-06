@@ -195,6 +195,7 @@ export interface PipelineWarning<T> {
 	severity: PipelineWarningSeverity;
 	code?: string;
 	details?: unknown;
+	message?: string;
 }
 
 export interface MergeConflictWarning {
