@@ -1,20 +1,24 @@
 import { createNASBuilder } from '../src/resolution';
+import type { DerivedSchema } from '../src/derivation/types';
 import biopsychTemplate from '../src/tests/biopsych-intake-template.schema.json';
 import demoData from '../src/tests/sample-data/biopsych-intake/m-rodriguez-biopsych-sample.json';
 
 async function main() {
   const builder = createNASBuilder();
 
+  const nasSchema: DerivedSchema = {
+    $id: 'debug-nas',
+    $schema: 'https://json-schema.org/draft/2020-12/schema',
+    title: 'Debug NAS Schema',
+    type: 'object',
+    properties: {},
+    additionalProperties: true,
+  };
+
   const result = await builder.build({
     template: biopsychTemplate as any,
     sourceData: demoData,
-    nasSchema: {
-      $id: 'debug-nas',
-      $schema: 'https://json-schema.org/draft/2020-12/schema',
-      type: 'object',
-      properties: {},
-      additionalProperties: true,
-    },
+    nasSchema,
   });
 
   console.log('Resolved fields:', result.resolved.length);
