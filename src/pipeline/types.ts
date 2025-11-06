@@ -202,6 +202,7 @@ export interface MergeConflictWarning {
 	expectedType?: string;
 	actualType?: string;
 	message: string;
+	severity: PipelineWarningSeverity;
 }
 
 export type TokenValueSource = 'default' | 'template' | 'override';

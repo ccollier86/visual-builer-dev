@@ -9,7 +9,13 @@ import type { PromptBundle } from '../../composition/types';
 import type { DesignTokens } from '../../tokens/types';
 import type { GenerationOptions, GenerationResult } from '../../integration/types';
 import type { ResolutionResult } from '../../resolution/contracts/types';
-import type { PipelineOptions, PipelineWarnings, PipelineError } from '../types';
+import type {
+	PipelineOptions,
+	PipelineWarnings,
+	PipelineError,
+	MergeConflictWarning,
+	TokenDiagnostics,
+} from '../types';
 
 /**
  * Structured logger contract for pipeline lifecycle events.
@@ -23,6 +29,8 @@ export interface PipelineLogger {
   onAIResponse?(event: PipelineAIResponseEvent): void;
   onMergeCompleted?(event: PipelineMergeEvent): void;
   onRender?(event: PipelineRenderEvent): void;
+  onStageTiming?(event: PipelineStageTimingEvent): void;
+  onTokenDiagnostics?(event: PipelineTokenDiagnosticsEvent): void;
   onComplete?(event: PipelineCompleteEvent): void;
   onError?(event: PipelineErrorEvent): void;
 }
@@ -66,16 +74,28 @@ export interface PipelineAIRequestEvent extends PipelineBaseEvent {
 export interface PipelineAIResponseEvent extends PipelineBaseEvent {
   result: GenerationResult;
   mocked?: boolean;
+  durationMs?: number;
+  retries?: number;
 }
 
 export interface PipelineMergeEvent extends PipelineBaseEvent {
   finalPayload: unknown;
   tokens: DesignTokens;
+  conflicts?: MergeConflictWarning[];
 }
 
 export interface PipelineRenderEvent extends PipelineBaseEvent {
   htmlLength: number;
   cssHash: string;
+}
+
+export interface PipelineStageTimingEvent extends PipelineBaseEvent {
+  stage: string;
+  durationMs: number;
+}
+
+export interface PipelineTokenDiagnosticsEvent extends PipelineBaseEvent {
+  diagnostics: TokenDiagnostics;
 }
 
 export interface PipelineCompleteEvent extends PipelineBaseEvent {

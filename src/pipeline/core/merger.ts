@@ -10,6 +10,7 @@
  */
 
 import type { AIPayload, NasSnapshot, RenderPayload } from '../../types/payloads';
+import { PipelineWarningSeverity, type MergeConflictWarning } from '../types';
 
 /**
  * Deep merge AI output and NAS data into final render payload
@@ -96,50 +97,75 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
  * @param nasData - NAS data to check
  * @returns Array of conflict paths (empty if no conflicts)
  */
+export function collectMergeConflicts(
+	aiOutput: AIPayload,
+	nasData: NasSnapshot,
+	pathPrefix = ''
+): MergeConflictWarning[] {
+	const conflicts: MergeConflictWarning[] = [];
+
+	if (!isPlainObject(aiOutput) || !isPlainObject(nasData)) {
+		return conflicts;
+	}
+
+	for (const key in aiOutput) {
+		if (!Object.prototype.hasOwnProperty.call(aiOutput, key)) continue;
+
+		const currentPath = pathPrefix ? `${pathPrefix}.${key}` : key;
+
+		if (key in nasData) {
+			const aiValue = aiOutput[key];
+			const nasValue = nasData[key];
+
+			const aiType = getValueType(aiValue);
+			const nasType = getValueType(nasValue);
+
+			if (aiType !== nasType) {
+				conflicts.push({
+					path: currentPath,
+					expectedType: nasType,
+					actualType: aiType,
+					message: 'AI output type differs from NAS data.',
+					severity: PipelineWarningSeverity.Error,
+				});
+			} else if (aiType === 'object' && nasType === 'object') {
+				if (isPlainObject(aiValue) && isPlainObject(nasValue)) {
+					conflicts.push(
+						...collectMergeConflicts(
+							aiValue as AIPayload,
+							nasValue as NasSnapshot,
+							currentPath
+						)
+					);
+				}
+			} else if (aiType === 'array' && nasType === 'array') {
+				// arrays get overwritten; record informational entry
+				conflicts.push({
+					path: currentPath,
+					message: 'AI array overwrote NAS array.',
+					severity: PipelineWarningSeverity.Warning,
+				});
+			}
+		}
+	}
+
+	return conflicts;
+}
+
+/**
+ * Backwards compatible conflict detector returning string paths.
+ * @deprecated Use collectMergeConflicts for structured diagnostics.
+ */
 export function findMergeConflicts(
-  aiOutput: AIPayload,
-  nasData: NasSnapshot,
-  pathPrefix = ''
+	aiOutput: AIPayload,
+	nasData: NasSnapshot,
+	pathPrefix = ''
 ): string[] {
-  const conflicts: string[] = [];
-
-  if (!isPlainObject(aiOutput) || !isPlainObject(nasData)) {
-    return conflicts;
-  }
-
-  for (const key in aiOutput) {
-    if (!Object.prototype.hasOwnProperty.call(aiOutput, key)) continue;
-
-    const currentPath = pathPrefix ? `${pathPrefix}.${key}` : key;
-
-    if (key in nasData) {
-      const aiValue = aiOutput[key];
-      const nasValue = nasData[key];
-
-      const aiType = getValueType(aiValue);
-      const nasType = getValueType(nasValue);
-
-      if (aiType !== nasType) {
-        // Type conflict detected
-        conflicts.push(
-          `${currentPath} (AI: ${aiType}, NAS: ${nasType})`
-        );
-      } else if (aiType === 'object' && nasType === 'object') {
-        if (isPlainObject(aiValue) && isPlainObject(nasValue)) {
-          // Recurse into nested objects
-          conflicts.push(
-            ...findMergeConflicts(
-              aiValue as AIPayload,
-              nasValue as NasSnapshot,
-              currentPath
-            )
-          );
-        }
-      }
-    }
-  }
-
-  return conflicts;
+	return collectMergeConflicts(aiOutput, nasData, pathPrefix).map((conflict) =>
+		conflict.actualType && conflict.expectedType
+			? `${conflict.path} (AI: ${conflict.actualType}, NAS: ${conflict.expectedType})`
+			: `${conflict.path}: ${conflict.message}`
+	);
 }
 
 /**
