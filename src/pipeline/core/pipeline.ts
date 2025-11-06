@@ -460,7 +460,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			cssHash: css.hash,
 		});
 
-	logVerbose(options, 'Pipeline complete!');
+		logVerbose(options, 'Pipeline complete!');
 
 		const warnings = Object.keys(pipelineWarnings).length > 0 ? pipelineWarnings : undefined;
 
