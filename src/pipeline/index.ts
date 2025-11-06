@@ -24,7 +24,7 @@
 export { runPipeline } from './core/pipeline';
 
 // Utilities
-export { mergePayloads, findMergeConflicts } from './core/merger';
+export { mergePayloads, findMergeConflicts, collectMergeConflicts } from './core/merger';
 
 // Types
 export type {
@@ -33,6 +33,14 @@ export type {
   PipelineOutput,
   PipelineError,
   PipelineWarnings,
+  PipelineWarning,
+  PipelineWarningSeverity,
+  WarningGuardOptions,
+  MergeGuardOptions,
+  MergeConflictWarning,
+  TokenDiagnostics,
+  TokenDiagnosticsEntry,
+  TokenValueSource,
   MockGenerationProvider,
   MockGenerationContext,
   MockGenerationResult,
@@ -51,6 +59,8 @@ export type {
   PipelineAIResponseEvent,
   PipelineMergeEvent,
   PipelineRenderEvent,
+  PipelineStageTimingEvent,
+  PipelineTokenDiagnosticsEvent,
   PipelineCompleteEvent,
   PipelineErrorEvent,
   PipelineInstrumentation,
