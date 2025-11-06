@@ -9,7 +9,6 @@
  * DI: Receives all dependencies via imports, pure functional composition
  */
 
-import { randomUUID } from 'node:crypto';
 import { deriveAIS, deriveNAS, mergeToRPS } from '../../derivation';
 import { validateNoteTemplate, validateAIS, getAIOutputValidator } from '../../validation';
 import { composePrompt } from '../../composition';
@@ -21,11 +20,8 @@ import type { PipelineInput, PipelineOutput, PipelineOptions, PipelineError, Pip
 import type { DesignTokens, Layout } from '../../tokens';
 import type { TemplateStyle } from '../../derivation/types';
 import type { FactPack } from '../../types/payloads';
-import { createNoopPipelineLogger } from '../logging';
-import type { PipelineLogger } from '../logging';
+import { createPipelineInstrumentation } from './instrumentation';
 import defaultTokensRaw from '../../tokens/defaults/default-tokens.json';
-
-const DEFAULT_CAPTURE_PROMPT_METADATA = true;
 
 function cloneTokens(tokens: DesignTokens): DesignTokens {
   return JSON.parse(JSON.stringify(tokens)) as DesignTokens;
@@ -151,28 +147,15 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
   const options: PipelineOptions = input.options ? { ...input.options } : {};
   const validate = options.validateSteps ?? true;
 
-  const logger: PipelineLogger = options.logger ?? createNoopPipelineLogger();
-  const requestId = options.requestId ?? generateRequestId();
-  const capturePromptMetadata = options.capturePromptMetadata ?? DEFAULT_CAPTURE_PROMPT_METADATA;
-  if (!options.requestId) {
-    options.requestId = requestId;
-  }
-  if (options.capturePromptMetadata === undefined) {
-    options.capturePromptMetadata = capturePromptMetadata;
-  }
+  const instrumentation = createPipelineInstrumentation({
+    template: input.template,
+    options,
+  });
 
-  const baseContext: BaseLogContext = {
-    requestId,
-    templateId: input.template.id,
-    templateName: input.template.name,
-    templateVersion: input.template.version,
-  };
+  instrumentation.start();
 
-  const emit = createEventEmitter(logger, baseContext);
+  const capturePromptMetadata = instrumentation.capturePromptMetadata;
   const startTime = Date.now();
-
-  const sanitizedOptions = sanitizeOptionsForLogging(options);
-  emit('onStart', { options: sanitizedOptions });
 
   try {
     const pipelineWarnings: PipelineWarnings = {};
@@ -217,7 +200,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       input.template.version
     );
 
-    emit('onSchemasDerived', {
+    instrumentation.schemasDerived({
       aisSchema: ais,
       nasSchema: nas,
       rpsSchema: rps,
@@ -237,7 +220,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 
     const resolvedNasData = resolutionResult.nasData;
 
-    emit('onResolution', { resolution: resolutionResult });
+    instrumentation.resolution({ resolution: resolutionResult });
 
     // Log warnings
     if (resolutionResult.warnings.length > 0) {
@@ -302,7 +285,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       }
     }
 
-    emit('onPromptComposed', {
+    instrumentation.promptComposed({
       prompt: promptBundle,
       warnings: lintResult.warnings.length > 0 ? lintResult.warnings : undefined,
     });
@@ -318,7 +301,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 
     const aiOutputValidator = getAIOutputValidator(ais);
 
-    emit('onAIRequest', {
+    instrumentation.aiRequest({
       prompt: promptBundle,
       model: options.generationOptions?.model,
       generationOptions: options.generationOptions ? { ...options.generationOptions } : undefined,
@@ -349,7 +332,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       ? generation
       : { ...generation, promptId: undefined, responseId: undefined };
 
-    emit('onAIResponse', { result: aiResultForLogging });
+    instrumentation.aiResponse({ result: aiResultForLogging });
 
     const aiWarnings = generation.warnings ?? [];
     if (aiWarnings.length > 0) {
@@ -404,7 +387,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
     applyTemplateStyle(baseTokens, input.template.style);
     const tokens = mergeDesignTokens(baseTokens, input.tokens);
 
-    emit('onMergeCompleted', {
+    instrumentation.mergeCompleted({
       finalPayload,
       tokens,
     });
@@ -421,7 +404,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       },
     });
 
-    emit('onRender', {
+    instrumentation.render({
       htmlLength: html.length,
       cssHash: css.hash,
     });
@@ -430,7 +413,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 
     const warnings = Object.keys(pipelineWarnings).length > 0 ? pipelineWarnings : undefined;
 
-    emit('onComplete', {
+    instrumentation.complete({
       durationMs: Date.now() - startTime,
       warnings,
     });
@@ -454,7 +437,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
         ? (error as PipelineError)
         : createError('Pipeline execution failed', 'unknown', error);
 
-    emit('onError', { error: pipelineError });
+    instrumentation.error(pipelineError);
 
     throw pipelineError;
   }
