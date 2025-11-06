@@ -41,6 +41,7 @@ export const templateBuilderStore = createStore({
     }),
 
     updateTemplateName: (ctx, event: { name: string }) => ({
+      ...ctx,
       template: {
         ...ctx.template,
         name: event.name
@@ -48,6 +49,7 @@ export const templateBuilderStore = createStore({
     }),
 
     updateTemplateType: (ctx, event: { templateType: Template['type'] }) => ({
+      ...ctx,
       template: {
         ...ctx.template,
         type: event.templateType
@@ -55,6 +57,7 @@ export const templateBuilderStore = createStore({
     }),
 
     setTheme: (ctx, event: { theme: Theme }) => ({
+      ...ctx,
       template: {
         ...ctx.template,
         theme: event.theme
