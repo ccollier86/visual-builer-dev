@@ -1,9 +1,19 @@
-import type { PromptBundle } from '../composition/types';
-import type { DesignTokens } from '../tokens/types';
-import type { GenerationResult, GenerationOptions } from '../integration/types';
-import type { ResolutionResult } from '../resolution/contracts/types';
-import type { PipelineWarnings, PipelineOptions, PipelineError } from './types';
+/**
+ * Pipeline Logging - Type Contracts
+ *
+ * Domain: pipeline/logging
+ * Responsibility: Define structured logging events and logger contract
+ */
 
+import type { PromptBundle } from '../../composition/types';
+import type { DesignTokens } from '../../tokens/types';
+import type { GenerationOptions, GenerationResult } from '../../integration/types';
+import type { ResolutionResult } from '../../resolution/contracts/types';
+import type { PipelineOptions, PipelineWarnings, PipelineError } from '../types';
+
+/**
+ * Structured logger contract for pipeline lifecycle events.
+ */
 export interface PipelineLogger {
   onStart?(event: PipelineStartEvent): void;
   onSchemasDerived?(event: PipelineSchemasEvent): void;
@@ -17,6 +27,9 @@ export interface PipelineLogger {
   onError?(event: PipelineErrorEvent): void;
 }
 
+/**
+ * Base metadata shared across all pipeline logging events.
+ */
 export interface PipelineBaseEvent {
   requestId: string;
   templateId: string;
@@ -75,6 +88,9 @@ export interface PipelineErrorEvent extends PipelineBaseEvent {
 
 const NOOP_LOGGER: PipelineLogger = Object.freeze({});
 
+/**
+ * Provides a do-nothing logger implementation for callers who opt out of instrumentation.
+ */
 export function createNoopPipelineLogger(): PipelineLogger {
   return NOOP_LOGGER;
 }

@@ -1,3 +1,10 @@
+/**
+ * Pipeline Logging - Instrumentation Adapter
+ *
+ * Domain: pipeline/logging
+ * Responsibility: Emit structured events to the injected logger
+ */
+
 import { randomUUID } from 'node:crypto';
 import type { NoteTemplate } from '../../derivation/types';
 import type { PipelineOptions, PipelineError } from '../types';
@@ -15,26 +22,7 @@ import {
   type PipelineRenderEvent,
   type PipelineCompleteEvent,
   type PipelineErrorEvent,
-} from '../logging';
-
-export interface PipelineInstrumentation {
-  capturePromptMetadata: boolean;
-  start(): void;
-  schemasDerived(event: LoggerEventPayload<'onSchemasDerived'>): void;
-  resolution(event: LoggerEventPayload<'onResolution'>): void;
-  promptComposed(event: LoggerEventPayload<'onPromptComposed'>): void;
-  aiRequest(event: LoggerEventPayload<'onAIRequest'>): void;
-  aiResponse(event: LoggerEventPayload<'onAIResponse'>): void;
-  mergeCompleted(event: LoggerEventPayload<'onMergeCompleted'>): void;
-  render(event: LoggerEventPayload<'onRender'>): void;
-  complete(event: LoggerEventPayload<'onComplete'>): void;
-  error(error: PipelineError): void;
-}
-
-export interface InstrumentationConfig {
-  template: NoteTemplate;
-  options: PipelineOptions;
-}
+} from './types';
 
 type LoggerEventMap = {
   onStart: PipelineStartEvent;
@@ -51,10 +39,40 @@ type LoggerEventMap = {
 
 type LoggerEventPayload<K extends keyof LoggerEventMap> = Omit<LoggerEventMap[K], keyof PipelineBaseEvent>;
 
+interface LoggerContext extends Omit<PipelineBaseEvent, 'timestamp'> {}
+
 const DEFAULT_CAPTURE_PROMPT_METADATA = true;
 
+/**
+ * Public instrumentation contract used by the pipeline orchestrator.
+ */
+export interface PipelineInstrumentation {
+  capturePromptMetadata: boolean;
+  start(): void;
+  schemasDerived(event: LoggerEventPayload<'onSchemasDerived'>): void;
+  resolution(event: LoggerEventPayload<'onResolution'>): void;
+  promptComposed(event: LoggerEventPayload<'onPromptComposed'>): void;
+  aiRequest(event: LoggerEventPayload<'onAIRequest'>): void;
+  aiResponse(event: LoggerEventPayload<'onAIResponse'>): void;
+  mergeCompleted(event: LoggerEventPayload<'onMergeCompleted'>): void;
+  render(event: LoggerEventPayload<'onRender'>): void;
+  complete(event: LoggerEventPayload<'onComplete'>): void;
+  error(error: PipelineError): void;
+}
+
+/**
+ * Configuration required to bootstrap instrumentation for a pipeline run.
+ */
+export interface PipelineInstrumentationConfig {
+  template: NoteTemplate;
+  options: PipelineOptions;
+}
+
+/**
+ * Creates an instrumentation adapter that emits structured events to the provided logger.
+ */
 export function createPipelineInstrumentation(
-  config: InstrumentationConfig
+  config: PipelineInstrumentationConfig
 ): PipelineInstrumentation {
   const { template, options } = config;
   const logger = options.logger ?? createNoopPipelineLogger();
@@ -63,25 +81,25 @@ export function createPipelineInstrumentation(
     options.capturePromptMetadata ?? DEFAULT_CAPTURE_PROMPT_METADATA;
   const requestId = options.requestId ?? generateRequestId();
 
-  const baseContext: Omit<PipelineBaseEvent, 'timestamp'> = {
+  const context: LoggerContext = {
     requestId,
     templateId: template.id,
     templateName: template.name,
     templateVersion: template.version,
   };
 
-  const sanitizedOptions = sanitizeOptionsForLogging(
+  const sanitisedOptions = sanitiseOptionsForLogging(
     options,
     requestId,
     capturePromptMetadata
   );
 
-  const emit = createEmitter(logger, baseContext);
+  const emit = createEmitter(logger, context);
 
   return {
     capturePromptMetadata,
     start() {
-      emit('onStart', { options: sanitizedOptions });
+      emit('onStart', { options: sanitisedOptions });
     },
     schemasDerived(event) {
       emit('onSchemasDerived', event);
@@ -113,22 +131,58 @@ export function createPipelineInstrumentation(
   };
 }
 
+/**
+ * Normalises options for downstream logging without mutating caller state.
+ */
+function sanitiseOptionsForLogging(
+  options: PipelineOptions,
+  requestId: string,
+  capturePromptMetadata: boolean
+): PipelineOptions {
+  const { logger: _logger, ...rest } = options;
+  const sanitised: PipelineOptions = { ...rest };
+
+  if (!sanitised.requestId) {
+    sanitised.requestId = requestId;
+  }
+
+  if (sanitised.capturePromptMetadata === undefined) {
+    sanitised.capturePromptMetadata = capturePromptMetadata;
+  }
+
+  return sanitised;
+}
+
+/**
+ * Generates stable identifiers for pipeline runs.
+ */
+function generateRequestId(): string {
+  try {
+    return randomUUID();
+  } catch {
+    return `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+  }
+}
+
+/**
+ * Produces a helper that emits events to the injected logger with shared metadata.
+ */
 function createEmitter(
   logger: PipelineLogger,
-  baseContext: Omit<PipelineBaseEvent, 'timestamp'>
+  context: LoggerContext
 ) {
   return function emit<K extends keyof LoggerEventMap>(
     method: K,
     data: LoggerEventPayload<K>
   ): void {
-    const handler = logger[method];
-    if (typeof handler !== 'function') {
+    const handler = logger[method] as ((event: LoggerEventMap[K]) => void) | undefined;
+    if (!handler) {
       return;
     }
 
     try {
       const event = {
-        ...baseContext,
+        ...context,
         timestamp: new Date().toISOString(),
         ...data,
       } as LoggerEventMap[K];
@@ -138,31 +192,4 @@ function createEmitter(
       console.warn(`[Pipeline] logger.${String(method)} handler threw`, error);
     }
   };
-}
-
-function sanitizeOptionsForLogging(
-  options: PipelineOptions,
-  requestId: string,
-  capturePromptMetadata: boolean
-): PipelineOptions {
-  const { logger: _logger, ...rest } = options;
-  const sanitized: PipelineOptions = { ...rest };
-
-  if (!sanitized.requestId) {
-    sanitized.requestId = requestId;
-  }
-
-  if (sanitized.capturePromptMetadata === undefined) {
-    sanitized.capturePromptMetadata = capturePromptMetadata;
-  }
-
-  return sanitized;
-}
-
-function generateRequestId(): string {
-  try {
-    return randomUUID();
-  } catch {
-    return `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
-  }
 }

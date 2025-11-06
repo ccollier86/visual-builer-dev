@@ -36,7 +36,7 @@ export type {
 } from './types';
 
 // Logging
-export { createNoopPipelineLogger } from './logging';
+export { createNoopPipelineLogger, createPipelineInstrumentation } from './logging';
 export type {
   PipelineLogger,
   PipelineBaseEvent,
@@ -50,4 +50,6 @@ export type {
   PipelineRenderEvent,
   PipelineCompleteEvent,
   PipelineErrorEvent,
+  PipelineInstrumentation,
+  PipelineInstrumentationConfig,
 } from './logging';

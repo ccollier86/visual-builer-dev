@@ -20,7 +20,7 @@ import type { PipelineInput, PipelineOutput, PipelineOptions, PipelineError, Pip
 import type { DesignTokens, Layout } from '../../tokens';
 import type { TemplateStyle } from '../../derivation/types';
 import type { FactPack } from '../../types/payloads';
-import { createPipelineInstrumentation } from './instrumentation';
+import { createPipelineInstrumentation } from '../logging';
 import defaultTokensRaw from '../../tokens/defaults/default-tokens.json';
 
 function cloneTokens(tokens: DesignTokens): DesignTokens {
