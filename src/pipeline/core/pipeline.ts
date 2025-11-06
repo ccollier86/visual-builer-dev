@@ -10,7 +10,7 @@
  */
 
 import { deriveAIS, deriveNAS, mergeToRPS } from '../../derivation';
-import { validateNoteTemplate, validateAIS, getAIOutputValidator } from '../../validation';
+import { validateNoteTemplate, validateAIS, getAIOutputValidator, lintNoteTemplate } from '../../validation';
 import { composePrompt } from '../../composition';
 import { createOpenAIClient, generateWithSchema } from '../../integration';
 import { compileCSS } from '../../tokens';
@@ -168,6 +168,42 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
         'template-validation',
         templateResult.errors
       );
+    }
+
+    const templateLint = lintNoteTemplate(input.template);
+    if (templateLint.errors.length > 0) {
+      throw createError(
+        'Template lint failed',
+        'template-lint',
+        templateLint.errors
+      );
+    }
+
+    if (templateLint.warnings.length > 0) {
+      if (options.guards?.templateLint?.failOnWarning) {
+        throw createError(
+          'Template lint warnings present',
+          'template-lint-warning',
+          templateLint.warnings
+        );
+      }
+
+      pipelineWarnings.template = templateLint.warnings;
+
+      if (options.verbose) {
+        console.warn(`Template lint warnings (${templateLint.warnings.length}):`);
+        templateLint.warnings.forEach(warning => {
+          const details: string[] = [];
+          if (warning.componentId) {
+            details.push(`component=${warning.componentId}`);
+          }
+          if (warning.slotId) {
+            details.push(`slot=${warning.slotId}`);
+          }
+          const suffix = details.length > 0 ? ` (${details.join(', ')})` : '';
+          console.warn(`  [${warning.code}] ${warning.message}${suffix}`);
+        });
+      }
     }
 
     // Step 2: Derive AIS schema (AI Structured Output)

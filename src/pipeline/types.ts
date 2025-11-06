@@ -10,7 +10,7 @@ import type { GenerationOptions } from '../integration';
 import type { ResolutionWarning, SourceData } from '../resolution';
 import type { CompiledCSS, DesignTokens } from '../tokens';
 import type { AIPayload, NasSnapshot, RenderPayload } from '../types/payloads';
-import type { ValidationIssue } from '../validation';
+import type { TemplateLintIssue, ValidationIssue } from '../validation';
 import type { PipelineLogger } from './logging';
 
 /**
@@ -66,6 +66,7 @@ export interface PipelineOptions {
  * Fine-grained guardrail configuration per pipeline stage.
  */
 export interface PipelineGuardOptions {
+	templateLint?: WarningGuardOptions;
 	resolution?: WarningGuardOptions;
 	promptLint?: WarningGuardOptions;
 	validation?: WarningGuardOptions;
@@ -127,6 +128,7 @@ export interface PipelineOutput {
  * Warning collections keyed by pipeline stage.
  */
 export interface PipelineWarnings {
+	template?: TemplateLintIssue[];
 	resolution?: ResolutionWarning[];
 	prompt?: LintIssue[];
 	validation?: ValidationIssue[];

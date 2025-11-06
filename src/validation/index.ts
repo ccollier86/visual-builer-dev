@@ -25,6 +25,13 @@ export { validateNAS } from './validators/nas-validator';
 export { validatePromptBundle } from './validators/prompt-validator';
 export { validateRPS } from './validators/rps-validator';
 export { validateDesignTokens } from './validators/tokens-validator';
+export { lintNoteTemplate } from './lint';
 
 // Types
-export type { ValidationResult, ValidationIssue } from './types';
+export type {
+  ValidationResult,
+  ValidationIssue,
+  LintSeverity,
+  TemplateLintIssue,
+  TemplateLintResult,
+} from './types';
