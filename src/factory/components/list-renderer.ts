@@ -3,6 +3,7 @@
 
 import type { Component, ContentItem } from '../../derivation/types';
 import type { RenderPayload } from '../../types/payloads';
+import type { ComponentDiagnostic } from '../types';
 
 import { escapeHtml } from "../utils/html-escape";
 import {
@@ -37,6 +38,10 @@ export function renderListComponent(
   const rowPath = inferArrayRoot(itemsDef);
   const rowsValue = rowPath ? getByPath(payload, rowPath) : undefined;
   const rows = Array.isArray(rowsValue) ? rowsValue : [];
+  const listDiagnostics = collectListDiagnostics(comp.id, rowPath, itemsDef, rows.length);
+  if (listDiagnostics.length > 0) {
+    logListDiagnostics(listDiagnostics);
+  }
 
   const chunks: string[] = [];
   chunks.push(`<${tag} class="list">`);
@@ -169,4 +174,49 @@ function isVerbatimValue(value: unknown): value is VerbatimValue {
     value !== null &&
     typeof (value as Record<string, unknown>).text === 'string'
   );
+}
+
+/**
+ * Analyse list definitions for missing item mappings relative to the resolved rows.
+ */
+function collectListDiagnostics(
+  componentId: string | undefined,
+  rowPath: string,
+  itemsDef: ContentItem[],
+  rowCount: number
+): ComponentDiagnostic[] {
+  const diagnostics: ComponentDiagnostic[] = [];
+
+  if (rowPath && itemsDef.length === 0) {
+    diagnostics.push({
+      code: 'list.items.missing',
+      message: `List component resolving "${rowPath}" has no item definitions.`,
+      severity: 'warning',
+    });
+  }
+
+  if (rowPath && rowCount === 0) {
+    diagnostics.push({
+      code: 'list.rows.empty',
+      message: `List component resolving "${rowPath}" generated zero rows from the payload.`,
+      severity: 'warning',
+    });
+  }
+
+  if (componentId) {
+    diagnostics.forEach((diag) => {
+      diag.message = `[${componentId}] ${diag.message}`;
+    });
+  }
+
+  return diagnostics;
+}
+
+/**
+ * Log list diagnostics to aid template authors in debugging configuration gaps.
+ */
+function logListDiagnostics(diagnostics: ComponentDiagnostic[]): void {
+  diagnostics.forEach((diagnostic) => {
+    console.warn(`List renderer warning (${diagnostic.code}): ${diagnostic.message}`);
+  });
 }
