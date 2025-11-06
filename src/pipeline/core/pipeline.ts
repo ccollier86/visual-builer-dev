@@ -13,7 +13,7 @@ import { composePrompt } from '../../composition';
 import { deriveAIS, deriveNAS, mergeToRPS } from '../../derivation';
 import type { TemplateStyle } from '../../derivation/types';
 import { renderNoteHTML } from '../../factory';
-import { createOpenAIClient, generateWithSchema } from '../../integration';
+import { generateWithSchema } from '../../integration';
 import type { GenerationResult } from '../../integration/types';
 import type { DesignTokens, Layout } from '../../tokens';
 import { compileCSS } from '../../tokens';
@@ -32,10 +32,15 @@ import type {
 	PipelineOptions,
 	PipelineOutput,
 	PipelineWarnings,
+	PipelineWarning,
+	PipelineWarningSeverity,
+	MergeConflictWarning,
+	TokenDiagnostics,
 } from '../types';
-import { findMergeConflicts, mergePayloads } from './merger';
-import { createPipelineError, logVerbose } from './helpers';
+import { collectMergeConflicts, mergePayloads } from './merger';
+import { createPipelineError, logVerbose, resolveOpenAIClient, timeStage } from './helpers';
 import { isMockGenerationEnabled, resolveMockGeneration } from './mock-generation';
+import { diagnoseTokens } from './tokens-diagnostics';
 
 function cloneTokens(tokens: DesignTokens): DesignTokens {
 	return JSON.parse(JSON.stringify(tokens)) as DesignTokens;
