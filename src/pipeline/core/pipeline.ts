@@ -413,15 +413,15 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 		if (validate) {
 			const aisResult = aiOutputValidator(generation.output);
 			if (!aisResult.ok) {
-				throw createError('AI output validation failed', 'ai-validation', aisResult.errors);
+				throw createPipelineError('AI output validation failed', 'ai-validation', aisResult.errors);
 			}
 
-		if (aisResult.warnings.length > 0 && !pipelineWarnings.validation) {
-			pipelineWarnings.validation = aisResult.warnings;
+			if (aisResult.warnings.length > 0 && !pipelineWarnings.validation) {
+				pipelineWarnings.validation = aisResult.warnings;
+			}
 		}
-	}
 
-	logVerbose(options, 'Step 8/8: Merging AI output with NAS data...');
+		logVerbose(options, 'Step 8/8: Merging AI output with NAS data...');
 
 		// Check for conflicts (should never happen with proper schemas)
 		if (validate) {
@@ -492,30 +492,5 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 		instrumentation.error(pipelineError);
 
 		throw pipelineError;
-	}
-}
-
-/**
- * Create a structured pipeline error for consistent error handling.
- *
- * @param message - Human-readable description of the failure.
- * @param step - Pipeline step identifier where the error originated.
- * @param cause - Optional underlying error that triggered this failure.
- * @returns PipelineError with contextual metadata for upstream callers.
- */
-function createError(message: string, step: string, cause?: unknown): PipelineError {
-	const error = new Error(message) as PipelineError;
-	error.name = 'PipelineError';
-	error.step = step;
-	error.cause = cause;
-	return error;
-}
-
-/**
- * Log message if verbose mode enabled
- */
-function log(options: PipelineOptions, message: string): void {
-	if (options.verbose) {
-		console.log(`[Pipeline] ${message}`);
 	}
 }
