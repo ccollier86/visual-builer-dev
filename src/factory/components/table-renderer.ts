@@ -17,11 +17,13 @@ import {
 import type { VerbatimValue } from '../types';
 import {
   buildCellClassList,
+  collectTableDiagnostics,
   deriveCellRole,
   extractTableItems,
   getTableCellHints,
   groupTableItems,
 } from './table/utils';
+import type { ComponentDiagnostic } from '../types';
 
 /**
  * Renders a table component with full structure
@@ -44,6 +46,10 @@ export function renderTableComponent(
 
   const columnCount = columns.length > 0 ? columns.length : Math.max(tableItems.length, 1);
   const columnGroups = groupTableItems(tableItems, columnCount, columns);
+  const tableDiagnostics = collectTableDiagnostics(columns, columnGroups);
+  if (tableDiagnostics.length > 0) {
+    logTableDiagnostics(comp.id, tableDiagnostics);
+  }
 
   // Determine array root from tableMap (e.g., "diagnoses[]")
   const rowPath = inferArrayRoot(tableItems);
@@ -259,4 +265,19 @@ function isVerbatimValue(value: unknown): value is VerbatimValue {
     value !== null &&
     typeof (value as Record<string, unknown>).text === 'string'
   );
+}
+
+/**
+ * Emit diagnostic messages to help template authors identify misconfigured tables.
+ */
+function logTableDiagnostics(
+  componentId: string | undefined,
+  diagnostics: ComponentDiagnostic[]
+): void {
+  const prefix = componentId ? `[${componentId}] ` : '';
+  diagnostics.forEach((diagnostic) => {
+    console.warn(
+      `Table renderer warning (${diagnostic.code}): ${prefix}${diagnostic.message}`
+    );
+  });
 }

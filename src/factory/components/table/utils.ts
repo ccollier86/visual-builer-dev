@@ -1,4 +1,5 @@
 import type { ContentItem } from '../../../derivation/types';
+import type { ComponentDiagnostic } from '../../types';
 import type { TableCellHints } from './types';
 
 /**
@@ -198,4 +199,34 @@ function clamp(value: number, min: number, max: number): number {
 
 function isRecord(value: unknown): value is Record<string, any> {
   return typeof value === 'object' && value !== null;
+}
+
+/**
+ * Produce diagnostics when template column hints do not align with provided column labels.
+ */
+export function collectTableDiagnostics(
+  columns: string[],
+  columnGroups: ContentItem[][]
+): ComponentDiagnostic[] {
+  const diagnostics: ComponentDiagnostic[] = [];
+
+  if (columns.length > 0 && columnGroups.length !== columns.length) {
+    diagnostics.push({
+      code: 'table.columns.mismatch',
+      message: `Template declares ${columns.length} columns but ${columnGroups.length} column groups were generated.`,
+      severity: 'warning',
+    });
+  }
+
+  columnGroups.forEach((group, index) => {
+    if (group.length === 0) {
+      diagnostics.push({
+        code: 'table.column.empty',
+        message: `Column index ${index} has no mapped content items.`,
+        severity: 'warning',
+      });
+    }
+  });
+
+  return diagnostics;
 }
