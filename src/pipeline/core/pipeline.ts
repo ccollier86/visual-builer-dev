@@ -42,6 +42,12 @@ import type {
 } from '../types';
 import { collectMergeConflicts, mergePayloads } from './merger';
 import { createPipelineError, logVerbose, resolveOpenAIClient, timeStage } from './helpers';
+import {
+	mapTemplateSeverity,
+	mapResolutionSeverity,
+	shouldFailGuard,
+	shouldFailMerge,
+} from './warnings';
 import { isMockGenerationEnabled, resolveMockGeneration } from './mock-generation';
 import { diagnoseTokens } from './tokens-diagnostics';
 
