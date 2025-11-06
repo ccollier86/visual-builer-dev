@@ -172,9 +172,9 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 	const startTime = Date.now();
 
 	try {
-	const pipelineWarnings: PipelineWarnings = {};
-	// Step 1: Validate template
-	logVerbose(options, 'Step 1/8: Validating note template...');
+		const pipelineWarnings: PipelineWarnings = {};
+		// Step 1: Validate template
+		logVerbose(options, 'Step 1/8: Validating note template...');
 		const templateResult = validateNoteTemplate(input.template);
 		if (!templateResult.ok) {
 			throw createPipelineError('Template validation failed', 'template-validation', templateResult.errors);
@@ -197,8 +197,8 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			pipelineWarnings.template = templateLint.warnings;
 		}
 
-	// Step 2: Derive AIS schema (AI Structured Output)
-	logVerbose(options, 'Step 2/8: Deriving AIS schema...');
+		// Step 2: Derive AIS schema (AI Structured Output)
+		logVerbose(options, 'Step 2/8: Deriving AIS schema...');
 		const ais = deriveAIS(input.template);
 
 		// Validate AIS schema structure against meta-schema
@@ -213,12 +213,12 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			}
 		}
 
-	// Step 3: Derive NAS schema (Non-AI Snapshot)
-	logVerbose(options, 'Step 3/8: Deriving NAS schema...');
+		// Step 3: Derive NAS schema (Non-AI Snapshot)
+		logVerbose(options, 'Step 3/8: Deriving NAS schema...');
 		const nas = deriveNAS(input.template);
 
-	// Step 4: Merge to RPS schema (Render Payload)
-	logVerbose(options, 'Step 4/8: Merging to RPS schema...');
+		// Step 4: Merge to RPS schema (Render Payload)
+		logVerbose(options, 'Step 4/8: Merging to RPS schema...');
 		const rps = mergeToRPS(
 			ais,
 			nas,
@@ -233,8 +233,8 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			rpsSchema: rps,
 		});
 
-	// Step 5: Resolve NAS data from source
-	logVerbose(options, 'Step 5/8: Resolving NAS data from source...');
+		// Step 5: Resolve NAS data from source
+		logVerbose(options, 'Step 5/8: Resolving NAS data from source...');
 
 		const { createNASBuilder } = await import('../../resolution');
 		const nasBuilder = createNASBuilder();
@@ -269,10 +269,10 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			}
 		}
 
-	logVerbose(options, `Resolved ${resolutionResult.resolved.length} fields`);
+		logVerbose(options, `Resolved ${resolutionResult.resolved.length} fields`);
 
-	// Step 6: Compose prompt bundle
-	logVerbose(options, 'Step 6/8: Composing prompt bundle...');
+		// Step 6: Compose prompt bundle
+		logVerbose(options, 'Step 6/8: Composing prompt bundle...');
 		const promptResult = composePrompt({
 			template: input.template,
 			aiSchema: ais,
@@ -313,8 +313,8 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			warnings: lintResult.warnings.length > 0 ? lintResult.warnings : undefined,
 		});
 
-	// Step 7: Generate AI output via OpenAI (or approved mock)
-	logVerbose(options, 'Step 7/8: Generating AI output...');
+		// Step 7: Generate AI output via OpenAI (or approved mock)
+		logVerbose(options, 'Step 7/8: Generating AI output...');
 
 		const aiOutputValidator = getAIOutputValidator(ais);
 		const mockProvider = options.mockGeneration;
