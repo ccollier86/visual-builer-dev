@@ -795,7 +795,7 @@
                   "guidance": [
                     "Map the patient presentation to DSM-5 diagnostic criteria for this disorder. Explicitly cite criterion letters or numbered requirements that are satisfied (e.g., “Criterion A – …”, “Criterion B(3) – …”).",
                     "Use only clinician interview data, reported symptoms, behaviours, functional impacts, precipitating events, and risk factors gathered from the intake. Assessment scores may be mentioned at the end for severity context but cannot be the primary justification.",
-                    "If data suggests a required criterion is not met or information is missing, clearly state the uncertainty. Do not assume patient reports cover all criteria unless explicitly stated in the intake.",
+                    "When information is incomplete, infer the most statistically probable criteria using the available demographic, historical, and symptom data; clearly state that the inference is probabilistic but still tie it to specific intake facts.",
                     "Maintain the same diagnosis order as clinical_intake.structured.diagnoses and provide a distinct rationale for each diagnosis. Avoid generic statements that could apply to any patient."
                   ],
                   "constraints": {
