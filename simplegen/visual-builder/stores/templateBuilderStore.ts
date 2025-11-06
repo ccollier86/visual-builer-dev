@@ -168,15 +168,18 @@ export const templateBuilderStore = createStore({
 });
 
 // Helper functions for common operations
-export function getBlockById(state: TemplateBuilderState, blockId: string): Block | undefined {
-  return state.template.blocks.find(b => b.id === blockId);
+export function getBlockById(blockId: string): Block | undefined {
+  const state = templateBuilderStore.getSnapshot();
+  return state.context.template.blocks.find(b => b.id === blockId);
 }
 
-export function getSelectedBlock(state: TemplateBuilderState): Block | undefined {
-  if (!state.selectedBlockId) return undefined;
-  return getBlockById(state, state.selectedBlockId);
+export function getSelectedBlock(): Block | undefined {
+  const state = templateBuilderStore.getSnapshot();
+  if (!state.context.selectedBlockId) return undefined;
+  return getBlockById(state.context.selectedBlockId);
 }
 
-export function getBlockIndex(state: TemplateBuilderState, blockId: string): number {
-  return state.template.blocks.findIndex(b => b.id === blockId);
+export function getBlockIndex(blockId: string): number {
+  const state = templateBuilderStore.getSnapshot();
+  return state.context.template.blocks.findIndex(b => b.id === blockId);
 }
