@@ -13,6 +13,7 @@ import type { CompiledCSS, DesignTokens } from '../tokens';
 import type { AIPayload, NasSnapshot, RenderPayload } from '../types/payloads';
 import type { TemplateLintIssue, ValidationIssue } from '../validation';
 import type { PipelineLogger } from './logging';
+import type OpenAI from 'openai';
 
 /**
  * Input configuration for the complete pipeline
@@ -64,6 +65,9 @@ export interface PipelineOptions {
 
 	/** Optional mock generation provider gated by feature flag */
 	mockGeneration?: MockGenerationProvider;
+
+	/** Optional pre-configured OpenAI client (avoids env mutation) */
+	openaiClient?: OpenAI;
 }
 
 /**
@@ -100,13 +104,22 @@ export interface PipelineGuardOptions {
 	resolution?: WarningGuardOptions;
 	promptLint?: WarningGuardOptions;
 	validation?: WarningGuardOptions;
+	merge?: MergeGuardOptions;
 }
 
 /**
  * Warning guard configuration shared across guardable stages.
  */
 export interface WarningGuardOptions {
+	/** @deprecated use failOnSeverity */
 	failOnWarning?: boolean;
+	failOnSeverity?: PipelineWarningSeverity;
+}
+
+export interface MergeGuardOptions {
+	/** When true, conflicting AI/NAS data throws instead of logging */
+	strict?: boolean;
+	severity?: PipelineWarningSeverity;
 }
 
 /**
@@ -148,6 +161,9 @@ export interface PipelineOutput {
 	/** Indicates whether the AI response originated from a mock provider */
 	aiResponseMocked?: boolean;
 
+	/** Optional design-token provenance diagnostics */
+	tokenDiagnostics?: TokenDiagnostics;
+
 	/** Collected non-fatal warnings surfaced during execution */
 	warnings?: PipelineWarnings;
 
@@ -161,10 +177,44 @@ export interface PipelineOutput {
  * Warning collections keyed by pipeline stage.
  */
 export interface PipelineWarnings {
-	template?: TemplateLintIssue[];
-	resolution?: ResolutionWarning[];
-	prompt?: LintIssue[];
-	validation?: ValidationIssue[];
+	template?: PipelineWarning<TemplateLintIssue>[];
+	resolution?: PipelineWarning<ResolutionWarning>[];
+	prompt?: PipelineWarning<LintIssue>[];
+	validation?: PipelineWarning<ValidationIssue>[];
+	merge?: PipelineWarning<MergeConflictWarning>[];
+}
+
+export enum PipelineWarningSeverity {
+	Info = 'info',
+	Warning = 'warning',
+	Error = 'error',
+}
+
+export interface PipelineWarning<T> {
+	issue: T;
+	severity: PipelineWarningSeverity;
+	code?: string;
+	details?: unknown;
+}
+
+export interface MergeConflictWarning {
+	path: string;
+	expectedType?: string;
+	actualType?: string;
+	message: string;
+}
+
+export type TokenValueSource = 'default' | 'template' | 'override';
+
+export interface TokenDiagnosticsEntry {
+	path: string;
+	source: TokenValueSource;
+	severity: PipelineWarningSeverity;
+	message?: string;
+}
+
+export interface TokenDiagnostics {
+	entries: TokenDiagnosticsEntry[];
 }
 
 /**
