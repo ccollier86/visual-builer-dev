@@ -81,6 +81,7 @@ export const templateBuilderStore = createStore({
       });
 
       return {
+        ...ctx,
         template: {
           ...ctx.template,
           blocks
@@ -104,6 +105,7 @@ export const templateBuilderStore = createStore({
         .filter((b): b is Block => b !== null);
 
       return {
+        ...ctx,
         template: {
           ...ctx.template,
           blocks
@@ -117,6 +119,7 @@ export const templateBuilderStore = createStore({
         .map((b, index) => ({ ...b, order: index }));
 
       return {
+        ...ctx,
         template: {
           ...ctx.template,
           blocks
@@ -128,6 +131,7 @@ export const templateBuilderStore = createStore({
     },
 
     updateBlock: (ctx, event: { blockId: string; updates: Partial<Block> }) => ({
+      ...ctx,
       template: {
         ...ctx.template,
         blocks: ctx.template.blocks.map(block =>
