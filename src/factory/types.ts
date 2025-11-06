@@ -39,3 +39,13 @@ export interface VerbatimValue {
   text: string;
   ref?: string;
 }
+
+/** Severity levels for component diagnostics surfaced during rendering. */
+export type DiagnosticSeverity = 'warning' | 'error';
+
+/** Structured warning emitted by factory components when template assumptions are violated. */
+export interface ComponentDiagnostic {
+  code: string;
+  message: string;
+  severity: DiagnosticSeverity;
+}
