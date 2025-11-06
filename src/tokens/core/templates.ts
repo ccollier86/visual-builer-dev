@@ -235,19 +235,18 @@ body.note-body {
 .note th,
 .note td {
   border-bottom: 1px solid var(--surface-card-border);
-  padding: calc(var(--note-base) * 0.7) calc(var(--note-base) * 0.85);
+  padding: calc(var(--note-base) * 0.75) calc(var(--note-base) * 0.9);
   text-align: left;
   vertical-align: top;
 }
 
 .note th {
-  color: var(--note-muted);
-  font-weight: 600;
+  color: var(--note-text);
+  font-weight: 700;
 }
 
 .note thead th {
-  border-bottom: 2px solid var(--note-text);
-  font-weight: 700;
+  border-bottom: 2px solid var(--note-accent);
 }
 
 .note-table-stack {

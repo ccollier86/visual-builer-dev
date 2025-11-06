@@ -49,17 +49,21 @@ const aiSchema: DerivedSchema = {
 };
 
 describe('composePrompt', () => {
-  it('returns lint warnings without throwing', () => {
+  it('produces a lint result without errors', () => {
     const input: CompositionInput = {
       template,
       aiSchema,
-      nasSnapshot: {},
+      nasSnapshot: {
+        subjective: {
+          mood: 'uplifted',
+        },
+      },
     };
 
     const result = composePrompt(input);
 
     expect(result.bundle.templateId).toBe('prompt-test');
     expect(result.lint.errors).toHaveLength(0);
-    expect(result.lint.warnings.length).toBeGreaterThan(0);
+    expect(result.lint.warnings).toHaveLength(0);
   });
 });

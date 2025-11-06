@@ -11,7 +11,7 @@
  * 5. Message roles: system then user
  */
 import type { Component, DerivedSchema, NoteTemplate, SchemaNode } from '../../derivation/types';
-import type { LintIssue, LintResult, NasSnapshot, PromptBundle } from '../types';
+import type { FieldDependency, LintIssue, LintResult, PromptBundle } from '../types';
 
 export function lintPromptBundle(
 	bundle: PromptBundle,
@@ -75,20 +75,30 @@ export function lintPromptBundle(
 	}
 
 	// Check 4: Dependencies resolvable - each dependency exists in context.nasSlices
-	for (const fg of bundle.fieldGuide) {
-		if (fg.dependencies) {
-			for (const dep of fg.dependencies) {
-				if (!pathResolvable(bundle.context?.nasSlices, dep)) {
-					issues.push({
-						severity: 'warning',
-						check: 'dependencies',
-						message: `Dependency not in context: ${dep} (required by ${fg.path})`,
-						path: fg.path,
-					});
-				}
-			}
-		}
-	}
+  for (const fg of bundle.fieldGuide) {
+    const dependencies = fg.dependencies ?? [];
+    if (dependencies.length === 0) {
+      issues.push({
+        severity: 'error',
+        check: 'dependencies',
+        message: `AI field ${fg.path} is missing dependency metadata.`,
+        path: fg.path,
+      });
+      continue;
+    }
+
+    dependencies.forEach((dep) => {
+      if (!dependencyResolvable(dep, bundle)) {
+        issues.push({
+          severity: 'warning',
+          check: 'dependencies',
+          message: `Dependency not present in context (${dep.scope}): ${dep.path} (required by ${fg.path})`,
+          path: fg.path,
+        });
+      }
+    });
+  }
+
 
 	// Check 5: Message roles - system then user
 	if (bundle.messages.length < 2) {
@@ -110,6 +120,15 @@ export function lintPromptBundle(
 				severity: 'error',
 				check: 'message-roles',
 				message: `Second message must be user role, got: ${bundle.messages[1]?.role}`,
+			});
+		}
+
+		const userContent = bundle.messages[1]?.content ?? '';
+		if (!userContent.includes('Return a single JSON object')) {
+			issues.push({
+				severity: 'error',
+				check: 'response-contract',
+				message: 'User message must include the JSON response contract directive.',
 			});
 		}
 	}
@@ -166,6 +185,14 @@ function countAIItems(template: NoteTemplate): number {
 	return count;
 }
 
+function dependencyResolvable(dep: FieldDependency, bundle: PromptBundle): boolean {
+	if (dep.scope === 'nas') {
+		return pathResolvable(bundle.context?.nasSlices, dep.path);
+	}
+
+	return pathResolvable(bundle.context?.factPack, dep.path);
+}
+
 // Helper: Check if path exists in schema
 function pathExistsInSchema(schema: DerivedSchema, path: string): boolean {
 	return getSchemaNode(schema, path) !== null;
@@ -207,7 +234,7 @@ function getSchemaNode(schema: DerivedSchema, path: string): SchemaNode | null {
 }
 
 // Helper: Check if path is resolvable in context
-function pathResolvable(context: NasSnapshot | undefined, path: string): boolean {
+function pathResolvable(context: unknown, path: string): boolean {
 	if (!context) return false;
 
 	const segments = path.split('.');

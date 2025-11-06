@@ -9,7 +9,7 @@ import { buildFieldGuide } from './field-guide-builder';
 import { sliceContext } from './context-slicer';
 import { buildMessages } from './message-builder';
 import { lintPromptBundle } from './prompt-linter';
-import type { CompositionInput, CompositionResult, PromptBundle } from '../types';
+import type { CompositionInput, CompositionResult, LintIssue, LintResult, PromptBundle } from '../types';
 
 /**
  * Compose a prompt bundle
@@ -33,14 +33,10 @@ import type { CompositionInput, CompositionResult, PromptBundle } from '../types
 export function composePrompt(input: CompositionInput): CompositionResult {
   const { template, aiSchema, nasSnapshot, factPack } = input;
 
-  // Step 1: Build field guide from template layout
-  const fieldGuide = buildFieldGuide(template.layout);
+  const fieldGuideResult = buildFieldGuide(template.layout);
+  const contextResult = sliceContext(nasSnapshot, fieldGuideResult.entries);
 
-  // Step 2: Slim NAS context to only dependency paths
-  const nasSlices = sliceContext(nasSnapshot, fieldGuide);
-
-  // Step 3: Generate messages
-  const messages = buildMessages(template, fieldGuide, factPack, nasSlices);
+  const messages = buildMessages(template, fieldGuideResult.entries, factPack, contextResult.nasSlices);
 
   // Step 4: Generate deterministic bundle ID
   const bundleId = generateBundleId(template.id, template.version);
@@ -52,19 +48,20 @@ export function composePrompt(input: CompositionInput): CompositionResult {
     templateVersion: template.version,
     messages,
     jsonSchema: aiSchema,
-    fieldGuide,
+    fieldGuide: fieldGuideResult.entries,
     context: {
       factPack,
-      nasSlices
+      nasSlices: contextResult.nasSlices
     }
   };
 
   // Step 6: Lint the bundle
   const lintResult = lintPromptBundle(bundle, aiSchema, template);
+  const lint = mergeLintIssues(fieldGuideResult.issues, contextResult.issues, lintResult);
 
   return {
     bundle,
-    lint: lintResult,
+    lint,
   };
 }
 
@@ -84,4 +81,21 @@ export function composePrompt(input: CompositionInput): CompositionResult {
 function generateBundleId(templateId: string, version: string): string {
   const timestamp = new Date().toISOString();
   return `${templateId}@${version}_${timestamp}`;
+}
+
+function mergeLintIssues(
+  fieldIssues: LintIssue[],
+  contextIssues: LintIssue[],
+  result: LintResult
+): LintResult {
+  const issues = [...fieldIssues, ...contextIssues, ...result.issues];
+  const errors = issues.filter(issue => issue.severity === 'error');
+  const warnings = issues.filter(issue => issue.severity === 'warning');
+
+  return {
+    ok: errors.length === 0,
+    issues,
+    errors,
+    warnings,
+  };
 }

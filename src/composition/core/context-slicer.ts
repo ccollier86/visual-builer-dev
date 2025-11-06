@@ -6,7 +6,7 @@
  */
 
 import type { PathSegment } from '../../derivation/types';
-import type { FieldGuideEntry, NasSnapshot } from '../types';
+import type { ContextSliceResult, FieldGuideEntry, NasSnapshot, LintIssue } from '../types';
 
 /**
  * Slice NAS snapshot to only dependency paths
@@ -24,41 +24,40 @@ import type { FieldGuideEntry, NasSnapshot } from '../types';
 export function sliceContext(
   nasSnapshot: NasSnapshot | undefined,
   fieldGuide: FieldGuideEntry[]
-): NasSnapshot {
+): ContextSliceResult {
   if (!nasSnapshot) {
-    return {};
+    return { nasSlices: {}, issues: [] };
   }
 
-  // Collect all dependency paths
-  const paths = new Set<string>();
-  for (const entry of fieldGuide) {
-    if (entry.dependencies) {
-      for (const dep of entry.dependencies) {
-        paths.add(dep);
-      }
-    }
+  const issues: LintIssue[] = [];
+  const nasPaths = collectNasDependencies(fieldGuide);
+
+  if (nasPaths.size === 0) {
+    return { nasSlices: {}, issues };
   }
 
-  // If no dependencies, return empty object
-  if (paths.size === 0) {
-    return {};
-  }
-
-  // Build sliced object
   const sliced: NasSnapshot = {};
+  const missing: string[] = [];
 
-  for (const path of paths) {
+  for (const path of nasPaths) {
     const value = getValueAtPath(nasSnapshot, path);
     if (value !== undefined) {
       setValueAtPath(sliced, path, value);
+    } else {
+      missing.push(path);
     }
   }
 
-  if (isEmptyObject(sliced)) {
-    return nasSnapshot;
+  if (missing.length > 0) {
+    issues.push(createIssue('warning', 'context-slice.missing', `Dependencies not present in NAS snapshot: ${missing.join(', ')}`));
   }
 
-  return sliced;
+  if (isEmptyObject(sliced)) {
+    issues.push(createIssue('error', 'context-slice.empty', 'No NAS context could be sliced from declared dependencies.'));
+    return { nasSlices: {}, issues };
+  }
+
+  return { nasSlices: sliced, issues };
 }
 
 /**
@@ -151,6 +150,19 @@ function setValueAtPath(obj: NasSnapshot, path: string, value: unknown): void {
   current[lastKey] = value;
 }
 
+function collectNasDependencies(fieldGuide: FieldGuideEntry[]): Set<string> {
+  const paths = new Set<string>();
+
+  for (const entry of fieldGuide) {
+    const dependencies = entry.dependencies ?? [];
+    dependencies
+      .filter((dep) => dep.scope === 'nas')
+      .forEach((dep) => paths.add(dep.path));
+  }
+
+  return paths;
+}
+
 /**
  * Parse a path into segments
  *
@@ -216,4 +228,16 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 
 function isObjectLike(value: unknown): value is Record<string, unknown> | unknown[] {
   return typeof value === 'object' && value !== null;
+}
+
+function createIssue(
+  severity: LintIssue['severity'],
+  check: string,
+  message: string
+): LintIssue {
+  return {
+    severity,
+    check,
+    message,
+  };
 }

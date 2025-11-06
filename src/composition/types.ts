@@ -37,11 +37,18 @@ export interface Message {
  * Metadata for a single AI field to guide the LLM
  * Extracted from template contentItem with slot:"ai"
  */
+export type FieldDependencyScope = 'nas' | 'source';
+
+export type FieldDependency = {
+  path: string;
+  scope: FieldDependencyScope;
+};
+
 export interface FieldGuideEntry {
   path: string;
   description?: string;
   guidance?: string[];
-  dependencies?: string[];
+  dependencies?: FieldDependency[];
   constraints?: FieldConstraints;
   style?: StyleHints;
 }
@@ -57,6 +64,14 @@ export interface FieldConstraints {
   'x-maxWords'?: number;
   'x-minSentences'?: number;
   'x-maxSentences'?: number;
+}
+
+/**
+ * Result of building the field guide along with authoring diagnostics.
+ */
+export interface FieldGuideBuildResult {
+  entries: FieldGuideEntry[];
+  issues: LintIssue[];
 }
 
 /**
@@ -96,6 +111,14 @@ export interface LintResult {
   issues: LintIssue[];     // All issues found
   errors: LintIssue[];     // Just errors
   warnings: LintIssue[];   // Just warnings
+}
+
+/**
+ * Result of NAS context slicing and associated diagnostics.
+ */
+export interface ContextSliceResult {
+  nasSlices: NasSnapshot;
+  issues: LintIssue[];
 }
 
 export type { FactPack, NasSnapshot } from '../types/payloads';

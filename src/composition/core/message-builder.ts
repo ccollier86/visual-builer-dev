@@ -170,9 +170,21 @@ function formatFieldGuideEntry(entry: FieldGuideEntry): string {
   }
 
   if (entry.dependencies && entry.dependencies.length > 0) {
-    lines.push('  deps:');
-    for (const dep of entry.dependencies) {
-      lines.push(`    - ${dep}`);
+    const nasDeps = entry.dependencies.filter(dep => dep.scope === 'nas');
+    const sourceDeps = entry.dependencies.filter(dep => dep.scope === 'source');
+
+    if (nasDeps.length > 0) {
+      lines.push('  deps (nas):');
+      for (const dep of nasDeps) {
+        lines.push(`    - ${dep.path}`);
+      }
+    }
+
+    if (sourceDeps.length > 0) {
+      lines.push('  deps (source):');
+      for (const dep of sourceDeps) {
+        lines.push(`    - ${dep.path}`);
+      }
     }
   }
 
