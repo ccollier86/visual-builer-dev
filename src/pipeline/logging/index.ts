@@ -17,6 +17,8 @@ export {
   type PipelineAIResponseEvent,
   type PipelineMergeEvent,
   type PipelineRenderEvent,
+  type PipelineStageTimingEvent,
+  type PipelineTokenDiagnosticsEvent,
   type PipelineCompleteEvent,
   type PipelineErrorEvent,
 } from './types';
