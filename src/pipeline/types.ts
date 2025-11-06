@@ -5,8 +5,9 @@
  */
 
 import type { LintIssue } from '../composition';
+import type { PromptBundle } from '../composition/types';
 import type { DerivedSchema, NoteTemplate } from '../derivation/types';
-import type { GenerationOptions } from '../integration';
+import type { GenerationOptions, GenerationResult } from '../integration';
 import type { ResolutionWarning, SourceData } from '../resolution';
 import type { CompiledCSS, DesignTokens } from '../tokens';
 import type { AIPayload, NasSnapshot, RenderPayload } from '../types/payloads';
@@ -60,7 +61,36 @@ export interface PipelineOptions {
 
 	/** Capture OpenAI prompt metadata (ids, etc.) for audit logging */
 	capturePromptMetadata?: boolean;
+
+	/** Optional mock generation provider gated by feature flag */
+	mockGeneration?: MockGenerationProvider;
 }
+
+/**
+ * Context passed to mock generation providers when synthesising AI output.
+ */
+export interface MockGenerationContext {
+	template: NoteTemplate;
+	prompt: PromptBundle;
+	options: PipelineOptions;
+}
+
+/**
+ * Shape of a mock generation result compatible with the integration domain.
+ */
+export interface MockGenerationResult
+  extends Partial<Omit<GenerationResult, 'output' | 'usage' | 'model'>> {
+	output: AIPayload;
+	usage?: Partial<GenerationResult['usage']>;
+	model?: string;
+}
+
+/**
+ * Provider contract for supplying mock AI generations.
+ */
+export type MockGenerationProvider =
+	| MockGenerationResult
+	| ( (context: MockGenerationContext) => Promise<MockGenerationResult> | MockGenerationResult );
 
 /**
  * Fine-grained guardrail configuration per pipeline stage.
@@ -114,6 +144,9 @@ export interface PipelineOutput {
 
 	/** Identifier of the prompt template recorded by OpenAI */
 	promptId?: string;
+
+	/** Indicates whether the AI response originated from a mock provider */
+	aiResponseMocked?: boolean;
 
 	/** Collected non-fatal warnings surfaced during execution */
 	warnings?: PipelineWarnings;

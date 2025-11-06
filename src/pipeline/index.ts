@@ -33,6 +33,9 @@ export type {
   PipelineOutput,
   PipelineError,
   PipelineWarnings,
+  MockGenerationProvider,
+  MockGenerationContext,
+  MockGenerationResult,
 } from './types';
 
 // Logging

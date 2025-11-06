@@ -9,121 +9,134 @@
  * DI: Receives all dependencies via imports, pure functional composition
  */
 
-import { deriveAIS, deriveNAS, mergeToRPS } from '../../derivation';
-import { validateNoteTemplate, validateAIS, getAIOutputValidator, lintNoteTemplate } from '../../validation';
 import { composePrompt } from '../../composition';
-import { createOpenAIClient, generateWithSchema } from '../../integration';
-import { compileCSS } from '../../tokens';
-import { renderNoteHTML } from '../../factory';
-import { mergePayloads, findMergeConflicts } from './merger';
-import type { PipelineInput, PipelineOutput, PipelineOptions, PipelineError, PipelineWarnings } from '../types';
-import type { DesignTokens, Layout } from '../../tokens';
+import { deriveAIS, deriveNAS, mergeToRPS } from '../../derivation';
 import type { TemplateStyle } from '../../derivation/types';
-import type { FactPack } from '../../types/payloads';
-import { createPipelineInstrumentation } from '../logging';
+import { renderNoteHTML } from '../../factory';
+import { createOpenAIClient, generateWithSchema } from '../../integration';
+import type { GenerationResult } from '../../integration/types';
+import type { DesignTokens, Layout } from '../../tokens';
+import { compileCSS } from '../../tokens';
 import defaultTokensRaw from '../../tokens/defaults/default-tokens.json';
+import type { FactPack } from '../../types/payloads';
+import {
+	getAIOutputValidator,
+	lintNoteTemplate,
+	validateAIS,
+	validateNoteTemplate,
+} from '../../validation';
+import { createPipelineInstrumentation } from '../logging';
+import type {
+	PipelineError,
+	PipelineInput,
+	PipelineOptions,
+	PipelineOutput,
+	PipelineWarnings,
+} from '../types';
+import { findMergeConflicts, mergePayloads } from './merger';
+import { isMockGenerationEnabled, resolveMockGeneration } from './mock-generation';
 
 function cloneTokens(tokens: DesignTokens): DesignTokens {
-  return JSON.parse(JSON.stringify(tokens)) as DesignTokens;
+	return JSON.parse(JSON.stringify(tokens)) as DesignTokens;
 }
 
 function applyTemplateStyle(tokens: DesignTokens, style?: TemplateStyle): void {
-  if (!style) return;
+	if (!style) return;
 
-  if (style.font) {
-    tokens.typography.fontFamily = style.font;
-  }
+	if (style.font) {
+		tokens.typography.fontFamily = style.font;
+	}
 
-  if (typeof style.spacing === 'number') {
-    tokens.spacing.unitPx = style.spacing;
-  }
+	if (typeof style.spacing === 'number') {
+		tokens.spacing.unitPx = style.spacing;
+	}
 
-  if (style.color) {
-    tokens.color.text = style.color;
-  }
+	if (style.color) {
+		tokens.color.text = style.color;
+	}
 
-  if (style.muted) {
-    tokens.color.muted = style.muted;
-  }
+	if (style.muted) {
+		tokens.color.muted = style.muted;
+	}
 
-  if (style.accent) {
-    tokens.color.accent = style.accent;
-  }
+	if (style.accent) {
+		tokens.color.accent = style.accent;
+	}
 
-  if (style.tableDensity) {
-    tokens.table.density = style.tableDensity;
-  }
+	if (style.tableDensity) {
+		tokens.table.density = style.tableDensity;
+	}
 
-  if (style.print) {
-    tokens.print.pageSize = style.print.size ?? tokens.print.pageSize;
-    tokens.print.margin = style.print.margin ?? tokens.print.margin;
-    tokens.print.showHeader = style.print.header ?? tokens.print.showHeader;
-    tokens.print.showFooter = style.print.footer ?? tokens.print.showFooter;
-  }
+	if (style.print) {
+		tokens.print.pageSize = style.print.size ?? tokens.print.pageSize;
+		tokens.print.margin = style.print.margin ?? tokens.print.margin;
+		tokens.print.showHeader = style.print.header ?? tokens.print.showHeader;
+		tokens.print.showFooter = style.print.footer ?? tokens.print.showFooter;
+	}
 }
 
 function mergeLayout(base?: Layout, override?: Layout): Layout | undefined {
-  if (!base && !override) {
-    return undefined;
-  }
+	if (!base && !override) {
+		return undefined;
+	}
 
-  const merged: Layout = {
-    ...(base ?? {}),
-    ...(override ?? {}),
-  };
+	const merged: Layout = {
+		...(base ?? {}),
+		...(override ?? {}),
+	};
 
-  if (base?.sectionBanner || override?.sectionBanner) {
-    merged.sectionBanner = {
-      ...(base?.sectionBanner ?? {}),
-      ...(override?.sectionBanner ?? {}),
-    };
-  }
+	if (base?.sectionBanner || override?.sectionBanner) {
+		merged.sectionBanner = {
+			...(base?.sectionBanner ?? {}),
+			...(override?.sectionBanner ?? {}),
+		};
+	}
 
-  return merged;
+	return merged;
 }
 
 function mergeDesignTokens(base: DesignTokens, override?: DesignTokens): DesignTokens {
-  if (!override) {
-    return base;
-  }
+	if (!override) {
+		return base;
+	}
 
-  return {
-    ...base,
-    ...override,
-    typography: {
-      ...base.typography,
-      ...override.typography,
-    },
-    color: {
-      ...base.color,
-      ...override.color,
-    },
-    spacing: {
-      ...base.spacing,
-      ...override.spacing,
-    },
-    table: {
-      ...base.table,
-      ...override.table,
-    },
-    list: {
-      ...(base.list ?? {}),
-      ...(override.list ?? {}),
-    },
-    layout: mergeLayout(base.layout, override.layout),
-    print: {
-      ...base.print,
-      ...override.print,
-    },
-    brand: {
-      ...(base.brand ?? {}),
-      ...(override.brand ?? {}),
-    },
-    surface: {
-      ...(base.surface ?? {}),
-      ...(override.surface ?? {}),
-    },
-  };
+	return {
+		...base,
+		...override,
+		typography: {
+			...base.typography,
+			...override.typography,
+		},
+		color: {
+			...base.color,
+			...override.color,
+		},
+		spacing: {
+			...base.spacing,
+			...override.spacing,
+		},
+		table: {
+			...base.table,
+			...override.table,
+		},
+		list: {
+			...(base.list ?? {}),
+			...(override.list ?? {}),
+		},
+		layout: mergeLayout(base.layout, override.layout),
+		print: {
+			...base.print,
+			...override.print,
+		},
+		brand: {
+			...(base.brand ?? {}),
+			...(override.brand ?? {}),
+		},
+		surface: {
+			...(base.surface ?? {}),
+			...(override.surface ?? {}),
+		},
+	};
 }
 
 /**
@@ -144,328 +157,342 @@ function mergeDesignTokens(base: DesignTokens, override?: DesignTokens): DesignT
  * @throws {PipelineError} If any step fails
  */
 export async function runPipeline(input: PipelineInput): Promise<PipelineOutput> {
-  const options: PipelineOptions = input.options ? { ...input.options } : {};
-  const validate = options.validateSteps ?? true;
+	const options: PipelineOptions = input.options ? { ...input.options } : {};
+	const validate = options.validateSteps ?? true;
 
-  const instrumentation = createPipelineInstrumentation({
-    template: input.template,
-    options,
-  });
+	const instrumentation = createPipelineInstrumentation({
+		template: input.template,
+		options,
+	});
 
-  instrumentation.start();
+	instrumentation.start();
 
-  const capturePromptMetadata = instrumentation.capturePromptMetadata;
-  const startTime = Date.now();
+	const capturePromptMetadata = instrumentation.capturePromptMetadata;
+	const startTime = Date.now();
 
-  try {
-    const pipelineWarnings: PipelineWarnings = {};
-    // Step 1: Validate template
-    log(options, 'Step 1/8: Validating note template...');
-    const templateResult = validateNoteTemplate(input.template);
-    if (!templateResult.ok) {
-      throw createError(
-        'Template validation failed',
-        'template-validation',
-        templateResult.errors
-      );
-    }
+	try {
+		const pipelineWarnings: PipelineWarnings = {};
+		// Step 1: Validate template
+		log(options, 'Step 1/8: Validating note template...');
+		const templateResult = validateNoteTemplate(input.template);
+		if (!templateResult.ok) {
+			throw createError('Template validation failed', 'template-validation', templateResult.errors);
+		}
 
-    const templateLint = lintNoteTemplate(input.template);
-    if (templateLint.errors.length > 0) {
-      throw createError(
-        'Template lint failed',
-        'template-lint',
-        templateLint.errors
-      );
-    }
+		const templateLint = lintNoteTemplate(input.template);
+		if (templateLint.errors.length > 0) {
+			throw createError('Template lint failed', 'template-lint', templateLint.errors);
+		}
 
-    if (templateLint.warnings.length > 0) {
-      if (options.guards?.templateLint?.failOnWarning) {
-        throw createError(
-          'Template lint warnings present',
-          'template-lint-warning',
-          templateLint.warnings
-        );
-      }
+		if (templateLint.warnings.length > 0) {
+			if (options.guards?.templateLint?.failOnWarning) {
+				throw createError(
+					'Template lint warnings present',
+					'template-lint-warning',
+					templateLint.warnings
+				);
+			}
 
-      pipelineWarnings.template = templateLint.warnings;
-    }
+			pipelineWarnings.template = templateLint.warnings;
+		}
 
-    // Step 2: Derive AIS schema (AI Structured Output)
-    log(options, 'Step 2/8: Deriving AIS schema...');
-    const ais = deriveAIS(input.template);
+		// Step 2: Derive AIS schema (AI Structured Output)
+		log(options, 'Step 2/8: Deriving AIS schema...');
+		const ais = deriveAIS(input.template);
 
-    // Validate AIS schema structure against meta-schema
-    if (validate) {
-      const aisSchemaResult = validateAIS(ais);
-      if (!aisSchemaResult.ok) {
-        throw createError(
-          'Derived AIS schema failed validation',
-          'ais-schema-validation',
-          aisSchemaResult.errors
-        );
-      }
-    }
+		// Validate AIS schema structure against meta-schema
+		if (validate) {
+			const aisSchemaResult = validateAIS(ais);
+			if (!aisSchemaResult.ok) {
+				throw createError(
+					'Derived AIS schema failed validation',
+					'ais-schema-validation',
+					aisSchemaResult.errors
+				);
+			}
+		}
 
-    // Step 3: Derive NAS schema (Non-AI Snapshot)
-    log(options, 'Step 3/8: Deriving NAS schema...');
-    const nas = deriveNAS(input.template);
+		// Step 3: Derive NAS schema (Non-AI Snapshot)
+		log(options, 'Step 3/8: Deriving NAS schema...');
+		const nas = deriveNAS(input.template);
 
-    // Step 4: Merge to RPS schema (Render Payload)
-    log(options, 'Step 4/8: Merging to RPS schema...');
-    const rps = mergeToRPS(
-      ais,
-      nas,
-      input.template.id,
-      input.template.name,
-      input.template.version
-    );
+		// Step 4: Merge to RPS schema (Render Payload)
+		log(options, 'Step 4/8: Merging to RPS schema...');
+		const rps = mergeToRPS(
+			ais,
+			nas,
+			input.template.id,
+			input.template.name,
+			input.template.version
+		);
 
-    instrumentation.schemasDerived({
-      aisSchema: ais,
-      nasSchema: nas,
-      rpsSchema: rps,
-    });
+		instrumentation.schemasDerived({
+			aisSchema: ais,
+			nasSchema: nas,
+			rpsSchema: rps,
+		});
 
-    // Step 5: Resolve NAS data from source
-    log(options, 'Step 5/8: Resolving NAS data from source...');
+		// Step 5: Resolve NAS data from source
+		log(options, 'Step 5/8: Resolving NAS data from source...');
 
-    const { createNASBuilder } = await import('../../resolution');
-    const nasBuilder = createNASBuilder();
+		const { createNASBuilder } = await import('../../resolution');
+		const nasBuilder = createNASBuilder();
 
-    const resolutionResult = await nasBuilder.build({
-      template: input.template,
-      sourceData: input.sourceData,
-      nasSchema: nas
-    });
+		const resolutionResult = await nasBuilder.build({
+			template: input.template,
+			sourceData: input.sourceData,
+			nasSchema: nas,
+		});
 
-    const resolvedNasData = resolutionResult.nasData;
+		const resolvedNasData = resolutionResult.nasData;
 
-    instrumentation.resolution({ resolution: resolutionResult });
+		instrumentation.resolution({ resolution: resolutionResult });
 
-    if (resolutionResult.warnings.length > 0) {
-      const fatalWarnings = resolutionResult.warnings.filter(w => w.severity === 'error');
-      if (fatalWarnings.length > 0) {
-        throw createError(
-          'Resolution produced fatal warnings',
-          'resolution-error',
-          fatalWarnings
-        );
-      }
+		if (resolutionResult.warnings.length > 0) {
+			const fatalWarnings = resolutionResult.warnings.filter((w) => w.severity === 'error');
+			if (fatalWarnings.length > 0) {
+				throw createError('Resolution produced fatal warnings', 'resolution-error', fatalWarnings);
+			}
 
-      const nonFatalWarnings = resolutionResult.warnings.filter(w => w.severity !== 'error');
-      if (nonFatalWarnings.length > 0) {
-        if (options.guards?.resolution?.failOnWarning) {
-          throw createError(
-            'Resolution produced warnings',
-            'resolution-warnings',
-            nonFatalWarnings
-          );
-        }
+			const nonFatalWarnings = resolutionResult.warnings.filter((w) => w.severity !== 'error');
+			if (nonFatalWarnings.length > 0) {
+				if (options.guards?.resolution?.failOnWarning) {
+					throw createError(
+						'Resolution produced warnings',
+						'resolution-warnings',
+						nonFatalWarnings
+					);
+				}
 
-        pipelineWarnings.resolution = nonFatalWarnings;
-      }
-    }
+				pipelineWarnings.resolution = nonFatalWarnings;
+			}
+		}
 
-    log(options, `Resolved ${resolutionResult.resolved.length} fields`);
+		log(options, `Resolved ${resolutionResult.resolved.length} fields`);
 
-    // Step 6: Compose prompt bundle
-    log(options, 'Step 6/8: Composing prompt bundle...');
-    const promptResult = composePrompt({
-      template: input.template,
-      aiSchema: ais,
-      nasSnapshot: resolvedNasData,
-      factPack: input.sourceData as FactPack,
-    });
-    const promptBundle = promptResult.bundle;
+		// Step 6: Compose prompt bundle
+		log(options, 'Step 6/8: Composing prompt bundle...');
+		const promptResult = composePrompt({
+			template: input.template,
+			aiSchema: ais,
+			nasSnapshot: resolvedNasData,
+			factPack: input.sourceData as FactPack,
+		});
+		const promptBundle = promptResult.bundle;
 
-    const lintResult = promptResult.lint;
+		const lintResult = promptResult.lint;
 
-    const lintErrors = lintResult.errors.filter(err => err.check !== 'coverage');
+		const lintErrors = lintResult.errors.filter((err) => err.check !== 'coverage');
 
-    if (lintErrors.length > 0) {
-      throw createError(
-        'Prompt bundle validation failed',
-        'prompt-lint',
-        lintErrors
-      );
-    }
+		if (lintErrors.length > 0) {
+			throw createError('Prompt bundle validation failed', 'prompt-lint', lintErrors);
+		}
 
-    if (lintResult.warnings.length > 0) {
-      if (options.guards?.promptLint?.failOnWarning) {
-        throw createError(
-          'Prompt bundle warnings present',
-          'prompt-lint-warning',
-          lintResult.warnings
-        );
-      }
+		if (lintResult.warnings.length > 0) {
+			if (options.guards?.promptLint?.failOnWarning) {
+				throw createError(
+					'Prompt bundle warnings present',
+					'prompt-lint-warning',
+					lintResult.warnings
+				);
+			}
 
-      pipelineWarnings.prompt = lintResult.warnings;
+			pipelineWarnings.prompt = lintResult.warnings;
 
-      if (options.verbose) {
-        console.warn(`Prompt bundle warnings (${lintResult.warnings.length}):`);
-        lintResult.warnings.forEach(w => {
-          console.warn(`  [${w.check}] ${w.message}`);
-        });
-      }
-    }
+			if (options.verbose) {
+				console.warn(`Prompt bundle warnings (${lintResult.warnings.length}):`);
+				lintResult.warnings.forEach((w) => {
+					console.warn(`  [${w.check}] ${w.message}`);
+				});
+			}
+		}
 
-    instrumentation.promptComposed({
-      prompt: promptBundle,
-      warnings: lintResult.warnings.length > 0 ? lintResult.warnings : undefined,
-    });
+		instrumentation.promptComposed({
+			prompt: promptBundle,
+			warnings: lintResult.warnings.length > 0 ? lintResult.warnings : undefined,
+		});
 
-    // Step 7: Generate AI output via OpenAI
-    log(options, 'Step 7/8: Generating AI output...');
+		// Step 7: Generate AI output via OpenAI (or approved mock)
+		log(options, 'Step 7/8: Generating AI output...');
 
-    // Override API key if provided (set temporarily in env)
-    const originalKey = process.env.OPENAI_API_KEY;
-    if (options.openaiKey) {
-      process.env.OPENAI_API_KEY = options.openaiKey;
-    }
+		const aiOutputValidator = getAIOutputValidator(ais);
+		const mockProvider = options.mockGeneration;
+		const mockFeatureEnabled = isMockGenerationEnabled();
 
-    const aiOutputValidator = getAIOutputValidator(ais);
+		if (mockProvider && !mockFeatureEnabled) {
+			throw createError(
+				'Mock generation requested but PIPELINE_ENABLE_MOCK_AI flag is disabled',
+				'mock-generation-disabled'
+			);
+		}
 
-    instrumentation.aiRequest({
-      prompt: promptBundle,
-      model: options.generationOptions?.model,
-      generationOptions: options.generationOptions ? { ...options.generationOptions } : undefined,
-    });
+		instrumentation.aiRequest({
+			prompt: promptBundle,
+			model: options.generationOptions?.model,
+			generationOptions: options.generationOptions ? { ...options.generationOptions } : undefined,
+		});
 
-    let generation;
-    try {
-      const client = createOpenAIClient();
+		let generation: GenerationResult;
+		let aiResponseMocked = false;
 
-      generation = await generateWithSchema(
-        client,
-        promptBundle,
-        aiOutputValidator,
-        options.generationOptions
-      );
-    } finally {
-      // Restore original API key
-      if (options.openaiKey) {
-        if (originalKey) {
-          process.env.OPENAI_API_KEY = originalKey;
-        } else {
-          delete process.env.OPENAI_API_KEY;
-        }
-      }
-    }
+		if (mockProvider && mockFeatureEnabled) {
+			log(options, 'Using mock AI generation result (PIPELINE_ENABLE_MOCK_AI=true)');
+			try {
+				const { generation: mockGeneration } = await resolveMockGeneration({
+					provider: mockProvider,
+					context: {
+						template: input.template,
+						prompt: promptBundle,
+						options,
+					},
+					options,
+				});
+				generation = mockGeneration;
+				aiResponseMocked = true;
+			} catch (error) {
+				throw createError('Mock generation provider failed', 'mock-generation-invalid', error);
+			}
+		} else {
+			// Override API key if provided (set temporarily in env)
+			const originalKey = process.env.OPENAI_API_KEY;
+			if (options.openaiKey) {
+				process.env.OPENAI_API_KEY = options.openaiKey;
+			}
 
-    const aiResultForLogging = capturePromptMetadata
-      ? generation
-      : { ...generation, promptId: undefined, responseId: undefined };
+			try {
+				const client = createOpenAIClient();
 
-    instrumentation.aiResponse({ result: aiResultForLogging });
+				generation = await generateWithSchema(
+					client,
+					promptBundle,
+					aiOutputValidator,
+					options.generationOptions
+				);
+			} finally {
+				// Restore original API key
+				if (options.openaiKey) {
+					if (originalKey) {
+						process.env.OPENAI_API_KEY = originalKey;
+					} else {
+						delete process.env.OPENAI_API_KEY;
+					}
+				}
+			}
+		}
 
-    const aiWarnings = generation.warnings ?? [];
-    if (aiWarnings.length > 0) {
-      if (options.guards?.validation?.failOnWarning) {
-        throw createError(
-          'AI output produced validation warnings',
-          'ai-validation-warning',
-          aiWarnings
-        );
-      }
+		const aiResultForLogging = capturePromptMetadata
+			? generation
+			: { ...generation, promptId: undefined, responseId: undefined };
 
-      pipelineWarnings.validation = aiWarnings;
+		instrumentation.aiResponse({
+			result: aiResultForLogging,
+			mocked: aiResponseMocked ? true : undefined,
+		});
 
-      if (options.verbose) {
-        console.warn(`AI output warnings (${aiWarnings.length}):`);
-        aiWarnings.forEach(warning => {
-          console.warn(`  [${warning.instancePath || '/'}] ${warning.message}`);
-        });
-      }
-    }
+		const aiWarnings = generation.warnings ?? [];
+		if (aiWarnings.length > 0) {
+			if (options.guards?.validation?.failOnWarning) {
+				throw createError(
+					'AI output produced validation warnings',
+					'ai-validation-warning',
+					aiWarnings
+				);
+			}
 
-    if (validate) {
-      const aisResult = aiOutputValidator(generation.output);
-      if (!aisResult.ok) {
-        throw createError(
-          'AI output validation failed',
-          'ai-validation',
-          aisResult.errors
-        );
-      }
+			pipelineWarnings.validation = aiWarnings;
 
-      if (aisResult.warnings.length > 0 && !pipelineWarnings.validation) {
-        pipelineWarnings.validation = aisResult.warnings;
-      }
-    }
+			if (options.verbose) {
+				console.warn(`AI output warnings (${aiWarnings.length}):`);
+				aiWarnings.forEach((warning) => {
+					console.warn(`  [${warning.instancePath || '/'}] ${warning.message}`);
+				});
+			}
+		}
 
-    // Step 8: Merge AI output + NAS data
-    log(options, 'Step 8/8: Merging AI output with NAS data...');
+		if (validate) {
+			const aisResult = aiOutputValidator(generation.output);
+			if (!aisResult.ok) {
+				throw createError('AI output validation failed', 'ai-validation', aisResult.errors);
+			}
 
-    // Check for conflicts (should never happen with proper schemas)
-    if (validate) {
-      const conflicts = findMergeConflicts(generation.output, resolvedNasData);
-      if (conflicts.length > 0) {
-        console.warn('Merge conflicts detected:', conflicts);
-      }
-    }
+			if (aisResult.warnings.length > 0 && !pipelineWarnings.validation) {
+				pipelineWarnings.validation = aisResult.warnings;
+			}
+		}
 
-    const finalPayload = mergePayloads(generation.output, resolvedNasData);
+		// Step 8: Merge AI output + NAS data
+		log(options, 'Step 8/8: Merging AI output with NAS data...');
 
-    // Compile CSS from design tokens
-    const baseTokens = cloneTokens(defaultTokensRaw as DesignTokens);
-    applyTemplateStyle(baseTokens, input.template.style);
-    const tokens = mergeDesignTokens(baseTokens, input.tokens);
+		// Check for conflicts (should never happen with proper schemas)
+		if (validate) {
+			const conflicts = findMergeConflicts(generation.output, resolvedNasData);
+			if (conflicts.length > 0) {
+				console.warn('Merge conflicts detected:', conflicts);
+			}
+		}
 
-    instrumentation.mergeCompleted({
-      finalPayload,
-      tokens,
-    });
+		const finalPayload = mergePayloads(generation.output, resolvedNasData);
 
-    const css = compileCSS(tokens);
+		// Compile CSS from design tokens
+		const baseTokens = cloneTokens(defaultTokensRaw as DesignTokens);
+		applyTemplateStyle(baseTokens, input.template.style);
+		const tokens = mergeDesignTokens(baseTokens, input.tokens);
 
-    // Render HTML
-    const html = renderNoteHTML({
-      template: input.template,
-      payload: finalPayload,
-      tokens,
-      options: {
-        provenance: options.provenance,
-      },
-    });
+		instrumentation.mergeCompleted({
+			finalPayload,
+			tokens,
+		});
 
-    instrumentation.render({
-      htmlLength: html.length,
-      cssHash: css.hash,
-    });
+		const css = compileCSS(tokens);
 
-    log(options, 'Pipeline complete!');
+		// Render HTML
+		const html = renderNoteHTML({
+			template: input.template,
+			payload: finalPayload,
+			tokens,
+			options: {
+				provenance: options.provenance,
+			},
+		});
 
-    const warnings = Object.keys(pipelineWarnings).length > 0 ? pipelineWarnings : undefined;
+		instrumentation.render({
+			htmlLength: html.length,
+			cssHash: css.hash,
+		});
 
-    instrumentation.complete({
-      durationMs: Date.now() - startTime,
-      warnings,
-    });
+		log(options, 'Pipeline complete!');
 
-    return {
-      html,
-      css,
-      aiOutput: generation.output,
-      schemas: { ais, nas, rps },
-      usage: generation.usage,
-      model: generation.model,
-      responseId: capturePromptMetadata ? generation.responseId : undefined,
-      promptId: capturePromptMetadata ? generation.promptId : undefined,
-      warnings,
-      payload: finalPayload,
-      nasSnapshot: resolvedNasData,
-    };
-  } catch (error) {
-    const pipelineError =
-      error && typeof error === 'object' && 'step' in error
-        ? (error as PipelineError)
-        : createError('Pipeline execution failed', 'unknown', error);
+		const warnings = Object.keys(pipelineWarnings).length > 0 ? pipelineWarnings : undefined;
 
-    instrumentation.error(pipelineError);
+		instrumentation.complete({
+			durationMs: Date.now() - startTime,
+			warnings,
+		});
 
-    throw pipelineError;
-  }
+		return {
+			html,
+			css,
+			aiOutput: generation.output,
+			schemas: { ais, nas, rps },
+			usage: generation.usage,
+			model: generation.model,
+			responseId: capturePromptMetadata ? generation.responseId : undefined,
+			promptId: capturePromptMetadata ? generation.promptId : undefined,
+			aiResponseMocked: aiResponseMocked ? true : undefined,
+			warnings,
+			payload: finalPayload,
+			nasSnapshot: resolvedNasData,
+		};
+	} catch (error) {
+		const pipelineError =
+			error && typeof error === 'object' && 'step' in error
+				? (error as PipelineError)
+				: createError('Pipeline execution failed', 'unknown', error);
+
+		instrumentation.error(pipelineError);
+
+		throw pipelineError;
+	}
 }
 
 /**
@@ -477,18 +504,18 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
  * @returns PipelineError with contextual metadata for upstream callers.
  */
 function createError(message: string, step: string, cause?: unknown): PipelineError {
-  const error = new Error(message) as PipelineError;
-  error.name = 'PipelineError';
-  error.step = step;
-  error.cause = cause;
-  return error;
+	const error = new Error(message) as PipelineError;
+	error.name = 'PipelineError';
+	error.step = step;
+	error.cause = cause;
+	return error;
 }
 
 /**
  * Log message if verbose mode enabled
  */
 function log(options: PipelineOptions, message: string): void {
-  if (options.verbose) {
-    console.log(`[Pipeline] ${message}`);
-  }
+	if (options.verbose) {
+		console.log(`[Pipeline] ${message}`);
+	}
 }

@@ -139,7 +139,7 @@ function sanitiseOptionsForLogging(
   requestId: string,
   capturePromptMetadata: boolean
 ): PipelineOptions {
-  const { logger: _logger, ...rest } = options;
+  const { logger: _logger, mockGeneration: _mockGeneration, ...rest } = options;
   const sanitised: PipelineOptions = { ...rest };
 
   if (!sanitised.requestId) {

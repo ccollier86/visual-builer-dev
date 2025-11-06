@@ -65,6 +65,7 @@ export interface PipelineAIRequestEvent extends PipelineBaseEvent {
 
 export interface PipelineAIResponseEvent extends PipelineBaseEvent {
   result: GenerationResult;
+  mocked?: boolean;
 }
 
 export interface PipelineMergeEvent extends PipelineBaseEvent {

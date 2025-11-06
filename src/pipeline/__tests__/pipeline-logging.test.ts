@@ -1,9 +1,11 @@
-import { describe, expect, it, mock } from 'bun:test';
+import { beforeEach, describe, expect, it, mock } from 'bun:test';
 import type { NoteTemplate } from '../../derivation/types';
 import type { SourceData } from '../../resolution';
 import type { DesignTokens } from '../../tokens/types';
 import defaultTokensRaw from '../../tokens/defaults/default-tokens.json';
 import type { AIPayload } from '../../types/payloads';
+
+const integrationCallLog: unknown[] = [];
 
 // Mock the integration layer so we can assert logging without performing real API calls.
 mock.module('../../integration', () => {
@@ -25,6 +27,8 @@ mock.module('../../integration', () => {
           `Mock generator produced invalid payload: ${JSON.stringify(validation.errors)}`
         );
       }
+
+      integrationCallLog.push({ prompt: _bundle });
 
       return {
         output,
@@ -125,6 +129,17 @@ const recordEvent = <K extends keyof PipelineLogger>(
     events.push({ type, event: payload as LoggerEvent['event'] });
   }) as PipelineLogger[K];
 
+const originalMockFlag = process.env.PIPELINE_ENABLE_MOCK_AI;
+
+beforeEach(() => {
+  integrationCallLog.length = 0;
+  if (originalMockFlag === undefined) {
+    delete process.env.PIPELINE_ENABLE_MOCK_AI;
+  } else {
+    process.env.PIPELINE_ENABLE_MOCK_AI = originalMockFlag;
+  }
+});
+
 describe('runPipeline logging adapter', () => {
   it('emits structured events with a stable request id and audit metadata', async () => {
     const events: LoggerEvent[] = [];
@@ -220,5 +235,71 @@ describe('runPipeline logging adapter', () => {
     expect(result.responseId).toBe('resp-audit-123');
     expect(result.promptId).toBe('prompt-audit-456');
     expect(events.some(e => e.type === 'onError')).toBe(false);
+  });
+
+  it('uses mock generation when the feature flag is enabled', async () => {
+    process.env.PIPELINE_ENABLE_MOCK_AI = 'true';
+
+    const events: LoggerEvent[] = [];
+    const logger: PipelineLogger = {
+      onAIResponse: recordEvent(events, 'onAIResponse'),
+    };
+
+    const result = await runPipeline({
+      template,
+      sourceData,
+      tokens,
+      options: {
+        logger,
+        mockGeneration: () => ({
+          output: {
+            assessment: { summary: 'Fixture summary' },
+          },
+          usage: {
+            promptTokens: 5,
+            completionTokens: 10,
+          },
+          model: 'mock-gpt-fixture',
+          responseId: 'resp-mock-001',
+        }),
+      },
+    });
+
+    expect(result.aiResponseMocked).toBe(true);
+    expect(result.model).toBe('mock-gpt-fixture');
+    expect(result.usage).toEqual({
+      promptTokens: 5,
+      completionTokens: 10,
+      totalTokens: 15,
+    });
+    const aiOutput = result.aiOutput as Record<string, unknown>;
+    const assessment = aiOutput.assessment as { summary: string } | undefined;
+    expect(assessment?.summary).toBe('Fixture summary');
+    expect(integrationCallLog.length).toBe(0);
+
+    const aiResponseEvent = events.find(e => e.type === 'onAIResponse')?.event as PipelineAIResponseEvent;
+    expect(aiResponseEvent.mocked).toBe(true);
+    expect(aiResponseEvent.result.model).toBe('mock-gpt-fixture');
+  });
+
+  it('throws when mock generation is requested without enabling the feature flag', async () => {
+    delete process.env.PIPELINE_ENABLE_MOCK_AI;
+
+    await expect(
+      runPipeline({
+        template,
+        sourceData,
+        tokens,
+        options: {
+          mockGeneration: {
+            output: {
+              assessment: { summary: 'Should not run' },
+            },
+          },
+        },
+      })
+    ).rejects.toMatchObject({ step: 'mock-generation-disabled' });
+
+    expect(integrationCallLog.length).toBe(0);
   });
 });
