@@ -47,18 +47,20 @@ mock.module('../../integration', () => {
 });
 
 import {
-  runPipeline,
-  type PipelineLogger,
-  type PipelineStartEvent,
-  type PipelineSchemasEvent,
-  type PipelineResolutionEvent,
-  type PipelinePromptEvent,
-  type PipelineAIRequestEvent,
-  type PipelineAIResponseEvent,
-  type PipelineMergeEvent,
-  type PipelineRenderEvent,
-  type PipelineCompleteEvent,
-  type PipelineErrorEvent,
+	runPipeline,
+	type PipelineLogger,
+	type PipelineStartEvent,
+	type PipelineSchemasEvent,
+	type PipelineResolutionEvent,
+	type PipelinePromptEvent,
+	type PipelineAIRequestEvent,
+	type PipelineAIResponseEvent,
+	type PipelineMergeEvent,
+	type PipelineRenderEvent,
+	type PipelineStageTimingEvent,
+	type PipelineTokenDiagnosticsEvent,
+	type PipelineCompleteEvent,
+	type PipelineErrorEvent,
 } from '..';
 
 const template: NoteTemplate = {
@@ -117,6 +119,8 @@ type LoggerEvent = {
     | PipelineAIResponseEvent
     | PipelineMergeEvent
     | PipelineRenderEvent
+    | PipelineStageTimingEvent
+    | PipelineTokenDiagnosticsEvent
     | PipelineCompleteEvent
     | PipelineErrorEvent;
 };
@@ -153,6 +157,8 @@ describe('runPipeline logging adapter', () => {
       onAIResponse: recordEvent(events, 'onAIResponse'),
       onMergeCompleted: recordEvent(events, 'onMergeCompleted'),
       onRender: recordEvent(events, 'onRender'),
+      onStageTiming: recordEvent(events, 'onStageTiming'),
+      onTokenDiagnostics: recordEvent(events, 'onTokenDiagnostics'),
       onComplete: recordEvent(events, 'onComplete'),
       onError: recordEvent(events, 'onError'),
     };
@@ -172,7 +178,10 @@ describe('runPipeline logging adapter', () => {
     });
 
     const eventKinds = events.map(e => e.type);
-    expect(eventKinds).toEqual([
+    const primaryEventOrder = eventKinds.filter(
+      type => type !== 'onStageTiming' && type !== 'onTokenDiagnostics'
+    );
+    expect(primaryEventOrder).toEqual([
       'onStart',
       'onSchemasDerived',
       'onResolution',
@@ -183,6 +192,9 @@ describe('runPipeline logging adapter', () => {
       'onRender',
       'onComplete',
     ]);
+
+    expect(eventKinds).toContain('onStageTiming');
+    expect(eventKinds).toContain('onTokenDiagnostics');
 
     const startEvent = events.find(e => e.type === 'onStart')?.event as PipelineStartEvent;
     expect(startEvent).toBeTruthy();
@@ -216,16 +228,34 @@ describe('runPipeline logging adapter', () => {
     expect(aiResponseEvent.result.model).toBe('mock-gpt-audit');
     expect(aiResponseEvent.result.responseId).toBe('resp-audit-123');
     expect(aiResponseEvent.result.promptId).toBe('prompt-audit-456');
+    expect(aiResponseEvent.durationMs).toBeGreaterThanOrEqual(0);
 
     const mergeEvent = events.find(e => e.type === 'onMergeCompleted')
       ?.event as PipelineMergeEvent;
     expect(mergeEvent.finalPayload).toBe(result.payload);
     expect(mergeEvent.tokens.id).toBe(tokens.id);
+    expect(Array.isArray(mergeEvent.conflicts)).toBe(true);
 
     const renderEvent = events.find(e => e.type === 'onRender')
       ?.event as PipelineRenderEvent;
     expect(renderEvent.htmlLength).toBe(result.html.length);
     expect(renderEvent.cssHash).toBe(result.css.hash);
+
+    const stageEvents = events
+      .filter(e => e.type === 'onStageTiming')
+      .map(e => e.event as PipelineStageTimingEvent);
+    const stageNames = stageEvents.map(event => event.stage);
+    expect(stageNames).toEqual(
+      expect.arrayContaining(['resolveNAS', 'composePrompt', 'generateWithSchema', 'compileCSS', 'renderNoteHTML'])
+    );
+    stageEvents.forEach(event => {
+      expect(event.durationMs).toBeGreaterThanOrEqual(0);
+    });
+
+    const tokenEvent = events.find(e => e.type === 'onTokenDiagnostics')
+      ?.event as PipelineTokenDiagnosticsEvent;
+    expect(tokenEvent).toBeDefined();
+    expect(tokenEvent.diagnostics.entries.length).toBeGreaterThan(0);
 
     const completeEvent = events.find(e => e.type === 'onComplete')
       ?.event as PipelineCompleteEvent;
@@ -234,6 +264,7 @@ describe('runPipeline logging adapter', () => {
 
     expect(result.responseId).toBe('resp-audit-123');
     expect(result.promptId).toBe('prompt-audit-456');
+    expect(result.tokenDiagnostics?.entries.length).toBeGreaterThan(0);
     expect(events.some(e => e.type === 'onError')).toBe(false);
   });
 
@@ -276,6 +307,7 @@ describe('runPipeline logging adapter', () => {
     const assessment = aiOutput.assessment as { summary: string } | undefined;
     expect(assessment?.summary).toBe('Fixture summary');
     expect(integrationCallLog.length).toBe(0);
+    expect(result.tokenDiagnostics?.entries.length).toBeGreaterThan(0);
 
     const aiResponseEvent = events.find(e => e.type === 'onAIResponse')?.event as PipelineAIResponseEvent;
     expect(aiResponseEvent.mocked).toBe(true);

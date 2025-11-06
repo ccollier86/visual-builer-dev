@@ -34,7 +34,6 @@ export type {
   PipelineError,
   PipelineWarnings,
   PipelineWarning,
-  PipelineWarningSeverity,
   WarningGuardOptions,
   MergeGuardOptions,
   MergeConflictWarning,
@@ -45,6 +44,8 @@ export type {
   MockGenerationContext,
   MockGenerationResult,
 } from './types';
+
+export { PipelineWarningSeverity } from './types';
 
 // Logging
 export { createNoopPipelineLogger, createPipelineInstrumentation } from './logging';

@@ -27,6 +27,7 @@ import {
 	validateNoteTemplate,
 } from '../../validation';
 import { createPipelineInstrumentation } from '../logging';
+import { PipelineWarningSeverity } from '../types';
 import type {
 	PipelineError,
 	PipelineInput,
@@ -34,7 +35,6 @@ import type {
 	PipelineOutput,
 	PipelineWarnings,
 	PipelineWarning,
-	PipelineWarningSeverity,
 	MergeConflictWarning,
 	TokenDiagnostics,
 	WarningGuardOptions,
