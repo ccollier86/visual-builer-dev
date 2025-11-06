@@ -201,7 +201,7 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 
 	const templateWarnings = templateLint.warnings.map((issue) => ({
 		issue,
-		severity: mapLintSeverity(issue.severity),
+		severity: mapTemplateSeverity(issue.severity),
 		code: issue.code,
 	}));
 
