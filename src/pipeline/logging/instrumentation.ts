@@ -122,6 +122,12 @@ export function createPipelineInstrumentation(
     render(event) {
       emit('onRender', event);
     },
+    stageTiming(event) {
+      emit('onStageTiming', event);
+    },
+    tokenDiagnostics(event) {
+      emit('onTokenDiagnostics', event);
+    },
     complete(event) {
       emit('onComplete', event);
     },
@@ -139,7 +145,7 @@ function sanitiseOptionsForLogging(
   requestId: string,
   capturePromptMetadata: boolean
 ): PipelineOptions {
-  const { logger: _logger, mockGeneration: _mockGeneration, ...rest } = options;
+  const { logger: _logger, mockGeneration: _mockGeneration, openaiClient: _client, ...rest } = options;
   const sanitised: PipelineOptions = { ...rest };
 
   if (!sanitised.requestId) {
