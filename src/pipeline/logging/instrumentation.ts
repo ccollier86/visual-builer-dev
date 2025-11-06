@@ -20,6 +20,8 @@ import {
   type PipelineAIResponseEvent,
   type PipelineMergeEvent,
   type PipelineRenderEvent,
+  type PipelineStageTimingEvent,
+  type PipelineTokenDiagnosticsEvent,
   type PipelineCompleteEvent,
   type PipelineErrorEvent,
 } from './types';
@@ -33,6 +35,8 @@ type LoggerEventMap = {
   onAIResponse: PipelineAIResponseEvent;
   onMergeCompleted: PipelineMergeEvent;
   onRender: PipelineRenderEvent;
+  onStageTiming: PipelineStageTimingEvent;
+  onTokenDiagnostics: PipelineTokenDiagnosticsEvent;
   onComplete: PipelineCompleteEvent;
   onError: PipelineErrorEvent;
 };
@@ -56,6 +60,8 @@ export interface PipelineInstrumentation {
   aiResponse(event: LoggerEventPayload<'onAIResponse'>): void;
   mergeCompleted(event: LoggerEventPayload<'onMergeCompleted'>): void;
   render(event: LoggerEventPayload<'onRender'>): void;
+  stageTiming(event: LoggerEventPayload<'onStageTiming'>): void;
+  tokenDiagnostics(event: LoggerEventPayload<'onTokenDiagnostics'>): void;
   complete(event: LoggerEventPayload<'onComplete'>): void;
   error(error: PipelineError): void;
 }
