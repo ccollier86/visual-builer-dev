@@ -1,3 +1,14 @@
+/**
+ * Resolution Domain - Type Contracts
+ *
+ * Domain: resolution/contracts
+ * Responsibility: Shared interfaces for NAS derivation, resolver contexts, and diagnostics.
+ *
+ * SOR: Centralised definitions consumed by all resolution components.
+ * SOD: Pure types with no side effects.
+ * DI: Imported by builders/resolvers to keep dependencies explicit.
+ */
+
 import type { ContentItem, DerivedSchema, NoteTemplate } from '../../derivation/types';
 import type { NasSnapshot } from '../../types/payloads';
 
