@@ -243,23 +243,27 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 
     instrumentation.resolution({ resolution: resolutionResult });
 
-    // Log warnings
     if (resolutionResult.warnings.length > 0) {
-      if (options.guards?.resolution?.failOnWarning) {
+      const fatalWarnings = resolutionResult.warnings.filter(w => w.severity === 'error');
+      if (fatalWarnings.length > 0) {
         throw createError(
-          'Resolution produced warnings',
-          'resolution-warnings',
-          resolutionResult.warnings
+          'Resolution produced fatal warnings',
+          'resolution-error',
+          fatalWarnings
         );
       }
 
-      pipelineWarnings.resolution = resolutionResult.warnings;
+      const nonFatalWarnings = resolutionResult.warnings.filter(w => w.severity !== 'error');
+      if (nonFatalWarnings.length > 0) {
+        if (options.guards?.resolution?.failOnWarning) {
+          throw createError(
+            'Resolution produced warnings',
+            'resolution-warnings',
+            nonFatalWarnings
+          );
+        }
 
-      if (options.verbose) {
-        console.warn(`Resolution warnings (${resolutionResult.warnings.length}):`);
-        resolutionResult.warnings.forEach(w => {
-          console.warn(`  [${w.componentId}/${w.slotId}] ${w.message}`);
-        });
+        pipelineWarnings.resolution = nonFatalWarnings;
       }
     }
 

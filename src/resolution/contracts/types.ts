@@ -32,13 +32,16 @@ export interface SourceData {
 /**
  * Resolution context passed to all resolvers
  */
-export interface ResolutionContext {
+export interface ResolutionBuildParams {
   /** Validated note template */
   template: NoteTemplate;
   /** Raw input data provided by the host application */
   sourceData: SourceData;
   /** Target NAS schema derived from the template */
   nasSchema: DerivedSchema;
+}
+
+export interface ResolutionContext extends ResolutionBuildParams {
   /** Partial NAS snapshot built so far (read-only to preserve purity) */
   partialNas: Readonly<NasSnapshot>;
 }
@@ -91,6 +94,7 @@ export interface UnresolvedSlot {
   slotId: string;
   slotType: string;
   targetPath?: string;
+  required?: boolean;
 }
 
 /**
@@ -130,5 +134,5 @@ export interface INASBuilder {
   /**
    * Build complete NAS snapshot from template + source data
    */
-  build(context: ResolutionContext): Promise<ResolutionResult>;
+  build(params: ResolutionBuildParams): Promise<ResolutionResult>;
 }
