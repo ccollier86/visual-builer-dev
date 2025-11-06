@@ -46,7 +46,7 @@ function getNestedValue(obj: unknown, path: string): unknown {
  */
 function getTableBorderStyle(borders?: string): string {
   if (borders === 'none') return '0';
-  return '1px solid var(--note-border)';
+  return '1px solid var(--surface-card-border)';
 }
 
 /**
@@ -55,11 +55,11 @@ function getTableBorderStyle(borders?: string): string {
 function getTablePadding(density?: string): string {
   switch (density) {
     case 'compact':
-      return '6px';
+      return '8px 10px';
     case 'spacious':
-      return '12px';
+      return '12px 16px';
     default:
-      return '8px';
+      return '10px 12px';
   }
 }
 
