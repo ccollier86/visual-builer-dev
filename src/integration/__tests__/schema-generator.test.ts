@@ -8,12 +8,13 @@
  * DI: OpenAI client dependency is injected via a stub implementation.
  */
 
-import { describe, expect, it, mock, spyOn } from 'bun:test';
+import { describe, expect, it } from 'bun:test';
 import type OpenAI from 'openai';
 import type { Response } from 'openai/resources/responses/responses';
 import { generateWithSchema } from '../core/schema-generator';
 import type { PromptBundle } from '../../composition/types';
 import type { SchemaValidator } from '../../validation/types';
+import type { IntegrationDiagnosticEvent } from '../types';
 
 /**
  * Builds a minimal prompt bundle fixture for tests.
@@ -76,7 +77,7 @@ function createValidator(): SchemaValidator {
 
 describe('generateWithSchema', () => {
   it('retries once when the first response is missing output_text', async () => {
-    const warn = spyOn(console, 'warn');
+    const diagnostics: IntegrationDiagnosticEvent[] = [];
 
     const responses = [
       buildResponse({
@@ -89,41 +90,67 @@ describe('generateWithSchema', () => {
       }),
     ];
 
-    const create = mock(async () => responses.shift() as Response);
+    let createCallCount = 0;
+    const create = async (): Promise<Response> => {
+      createCallCount++;
+      const next = responses.shift();
+      if (!next) {
+        throw new Error('No response available');
+      }
+      return next;
+    };
     const client = { responses: { create } } as unknown as OpenAI;
 
     const result = await generateWithSchema(
       client,
       buildPromptBundle(),
       createValidator(),
-      { retries: 0 }
+      { retries: 0 },
+      {
+        warn: (event) => diagnostics.push(event),
+      }
     );
 
-    expect(create.mock.calls.length).toBe(2);
     expect(result.output).toEqual({ mock: true });
-    expect(warn.mock.calls.length).toBeGreaterThan(0);
-
-    warn.mockRestore();
+    expect(diagnostics.length).toBe(1);
+    expect(createCallCount).toBe(2);
+    expect(diagnostics[0].code).toBe('missing-output');
+    expect(diagnostics[0].attempt).toBe(1);
   });
 
   it('throws after retrying when output_text is still missing', async () => {
-    const warn = spyOn(console, 'warn');
+    const diagnostics: IntegrationDiagnosticEvent[] = [];
 
     const responses = [
       buildResponse({ output_text: '' }),
       buildResponse({ output_text: '' }),
     ];
 
-    const create = mock(async () => responses.shift() as Response);
+    let createCallCount = 0;
+    const create = async (): Promise<Response> => {
+      createCallCount++;
+      const next = responses.shift();
+      if (!next) {
+        throw new Error('No response available');
+      }
+      return next;
+    };
     const client = { responses: { create } } as unknown as OpenAI;
 
-    await expect(
-      generateWithSchema(client, buildPromptBundle(), createValidator(), { retries: 0 })
-    ).rejects.toThrow('OpenAI response missing message content after retry');
+    const generationPromise = generateWithSchema(
+      client,
+      buildPromptBundle(),
+      createValidator(),
+      { retries: 0 },
+      {
+        warn: (event) => diagnostics.push(event),
+      }
+    );
 
-    expect(create.mock.calls.length).toBe(2);
-    expect(warn.mock.calls.length).toBeGreaterThanOrEqual(2);
+    await expect(generationPromise).rejects.toThrow('OpenAI response missing message content after retry');
 
-    warn.mockRestore();
+    expect(diagnostics.length).toBe(2);
+    expect(createCallCount).toBe(2);
+    expect(diagnostics.every(event => event.code === 'missing-output')).toBe(true);
   });
 });

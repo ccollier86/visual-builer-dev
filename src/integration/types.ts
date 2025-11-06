@@ -34,6 +34,25 @@ export interface GenerationResult {
 }
 
 /**
+ * Diagnostic information emitted by the integration layer when recovering from anomalies.
+ */
+export interface IntegrationDiagnosticEvent {
+  code: 'missing-output';
+  attempt: number;
+  model?: string;
+  responseId?: string;
+  promptId?: string;
+  rawPreview: string;
+}
+
+/**
+ * Logger contract injected by upstream layers to capture integration diagnostics.
+ */
+export interface IntegrationDiagnosticsLogger {
+  warn(event: IntegrationDiagnosticEvent): void;
+}
+
+/**
  * Retry configuration for API calls
  */
 export interface RetryConfig {

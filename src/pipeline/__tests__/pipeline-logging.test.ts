@@ -55,6 +55,7 @@ import {
 	type PipelinePromptEvent,
 	type PipelineAIRequestEvent,
 	type PipelineAIResponseEvent,
+	type PipelineAIDiagnosticEvent,
 	type PipelineMergeEvent,
 	type PipelineRenderEvent,
 	type PipelineStageTimingEvent,
@@ -117,6 +118,7 @@ type LoggerEvent = {
     | PipelinePromptEvent
     | PipelineAIRequestEvent
     | PipelineAIResponseEvent
+    | PipelineAIDiagnosticEvent
     | PipelineMergeEvent
     | PipelineRenderEvent
     | PipelineStageTimingEvent
@@ -155,6 +157,7 @@ describe('runPipeline logging adapter', () => {
       onPromptComposed: recordEvent(events, 'onPromptComposed'),
       onAIRequest: recordEvent(events, 'onAIRequest'),
       onAIResponse: recordEvent(events, 'onAIResponse'),
+      onAIDiagnostic: recordEvent(events, 'onAIDiagnostic'),
       onMergeCompleted: recordEvent(events, 'onMergeCompleted'),
       onRender: recordEvent(events, 'onRender'),
       onStageTiming: recordEvent(events, 'onStageTiming'),
@@ -195,6 +198,7 @@ describe('runPipeline logging adapter', () => {
 
     expect(eventKinds).toContain('onStageTiming');
     expect(eventKinds).toContain('onTokenDiagnostics');
+    expect(eventKinds).not.toContain('onAIDiagnostic');
 
     const startEvent = events.find(e => e.type === 'onStart')?.event as PipelineStartEvent;
     expect(startEvent).toBeTruthy();

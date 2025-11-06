@@ -15,6 +15,7 @@ export {
   type PipelinePromptEvent,
   type PipelineAIRequestEvent,
   type PipelineAIResponseEvent,
+  type PipelineAIDiagnosticEvent,
   type PipelineMergeEvent,
   type PipelineRenderEvent,
   type PipelineStageTimingEvent,

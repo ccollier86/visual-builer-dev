@@ -18,6 +18,7 @@ import {
   type PipelinePromptEvent,
   type PipelineAIRequestEvent,
   type PipelineAIResponseEvent,
+  type PipelineAIDiagnosticEvent,
   type PipelineMergeEvent,
   type PipelineRenderEvent,
   type PipelineStageTimingEvent,
@@ -33,6 +34,7 @@ type LoggerEventMap = {
   onPromptComposed: PipelinePromptEvent;
   onAIRequest: PipelineAIRequestEvent;
   onAIResponse: PipelineAIResponseEvent;
+  onAIDiagnostic: PipelineAIDiagnosticEvent;
   onMergeCompleted: PipelineMergeEvent;
   onRender: PipelineRenderEvent;
   onStageTiming: PipelineStageTimingEvent;
@@ -58,6 +60,7 @@ export interface PipelineInstrumentation {
   promptComposed(event: LoggerEventPayload<'onPromptComposed'>): void;
   aiRequest(event: LoggerEventPayload<'onAIRequest'>): void;
   aiResponse(event: LoggerEventPayload<'onAIResponse'>): void;
+  aiDiagnostic(event: LoggerEventPayload<'onAIDiagnostic'>): void;
   mergeCompleted(event: LoggerEventPayload<'onMergeCompleted'>): void;
   render(event: LoggerEventPayload<'onRender'>): void;
   stageTiming(event: LoggerEventPayload<'onStageTiming'>): void;
@@ -121,6 +124,9 @@ export function createPipelineInstrumentation(
     },
     aiResponse(event) {
       emit('onAIResponse', event);
+    },
+    aiDiagnostic(event) {
+      emit('onAIDiagnostic', event);
     },
     mergeCompleted(event) {
       emit('onMergeCompleted', event);

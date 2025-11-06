@@ -15,7 +15,10 @@ import { deriveAIS, deriveNAS, mergeToRPS } from '../../derivation';
 import type { TemplateStyle } from '../../derivation/types';
 import { renderNoteHTML } from '../../factory';
 import { generateWithSchema } from '../../integration';
-import type { GenerationResult } from '../../integration/types';
+import type {
+	GenerationResult,
+	IntegrationDiagnosticsLogger,
+} from '../../integration/types';
 import type { DesignTokens, Layout } from '../../tokens';
 import { compileCSS } from '../../tokens';
 import defaultTokensRaw from '../../tokens/defaults/default-tokens.json';
@@ -393,6 +396,19 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 		let aiResponseMocked = false;
 		let aiDurationMs: number | undefined;
 
+		const diagnosticsLogger: IntegrationDiagnosticsLogger = {
+			warn: (event) => {
+				instrumentation.aiDiagnostic({
+					code: event.code,
+					attempt: event.attempt,
+					model: event.model,
+					responseId: event.responseId,
+					promptId: event.promptId,
+					rawPreview: event.rawPreview,
+				});
+			},
+		};
+
 		if (mockProvider && mockFeatureEnabled) {
 			logVerbose(options, 'Using mock AI generation result (PIPELINE_ENABLE_MOCK_AI=true)');
 			try {
@@ -420,7 +436,13 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 		} else {
 			const { client } = resolveOpenAIClient(options);
 			const generationTiming = await timeStage(() =>
-				generateWithSchema(client, promptBundle, aiOutputValidator, options.generationOptions)
+				generateWithSchema(
+					client,
+					promptBundle,
+					aiOutputValidator,
+					options.generationOptions,
+					diagnosticsLogger
+				)
 			);
 			generation = generationTiming.result;
 			aiDurationMs = generationTiming.durationMs;

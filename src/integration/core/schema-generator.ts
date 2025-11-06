@@ -8,7 +8,11 @@
 import type OpenAI from 'openai';
 import type { Response, ResponseCreateParams } from 'openai/resources/responses/responses';
 import type { PromptBundle } from '../../composition/types';
-import type { GenerationOptions, GenerationResult } from '../types';
+import type {
+  GenerationOptions,
+  GenerationResult,
+  IntegrationDiagnosticsLogger,
+} from '../types';
 import type { SchemaValidator } from '../../validation/types';
 import type { AIPayload } from '../../types/payloads';
 import { withRetry } from '../utils/retry-handler';
@@ -24,6 +28,7 @@ import { DEFAULT_OPTIONS } from '../types';
  * @param bundle - Complete prompt bundle from composition phase
  * @param validator - Function to validate AI output against AIS schema (injected)
  * @param options - Optional generation parameters
+ * @param diagnostics - Optional logger receiving integration diagnostic events
  * @returns Generation result with validated AI output and usage metrics
  * @throws {Error} If API call fails or output validation fails
  */
@@ -33,7 +38,8 @@ export async function generateWithSchema(
   client: OpenAI,
   bundle: PromptBundle,
   validator: SchemaValidator,
-  options: Partial<GenerationOptions> = {}
+  options: Partial<GenerationOptions> = {},
+  diagnostics?: IntegrationDiagnosticsLogger
 ): Promise<GenerationResult> {
   const finalOptions = { ...DEFAULT_OPTIONS, ...options };
 
@@ -86,7 +92,7 @@ export async function generateWithSchema(
       break;
     }
 
-    logMissingOutputAttempt(attempt, current, finalOptions.model);
+    logMissingOutputAttempt(attempt, current, finalOptions.model, diagnostics);
 
     if (attempt === MAX_EMPTY_OUTPUT_ATTEMPTS - 1) {
       throw new Error(
@@ -242,7 +248,12 @@ function extractFirstTextOutput(response: Response): string | null {
   return null;
 }
 
-function logMissingOutputAttempt(attempt: number, response: Response, model?: string): void {
+function logMissingOutputAttempt(
+  attempt: number,
+  response: Response,
+  model: string | undefined,
+  diagnostics?: IntegrationDiagnosticsLogger
+): void {
   const attemptNumber = attempt + 1;
   const meta = {
     attempt: attemptNumber,
@@ -259,6 +270,18 @@ function logMissingOutputAttempt(attempt: number, response: Response, model?: st
       serialised.length > 4000 ? `${serialised.slice(0, 4000)}… (truncated)` : serialised;
   } catch {
     rawPreview = '[unserialisable response payload]';
+  }
+
+  if (diagnostics) {
+    diagnostics.warn({
+      code: 'missing-output',
+      attempt: attemptNumber,
+      model,
+      responseId: meta.responseId,
+      promptId: meta.promptId,
+      rawPreview,
+    });
+    return;
   }
 
   console.warn(

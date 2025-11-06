@@ -27,6 +27,7 @@ export interface PipelineLogger {
   onPromptComposed?(event: PipelinePromptEvent): void;
   onAIRequest?(event: PipelineAIRequestEvent): void;
   onAIResponse?(event: PipelineAIResponseEvent): void;
+  onAIDiagnostic?(event: PipelineAIDiagnosticEvent): void;
   onMergeCompleted?(event: PipelineMergeEvent): void;
   onRender?(event: PipelineRenderEvent): void;
   onStageTiming?(event: PipelineStageTimingEvent): void;
@@ -76,6 +77,15 @@ export interface PipelineAIResponseEvent extends PipelineBaseEvent {
   mocked?: boolean;
   durationMs?: number;
   retries?: number;
+}
+
+export interface PipelineAIDiagnosticEvent extends PipelineBaseEvent {
+  code: 'missing-output';
+  attempt: number;
+  model?: string;
+  responseId?: string;
+  promptId?: string;
+  rawPreview: string;
 }
 
 export interface PipelineMergeEvent extends PipelineBaseEvent {
