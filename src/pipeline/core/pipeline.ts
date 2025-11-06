@@ -27,29 +27,26 @@ import {
 	validateNoteTemplate,
 } from '../../validation';
 import { createPipelineInstrumentation } from '../logging';
-import { PipelineWarningSeverity } from '../types';
 import type {
+	MergeConflictWarning,
 	PipelineError,
 	PipelineInput,
 	PipelineOptions,
 	PipelineOutput,
-	PipelineWarnings,
 	PipelineWarning,
-	MergeConflictWarning,
-	TokenDiagnostics,
-	WarningGuardOptions,
-	MergeGuardOptions,
+	PipelineWarnings,
 } from '../types';
-import { collectMergeConflicts, mergePayloads } from './merger';
+import { PipelineWarningSeverity } from '../types';
 import { createPipelineError, logVerbose, resolveOpenAIClient, timeStage } from './helpers';
+import { collectMergeConflicts, mergePayloads } from './merger';
+import { isMockGenerationEnabled, resolveMockGeneration } from './mock-generation';
+import { diagnoseTokens } from './tokens-diagnostics';
 import {
-	mapTemplateSeverity,
 	mapResolutionSeverity,
+	mapTemplateSeverity,
 	shouldFailGuard,
 	shouldFailMerge,
 } from './warnings';
-import { isMockGenerationEnabled, resolveMockGeneration } from './mock-generation';
-import { diagnoseTokens } from './tokens-diagnostics';
 
 function cloneTokens(tokens: DesignTokens): DesignTokens {
 	return JSON.parse(JSON.stringify(tokens)) as DesignTokens;
@@ -191,34 +188,38 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 		logVerbose(options, 'Step 1/8: Validating note template...');
 		const templateResult = validateNoteTemplate(input.template);
 		if (!templateResult.ok) {
-			throw createPipelineError('Template validation failed', 'template-validation', templateResult.errors);
+			throw createPipelineError(
+				'Template validation failed',
+				'template-validation',
+				templateResult.errors
+			);
 		}
 
-	const templateLint = lintNoteTemplate(input.template);
-	if (templateLint.errors.length > 0) {
-		throw createPipelineError('Template lint failed', 'template-lint', templateLint.errors);
-	}
+		const templateLint = lintNoteTemplate(input.template);
+		if (templateLint.errors.length > 0) {
+			throw createPipelineError('Template lint failed', 'template-lint', templateLint.errors);
+		}
 
-	const templateWarnings = templateLint.warnings.map((issue) => ({
-		issue,
-		severity: mapTemplateSeverity(issue.severity),
-		code: issue.code,
-	}));
+		const templateWarnings = templateLint.warnings.map((issue) => ({
+			issue,
+			severity: mapTemplateSeverity(issue.severity),
+			code: issue.code,
+		}));
 
-	if (
-		templateWarnings.length > 0 &&
-		shouldFailGuard(options.guards?.templateLint, templateWarnings)
-	) {
-		throw createPipelineError(
-			'Template lint warnings present',
-			'template-lint-warning',
-			templateWarnings
-		);
-	}
+		if (
+			templateWarnings.length > 0 &&
+			shouldFailGuard(options.guards?.templateLint, templateWarnings)
+		) {
+			throw createPipelineError(
+				'Template lint warnings present',
+				'template-lint-warning',
+				templateWarnings
+			);
+		}
 
-	if (templateWarnings.length > 0) {
-		pipelineWarnings.template = templateWarnings;
-	}
+		if (templateWarnings.length > 0) {
+			pipelineWarnings.template = templateWarnings;
+		}
 
 		// Step 2: Derive AIS schema (AI Structured Output)
 		logVerbose(options, 'Step 2/8: Deriving AIS schema...');
@@ -262,52 +263,56 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 		const { createNASBuilder } = await import('../../resolution');
 		const nasBuilder = createNASBuilder();
 
-	const resolutionTiming = await timeStage(() =>
-		nasBuilder.build({
-			template: input.template,
-			sourceData: input.sourceData,
-			nasSchema: nas,
-		})
-	);
-	const resolutionResult = resolutionTiming.result;
-	instrumentation.stageTiming({ stage: 'resolveNAS', durationMs: resolutionTiming.durationMs });
+		const resolutionTiming = await timeStage(() =>
+			nasBuilder.build({
+				template: input.template,
+				sourceData: input.sourceData,
+				nasSchema: nas,
+			})
+		);
+		const resolutionResult = resolutionTiming.result;
+		instrumentation.stageTiming({ stage: 'resolveNAS', durationMs: resolutionTiming.durationMs });
 
 		const resolvedNasData = resolutionResult.nasData;
 
 		instrumentation.resolution({ resolution: resolutionResult });
 
-	const resolutionWarnings = resolutionResult.warnings.map((issue) => ({
-		issue,
-		severity: mapResolutionSeverity(issue.severity),
-		code: issue.reason,
-		details: issue.details,
-	}));
+		const resolutionWarnings = resolutionResult.warnings.map((issue) => ({
+			issue,
+			severity: mapResolutionSeverity(issue.severity),
+			code: issue.reason,
+			details: issue.details,
+		}));
 
-	const fatalWarnings = resolutionWarnings.filter(
-		(warning) => warning.severity === PipelineWarningSeverity.Error
-	);
-	if (fatalWarnings.length > 0) {
-		throw createPipelineError('Resolution produced fatal warnings', 'resolution-error', fatalWarnings);
-	}
-
-	const nonFatalResolutionWarnings = resolutionWarnings.filter(
-		(warning) => warning.severity !== PipelineWarningSeverity.Error
-	);
-
-	if (
-		nonFatalResolutionWarnings.length > 0 &&
-		shouldFailGuard(options.guards?.resolution, nonFatalResolutionWarnings)
-	) {
-		throw createPipelineError(
-			'Resolution produced warnings',
-			'resolution-warnings',
-			nonFatalResolutionWarnings
+		const fatalWarnings = resolutionWarnings.filter(
+			(warning) => warning.severity === PipelineWarningSeverity.Error
 		);
-	}
+		if (fatalWarnings.length > 0) {
+			throw createPipelineError(
+				'Resolution produced fatal warnings',
+				'resolution-error',
+				fatalWarnings
+			);
+		}
 
-	if (nonFatalResolutionWarnings.length > 0) {
-		pipelineWarnings.resolution = nonFatalResolutionWarnings;
-	}
+		const nonFatalResolutionWarnings = resolutionWarnings.filter(
+			(warning) => warning.severity !== PipelineWarningSeverity.Error
+		);
+
+		if (
+			nonFatalResolutionWarnings.length > 0 &&
+			shouldFailGuard(options.guards?.resolution, nonFatalResolutionWarnings)
+		) {
+			throw createPipelineError(
+				'Resolution produced warnings',
+				'resolution-warnings',
+				nonFatalResolutionWarnings
+			);
+		}
+
+		if (nonFatalResolutionWarnings.length > 0) {
+			pipelineWarnings.resolution = nonFatalResolutionWarnings;
+		}
 
 		logVerbose(options, `Resolved ${resolutionResult.resolved.length} fields`);
 
@@ -333,43 +338,43 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			throw createPipelineError('Prompt bundle validation failed', 'prompt-lint', lintErrors);
 		}
 
-	let promptWarnings: PipelineWarning<LintIssue>[] = [];
-	if (lintResult.warnings.length > 0) {
-		promptWarnings = lintResult.warnings.map((warning) => ({
-			issue: warning,
-			severity: PipelineWarningSeverity.Warning,
-			code: warning.check,
-		}));
+		let promptWarnings: PipelineWarning<LintIssue>[] = [];
+		if (lintResult.warnings.length > 0) {
+			promptWarnings = lintResult.warnings.map((warning) => ({
+				issue: warning,
+				severity: PipelineWarningSeverity.Warning,
+				code: warning.check,
+			}));
 
-		if (shouldFailGuard(options.guards?.promptLint, promptWarnings)) {
-			throw createPipelineError(
-				'Prompt bundle warnings present',
-				'prompt-lint-warning',
-				promptWarnings
-			);
+			if (shouldFailGuard(options.guards?.promptLint, promptWarnings)) {
+				throw createPipelineError(
+					'Prompt bundle warnings present',
+					'prompt-lint-warning',
+					promptWarnings
+				);
+			}
+
+			pipelineWarnings.prompt = promptWarnings;
+
+			if (options.verbose) {
+				console.warn(`Prompt bundle warnings (${lintResult.warnings.length}):`);
+				lintResult.warnings.forEach((w) => {
+					console.warn(`  [${w.check}] ${w.message}`);
+				});
+			}
 		}
 
-		pipelineWarnings.prompt = promptWarnings;
-
-		if (options.verbose) {
-			console.warn(`Prompt bundle warnings (${lintResult.warnings.length}):`);
-			lintResult.warnings.forEach((w) => {
-				console.warn(`  [${w.check}] ${w.message}`);
-			});
-		}
-	}
-
-	instrumentation.promptComposed({
-		prompt: promptBundle,
-		warnings: promptWarnings.length > 0 ? promptWarnings : undefined,
-	});
+		instrumentation.promptComposed({
+			prompt: promptBundle,
+			warnings: promptWarnings.length > 0 ? promptWarnings : undefined,
+		});
 
 		// Step 7: Generate AI output via OpenAI (or approved mock)
 		logVerbose(options, 'Step 7/8: Generating AI output...');
 
-	const aiOutputValidator = getAIOutputValidator(ais);
-	const mockProvider = options.mockGeneration;
-	const mockFeatureEnabled = isMockGenerationEnabled();
+		const aiOutputValidator = getAIOutputValidator(ais);
+		const mockProvider = options.mockGeneration;
+		const mockFeatureEnabled = isMockGenerationEnabled();
 
 		if (mockProvider && !mockFeatureEnabled) {
 			throw createPipelineError(
@@ -384,125 +389,121 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 			generationOptions: options.generationOptions ? { ...options.generationOptions } : undefined,
 		});
 
-	let generation: GenerationResult;
-	let aiResponseMocked = false;
-	let aiDurationMs: number | undefined;
+		let generation: GenerationResult;
+		let aiResponseMocked = false;
+		let aiDurationMs: number | undefined;
 
-	if (mockProvider && mockFeatureEnabled) {
-		logVerbose(options, 'Using mock AI generation result (PIPELINE_ENABLE_MOCK_AI=true)');
-		try {
-			const mockTiming = await timeStage(() =>
-				resolveMockGeneration({
-					provider: mockProvider,
-					context: {
-						template: input.template,
-						prompt: promptBundle,
+		if (mockProvider && mockFeatureEnabled) {
+			logVerbose(options, 'Using mock AI generation result (PIPELINE_ENABLE_MOCK_AI=true)');
+			try {
+				const mockTiming = await timeStage(() =>
+					resolveMockGeneration({
+						provider: mockProvider,
+						context: {
+							template: input.template,
+							prompt: promptBundle,
+							options,
+						},
 						options,
-					},
-					options,
-				})
+					})
+				);
+				generation = mockTiming.result.generation;
+				aiResponseMocked = true;
+				aiDurationMs = mockTiming.durationMs;
+			} catch (error) {
+				throw createPipelineError(
+					'Mock generation provider failed',
+					'mock-generation-invalid',
+					error
+				);
+			}
+		} else {
+			const { client } = resolveOpenAIClient(options);
+			const generationTiming = await timeStage(() =>
+				generateWithSchema(client, promptBundle, aiOutputValidator, options.generationOptions)
 			);
-			generation = mockTiming.result.generation;
-			aiResponseMocked = true;
-			aiDurationMs = mockTiming.durationMs;
-		} catch (error) {
-			throw createPipelineError('Mock generation provider failed', 'mock-generation-invalid', error);
-		}
-	} else {
-		const { client } = resolveOpenAIClient(options);
-		const generationTiming = await timeStage(() =>
-			generateWithSchema(
-				client,
-				promptBundle,
-				aiOutputValidator,
-				options.generationOptions
-			)
-		);
-		generation = generationTiming.result;
-		aiDurationMs = generationTiming.durationMs;
-	}
-
-	if (aiDurationMs !== undefined) {
-		instrumentation.stageTiming({ stage: 'generateWithSchema', durationMs: aiDurationMs });
-	}
-
-	const aiResultForLogging = capturePromptMetadata
-		? generation
-		: { ...generation, promptId: undefined, responseId: undefined };
-
-	instrumentation.aiResponse({
-		result: aiResultForLogging,
-		mocked: aiResponseMocked ? true : undefined,
-		durationMs: aiDurationMs,
-	});
-
-	const aiWarnings = (generation.warnings ?? []).map((issue) => ({
-		issue,
-		severity: PipelineWarningSeverity.Warning,
-		code: issue.keyword,
-		details: issue,
-	}));
-
-	if (aiWarnings.length > 0) {
-		if (shouldFailGuard(options.guards?.validation, aiWarnings)) {
-			throw createPipelineError(
-				'AI output produced validation warnings',
-				'ai-validation-warning',
-				aiWarnings
-			);
+			generation = generationTiming.result;
+			aiDurationMs = generationTiming.durationMs;
 		}
 
-		pipelineWarnings.validation = aiWarnings;
-
-		if (options.verbose) {
-			console.warn(`AI output warnings (${aiWarnings.length}):`);
-			aiWarnings.forEach((warning) => {
-				const issue = warning.issue;
-				console.warn(`  [${issue.instancePath || '/'}] ${issue.message}`);
-			});
-		}
-	}
-
-	if (validate) {
-		const aisResult = aiOutputValidator(generation.output);
-		if (!aisResult.ok) {
-			throw createPipelineError('AI output validation failed', 'ai-validation', aisResult.errors);
+		if (aiDurationMs !== undefined) {
+			instrumentation.stageTiming({ stage: 'generateWithSchema', durationMs: aiDurationMs });
 		}
 
-		if (aisResult.warnings.length > 0) {
-			const structuralWarnings = aisResult.warnings.map((issue) => ({
-				issue,
-				severity: PipelineWarningSeverity.Warning,
-				code: issue.keyword,
-			}));
-			const existing = pipelineWarnings.validation ?? [];
-			const combined = existing.concat(structuralWarnings);
-			if (
-				shouldFailGuard(options.guards?.validation, structuralWarnings)
-			) {
+		const aiResultForLogging = capturePromptMetadata
+			? generation
+			: { ...generation, promptId: undefined, responseId: undefined };
+
+		instrumentation.aiResponse({
+			result: aiResultForLogging,
+			mocked: aiResponseMocked ? true : undefined,
+			durationMs: aiDurationMs,
+		});
+
+		const aiWarnings = (generation.warnings ?? []).map((issue) => ({
+			issue,
+			severity: PipelineWarningSeverity.Warning,
+			code: issue.keyword,
+			details: issue,
+		}));
+
+		if (aiWarnings.length > 0) {
+			if (shouldFailGuard(options.guards?.validation, aiWarnings)) {
 				throw createPipelineError(
 					'AI output produced validation warnings',
 					'ai-validation-warning',
-					structuralWarnings
+					aiWarnings
 				);
 			}
-			pipelineWarnings.validation = combined;
+
+			pipelineWarnings.validation = aiWarnings;
+
+			if (options.verbose) {
+				console.warn(`AI output warnings (${aiWarnings.length}):`);
+				aiWarnings.forEach((warning) => {
+					const issue = warning.issue;
+					console.warn(`  [${issue.instancePath || '/'}] ${issue.message}`);
+				});
+			}
 		}
-	}
+
+		if (validate) {
+			const aisResult = aiOutputValidator(generation.output);
+			if (!aisResult.ok) {
+				throw createPipelineError('AI output validation failed', 'ai-validation', aisResult.errors);
+			}
+
+			if (aisResult.warnings.length > 0) {
+				const structuralWarnings = aisResult.warnings.map((issue) => ({
+					issue,
+					severity: PipelineWarningSeverity.Warning,
+					code: issue.keyword,
+				}));
+				const existing = pipelineWarnings.validation ?? [];
+				const combined = existing.concat(structuralWarnings);
+				if (shouldFailGuard(options.guards?.validation, structuralWarnings)) {
+					throw createPipelineError(
+						'AI output produced validation warnings',
+						'ai-validation-warning',
+						structuralWarnings
+					);
+				}
+				pipelineWarnings.validation = combined;
+			}
+		}
 
 		logVerbose(options, 'Step 8/8: Merging AI output with NAS data...');
 
 		const mergeConflicts = collectMergeConflicts(generation.output, resolvedNasData);
-		const mergeWarnings: PipelineWarning<MergeConflictWarning>[] = mergeConflicts.map((conflict) => ({
-			issue: conflict,
-			severity: conflict.severity,
-			message: conflict.message,
-		}));
+		const mergeWarnings: PipelineWarning<MergeConflictWarning>[] = mergeConflicts.map(
+			(conflict) => ({
+				issue: conflict,
+				severity: conflict.severity,
+				message: conflict.message,
+			})
+		);
 
-		if (
-			mergeWarnings.length > 0 &&
-			shouldFailMerge(options.guards?.merge, mergeWarnings)
-		) {
+		if (mergeWarnings.length > 0 && shouldFailMerge(options.guards?.merge, mergeWarnings)) {
 			throw createPipelineError('Merge conflicts detected', 'merge-conflict', mergeWarnings);
 		}
 
@@ -520,7 +521,12 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 		const templateAdjustedTokens = cloneTokens(defaultTokens);
 		applyTemplateStyle(templateAdjustedTokens, input.template.style);
 		const tokens = mergeDesignTokens(templateAdjustedTokens, input.tokens);
-		const tokenDiagnostics = diagnoseTokens(defaultTokens, templateAdjustedTokens, input.tokens, tokens);
+		const tokenDiagnostics = diagnoseTokens(
+			defaultTokens,
+			templateAdjustedTokens,
+			input.tokens,
+			tokens
+		);
 
 		instrumentation.tokenDiagnostics({ diagnostics: tokenDiagnostics });
 
@@ -579,8 +585,8 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 	} catch (error) {
 		const pipelineError =
 			error && typeof error === 'object' && 'step' in error
-			? (error as PipelineError)
-			: createPipelineError('Pipeline execution failed', 'unknown', error);
+				? (error as PipelineError)
+				: createPipelineError('Pipeline execution failed', 'unknown', error);
 
 		instrumentation.error(pipelineError);
 

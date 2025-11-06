@@ -13,8 +13,6 @@ import {
   type WarningGuardOptions,
   type MergeGuardOptions,
 } from '../types';
-import type { TemplateLintIssue } from '../../validation';
-import type { ResolutionWarning } from '../../resolution';
 
 /**
  * Map template lint severities (error/warning/info) to pipeline warning severity enum.
@@ -81,6 +79,3 @@ export function shouldFailMerge(
   }
   return false;
 }
-
-export type TemplateWarning = PipelineWarning<TemplateLintIssue>;
-export type ResolutionPipelineWarning = PipelineWarning<ResolutionWarning>;
