@@ -1,0 +1,199 @@
+{
+	"patient": {
+		"name": "Melinda Hamilton",
+		"dob": "04/19/1997",
+		"age": "28 yrs",
+		"demographics": {
+			"gender": "female",
+			"pronouns": "she/her",
+			"relationshipStatus": "engaged",
+			"livingSituation": "Shares a two-bedroom apartment with fiancé in Owensboro, KY",
+			"employment": "Full-time UX designer (remote)",
+			"supportSystem": [
+				"Fiancé (primary emotional support)",
+				"Younger sister (meets weekly)",
+				"Two close college friends (biweekly video calls)"
+			]
+		},
+		"psychosocialHistory": {
+			"trauma": "Complex trauma history including emotional neglect in childhood and sexual assault at age 19.",
+			"therapyExperience": "Completed 18 months of therapy focused on anxiety/trauma during graduate school; resumed care last month after symptom flare.",
+			"substanceUse": "Social alcohol use (1-2 drinks on weekends); denies other substances.",
+			"medical": "PCOS managed with metformin, migraines controlled with lifestyle modifications."
+		},
+		"strengths": [
+			"Insightful and reflective about emotional patterns",
+			"Motivated to use coping strategies when prompted",
+			"Creative outlets (digital art, journaling)"
+		],
+		"currentStressors": [
+			"Workplace restructuring creating role uncertainty",
+			"Wedding planning logistics and financial strain",
+			"Contact from estranged mother triggering trauma reminders"
+		]
+	},
+	"provider": {
+		"fullName": "Michelle Craig, LCSW"
+	},
+  "facility": {
+    "name": "Virtual Consult MD - Owensboro",
+    "phone": "(270) 215-4454",
+    "address": "1102 Triplett Street, Suite 2300",
+    "city": "Owensboro",
+    "state": "KY",
+    "zip": "42303"
+  },
+  "encounter": {
+    "date": "11/03/2025",
+    "start": "2025-11-03T11:00:00-05:00",
+    "end": "2025-11-03T11:58:00-05:00",
+    "durationMinutes": 58,
+    "cptCode": "90837",
+		"appointment": "11/03/2025 - 11:00 AM - DOXY THERAPY F/UP",
+		"signatureStatus": "Electronically signed by Michelle Craig at 11/04/2025 10:14 AM"
+	},
+	"session": {
+		"observation": "ATTITUDE TOWARDS THERAPY: good. MOTIVATION: good; identified need to resume therapy. COPING ABILITY: fair; acknowledges pausing some coping, implementing helpful alternatives. STRESSORS/TRIGGERS: anxiety, depression, recent change, trauma history. HYGIENE: good. CAFFEINE: none. SLEEP: good.",
+		"subjectiveHighlights": [
+			"Client noticed resurgence of trauma dreams tied to upcoming visit with estranged mother.",
+			"Reports journaling three evenings this week which reduced bedtime rumination.",
+			"Requested support staying present with fiancé instead of withdrawing during conflict."
+		],
+		"recentWins": [
+			"Completed high-stakes work presentation despite anticipatory anxiety.",
+			"Set boundaries limiting phone calls with mother to 15 minutes.",
+			"Practiced grounding twice during nightmare awakenings and returned to sleep."
+		],
+		"symptomSnapshot": {
+			"mood": "Baseline anxiety 6/10 with spikes to 9/10 at night; sadness brief (1-2 hrs) without hopelessness.",
+			"sleep": "Falls asleep within 25 minutes; trauma dreams 3 nights this week but able to re-ground.",
+			"appetite": "Stable; denies emotional eating or restriction.",
+			"energy": "Moderate afternoon fatigue, improved with breaks and hydration."
+		},
+		"interventionsUsed": [
+			"Solution-focused scaling questions to gauge progress since previous session.",
+			"Narrative re-authoring exercise reframing caregiver expectations.",
+			"Trauma-informed grounding (5-4-3-2-1) practiced in session.",
+			"Psychoeducation on window of tolerance and somatic cues."
+		],
+		"homeworkReview": {
+			"assigned": [
+				"Track anxiety triggers using mood journal app",
+				"Practice grounding with textured object or ice cube nightly"
+			],
+			"completion": "Completed journaling 4/7 nights; grounding practiced 3/7 nights; avoidance noted when planning ran late.",
+			"barriers": "Client forgets grounding until anxiety escalates; competing evening demands from wedding planning."
+		},
+		"mse": {
+			"narrative": "Appearance: Grooming WNL; Posture/Gait WNL; Activity decreased. Sensory: Attention WNL; Concentration WNL; Orientation WNL. Memory WNL. Relating: Eye contact WNL; Facial expression WNL; Affect congruent. Mood: anxious; Speech WNL. Thought Process goal-directed; Thought Content WNL. Insight fair; Judgement fair."
+		},
+    "times": {
+      "start": "11:00 AM",
+      "end": "11:58 AM",
+      "durationMinutes": 58,
+      "cptCode": "90837"
+    },
+		"diagnoses": [
+			{ "icd10": "F31.9", "dsm5": "F31.9", "description": "Bipolar disorder, unspecified" },
+			{ "icd10": "F43.12", "dsm5": "F43.12", "description": "Chronic PTSD" },
+			{ "icd10": "F41.1", "dsm5": "F41.1", "description": "Generalized anxiety disorder" },
+			{ "icd10": "F90.2", "dsm5": "F90.2", "description": "ADHD, combined type" },
+			{ "icd10": "F84.0", "dsm5": "F84.0", "description": "Autistic disorder" }
+		],
+		"safetyCheck": {
+			"passiveSI": "Denies",
+			"activeSI": "Denies",
+			"HI": "Denies",
+			"protectiveFactors": [
+				"Commitment to fiancé and younger sister",
+				"Future-oriented career goals",
+				"Active engagement in therapy and coping practice"
+			]
+		}
+	},
+	"assessment": {
+		"riskAssessment": "Denies SI/HI. No psychosis. Passive thoughts previously; no plan or intent. Protective factors include engagement in therapy and social reconnection. Risk remains low; continue monitoring.",
+		"symptomSummary": {
+			"anxiety": "Persistent generalized worry with somatic tension yet increased use of grounding and self-monitoring tools.",
+			"trauma": "Re-emergent triggers linked to family contact; dream frequency indicates nervous system activation that client can now down-regulate.",
+			"mood": "Low mood episodes brief and responsive to behavioral activation; denies vegetative symptoms.",
+			"adhd": "Maintains benefit from ADHD compensatory strategies (timers, task chunking)."
+		},
+		"progressSinceLast": "Client demonstrates more insight into trauma triggers, greater use of coping tools, and willingness to set family boundaries. Anxiety remains moderate but less impairing than last month.",
+		"substanceUse": "Occasional wine with dinner; no cravings or misuse."
+	},
+	"plan": {
+		"modalities": ["Solution-Focused Therapy", "Narrative Therapy", "Trauma Counseling"],
+		"frequency": "biweekly sessions; reassess and titrate as needed.",
+		"nextUpdate": "01/13/2026",
+		"upcomingFocus": [
+			"Integrate trauma narrative work with compassion-focused reframing",
+			"Solidify sensory-based grounding routine for nighttime anxiety",
+			"Role-play communication strategies with fiancé around emotional check-ins"
+		],
+		"homework": [
+			"Schedule two 20-minute creativity blocks this week for grounding",
+			"Use window of tolerance worksheet to label physiological cues",
+			"Practice 4-7-8 breathing nightly before bed"
+		],
+		"treatmentPlan": {
+			"lastUpdate": "10/13/2025",
+			"nextUpdate": "01/13/2026",
+			"frequency": "biWeekly Sessions, reassess continually titrate as needed.",
+			"goals": [
+				{
+					"summary": "Goal #1: Improve overall self-worth and self-esteem — Objective: create positive self-talk to replace negative self-talk. Tx Modality: CBT, Solution Focused Theory, Narrative Theory, Motivational Interviewing. Progress: Fair as evidenced by maintaining her positive self-talk."
+				},
+				{
+					"summary": "Goal #2: Work on dealing with boredom and idle time — Objective: identify coping strategies other than staying busy to manage idle time. Tx Modality: CBT, Solution Focused Theory, Narrative Theory, Motivational Interviewing. Progress: Fair as evidenced by increased motivation and broader coping tools."
+				},
+				{
+					"summary": "Goal #3: Understand Autism diagnosis — Objective: evaluate the overall impact of Autism on daily functioning. Tx Modality: CBT, Solution Focused Theory, Narrative Theory, Motivational Interviewing. Progress: Fair as evidenced by researching supportive strategies."
+				}
+			],
+			"prognosis": "Fair given the willingness to make changes, past help with therapy, possible underlying trauma and if client can build trust and rapport to address the underlying trauma."
+		}
+	},
+  "previousNote": {
+		"date": "10/20/2025",
+		"encounterType": "Individual Psychotherapy (regimen/therapy)",
+    "times": {
+      "start": "2025-10-20T11:00:00-05:00",
+      "end": "2025-10-20T11:45:00-05:00",
+      "durationMinutes": 45,
+      "cptCode": "90834"
+    },
+		"subjective": "Client reported increased worry surrounding recent transitions and occasional sleep disruption. Noted benefit from journaling and music. Denied SI/HI. Identified tension with family as primary stressor and desire to re-establish routines.",
+		"objective": {
+			"mse": "Appearance neat; behavior cooperative; speech normal rate/volume; mood anxious, affect congruent; thought process goal-directed; no delusions/hallucinations; orientation intact; insight/judgment fair."
+		},
+		"assessment": {
+			"risk": "No current SI/HI; low risk with protective factors including engagement in therapy and supportive sister.",
+			"diagnoses": [
+				{ "icd10": "F41.1", "dsm5": "F41.1", "description": "Generalized anxiety disorder" },
+				{ "icd10": "F43.12", "dsm5": "F43.12", "description": "Chronic PTSD" }
+			]
+		},
+		"plan": {
+			"modalities": ["CBT", "Solution-Focused Therapy", "Narrative Therapy"],
+			"goals": [
+				"Increase use of cognitive restructuring for worry episodes.",
+				"Rebuild daily routine with two consistent sleep anchors by next session.",
+				"Process trauma-linked triggers using narrative techniques."
+			],
+			"frequency": "Biweekly sessions; reinforce coping; revisit sleep plan.",
+			"nextUpdate": "12/20/2025",
+			"homework": ["Practice sensory grounding nightly", "Track anxiety spikes with ABC worksheet"]
+		},
+		"signature": {
+			"renderedBy": "Rendered by: Michelle Craig, LCSW",
+			"supervisedBy": "Supervised by: Neil Jariwala, MD",
+			"attestation": "I discussed this case with the treating therapist and agree with the assessment and plan."
+		}
+	},
+	"signature": {
+		"renderedBy": "Rendered by: Michelle Craig, LCSW",
+		"supervisedBy": "Supervised by: Neil Jariwala, MD",
+		"attestation": "I have staffed this case with the therapist and I agree with the interventions, progress, and approach presented. I have reviewed and approved this note."
+	}
+}

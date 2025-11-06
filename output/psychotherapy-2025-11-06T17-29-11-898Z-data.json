@@ -1,0 +1,527 @@
+{
+  "patient": "Michelle Craig",
+  "timestamp": "2025-11-06T17-29-11-898Z",
+  "aiOutput": {
+    "session": {
+      "observationAI": "Michelle is actively engaging in therapy, demonstrating an increased awareness of her trauma triggers and a commitment to implementing coping strategies. She has shown progress in setting boundaries with her family, which has reduced some anxiety. Despite ongoing challenges with anticipatory anxiety and trauma-related dreams, Michelle is utilizing grounding techniques more effectively. Her motivation to address these issues is evident, particularly in her efforts to stay present in her relationship and manage work stressors. Overall, her attitude towards therapy remains positive, reflecting her dedication to personal growth.",
+      "mse": {
+        "aiNarrative": "Michelle presented with well-groomed appearance and normal posture. Her activity level was slightly decreased, but her attention and concentration were within normal limits. She maintained good eye contact and her facial expressions were congruent with her mood, which was primarily anxious. Her speech was normal in rate and volume, and her thought process was goal-directed. She demonstrated fair insight and judgment throughout the session."
+      }
+    },
+    "assessment": {
+      "diagnoses": [
+        {}
+      ]
+    },
+    "plan": {
+      "modalitiesAI": [
+        "Solution-Focused Therapy",
+        "Narrative Therapy",
+        "Trauma Counseling"
+      ],
+      "goalsAI": [
+        "Improve self-worth through positive self-talk.",
+        "Diversify coping strategies to manage idle time.",
+        "Understand Autism diagnosis and develop supportive strategies."
+      ]
+    }
+  },
+  "schemas": {
+    "ais": {
+      "$id": "https://catalyst/generated/structured-output/psychotherapy-note@1.0.0.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Structured Output — Psychotherapy Follow-up v1.0.0",
+      "description": "AI-generated fields for Psychotherapy Follow-up",
+      "type": "object",
+      "properties": {
+        "session": {
+          "type": "object",
+          "properties": {
+            "observationAI": {
+              "type": "string",
+              "x-minSentences": 3,
+              "x-maxSentences": 6
+            },
+            "mse": {
+              "type": "object",
+              "properties": {
+                "aiNarrative": {
+                  "type": "string",
+                  "x-minSentences": 3,
+                  "x-maxSentences": 5
+                }
+              },
+              "required": [
+                "aiNarrative"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "observationAI",
+            "mse"
+          ],
+          "additionalProperties": false
+        },
+        "assessment": {
+          "type": "object",
+          "properties": {
+            "diagnoses": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "diagnoses"
+          ],
+          "additionalProperties": false
+        },
+        "plan": {
+          "type": "object",
+          "properties": {
+            "modalitiesAI": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "goalsAI": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "modalitiesAI",
+            "goalsAI"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "session",
+        "assessment",
+        "plan"
+      ],
+      "additionalProperties": false
+    },
+    "nas": {
+      "$id": "https://catalyst/generated/non-ai-output/psychotherapy-note@1.0.0.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Non-AI Output — Psychotherapy Follow-up v1.0.0",
+      "description": "Non-AI fields (lookup/computed/static/verbatim) for Psychotherapy Follow-up",
+      "type": "object",
+      "properties": {
+        "patient": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "dob": {
+              "type": "string"
+            },
+            "age": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "facility": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "header": {
+          "type": "object",
+          "properties": {
+            "encounter": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "noteType": {
+                  "type": "string"
+                },
+                "provider": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "encounter": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "string"
+            },
+            "end": {
+              "type": "string"
+            },
+            "durationMinutes": {
+              "type": "string"
+            },
+            "cptMapped": {
+              "type": "string"
+            },
+            "cptCode": {
+              "type": "string"
+            },
+            "signatureStatus": {
+              "type": "string"
+            },
+            "appointment": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "session": {
+          "type": "object",
+          "properties": {
+            "observation": {
+              "type": "string"
+            },
+            "mse": {
+              "type": "object",
+              "properties": {
+                "narrative": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "times": {
+              "type": "object",
+              "properties": {
+                "start": {
+                  "type": "string"
+                },
+                "end": {
+                  "type": "string"
+                },
+                "cptCode": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "assessment": {
+          "type": "object",
+          "properties": {
+            "riskAssessment": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "plan": {
+          "type": "object",
+          "properties": {
+            "modalities": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "goals": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "frequency": {
+              "type": "string"
+            },
+            "nextUpdate": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "signature": {
+          "type": "object",
+          "properties": {
+            "renderedBy": {
+              "type": "string"
+            },
+            "supervisedBy": {
+              "type": "string"
+            },
+            "attestation": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "previousNote": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "rps": {
+      "$id": "https://catalyst/generated/render/psychotherapy-note@1.0.0.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Render Payload — Psychotherapy Follow-up v1.0.0",
+      "description": "Final payload schema (AIS ∪ NAS) for Psychotherapy Follow-up",
+      "type": "object",
+      "properties": {
+        "session": {
+          "type": "object",
+          "properties": {
+            "observationAI": {
+              "type": "string",
+              "x-minSentences": 3,
+              "x-maxSentences": 6
+            },
+            "mse": {
+              "type": "object",
+              "properties": {
+                "aiNarrative": {
+                  "type": "string",
+                  "x-minSentences": 3,
+                  "x-maxSentences": 5
+                },
+                "narrative": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "aiNarrative"
+              ],
+              "additionalProperties": false
+            },
+            "observation": {
+              "type": "string"
+            },
+            "times": {
+              "type": "object",
+              "properties": {
+                "start": {
+                  "type": "string"
+                },
+                "end": {
+                  "type": "string"
+                },
+                "cptCode": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "observationAI",
+            "mse"
+          ],
+          "additionalProperties": false
+        },
+        "assessment": {
+          "type": "object",
+          "properties": {
+            "diagnoses": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": false
+              }
+            },
+            "riskAssessment": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "diagnoses"
+          ],
+          "additionalProperties": false
+        },
+        "plan": {
+          "type": "object",
+          "properties": {
+            "modalitiesAI": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "goalsAI": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modalities": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "goals": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "frequency": {
+              "type": "string"
+            },
+            "nextUpdate": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "modalitiesAI",
+            "goalsAI"
+          ],
+          "additionalProperties": false
+        },
+        "patient": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "dob": {
+              "type": "string"
+            },
+            "age": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "facility": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "header": {
+          "type": "object",
+          "properties": {
+            "encounter": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "noteType": {
+                  "type": "string"
+                },
+                "provider": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "encounter": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "string"
+            },
+            "end": {
+              "type": "string"
+            },
+            "durationMinutes": {
+              "type": "string"
+            },
+            "cptMapped": {
+              "type": "string"
+            },
+            "cptCode": {
+              "type": "string"
+            },
+            "signatureStatus": {
+              "type": "string"
+            },
+            "appointment": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "signature": {
+          "type": "object",
+          "properties": {
+            "renderedBy": {
+              "type": "string"
+            },
+            "supervisedBy": {
+              "type": "string"
+            },
+            "attestation": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "previousNote": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "session",
+        "assessment",
+        "plan"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "usage": {
+    "promptTokens": 4427,
+    "completionTokens": 254,
+    "totalTokens": 4681
+  },
+  "model": "gpt-4o-2024-08-06"
+}

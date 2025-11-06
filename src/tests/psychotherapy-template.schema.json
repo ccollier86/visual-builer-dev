@@ -1,0 +1,393 @@
+{
+  "id": "psychotherapy-note",
+  "name": "Psychotherapy Follow-up",
+  "version": "1.0.0",
+  "style": {
+    "font": "'Open Sans', Arial, sans-serif",
+    "color": "#000000",
+    "muted": "#555555",
+    "accent": "#666666",
+    "spacing": 12,
+    "tableDensity": "normal",
+    "print": {
+      "size": "Letter",
+      "margin": "0.75in",
+      "header": true,
+      "footer": true
+    }
+  },
+  "prompt": {
+    "system": "You are a clinical documentation assistant for psychotherapy follow-up notes.",
+    "main": "Compose clinically-appropriate narrative aligned with DSM-5 and the provided intake/session context.",
+    "rules": [
+      "Use professional clinical tone and avoid conjecture.",
+      "Ground rationales in intake/session details; use scores only to support severity when relevant.",
+      "Follow the structured output locations defined by outputPath/targetPath."
+    ]
+  },
+  "layout": [
+    {
+      "id": "header",
+      "type": "header",
+      "children": [
+        {
+          "id": "patient-info",
+          "type": "patientBlock",
+          "title": "PATIENT",
+          "content": [
+            { "slot": "lookup", "id": "patient-name", "targetPath": "patient.name", "lookup": "patient.name" },
+            { "slot": "lookup", "id": "patient-dob", "targetPath": "patient.dob", "lookup": "patient.dob" },
+            { "slot": "lookup", "id": "patient-age", "targetPath": "patient.age", "lookup": "patient.age" }
+          ]
+        },
+        {
+          "id": "facility-info",
+          "type": "patientBlock",
+          "title": "FACILITY",
+          "content": [
+            { "slot": "lookup", "id": "facility-name", "targetPath": "facility.name", "lookup": "facility.name" },
+            { "slot": "lookup", "id": "facility-phone", "targetPath": "facility.phone", "lookup": "facility.phone" },
+            { "slot": "lookup", "id": "facility-address", "targetPath": "facility.address", "lookup": "facility.address" },
+            {
+              "slot": "computed",
+              "id": "facility-location",
+              "description": "City, State ZIP line",
+              "formula": "facility.city + ', ' + facility.state + ' ' + facility.zip",
+              "targetPath": "facility.location"
+            }
+          ]
+        },
+        {
+          "id": "encounter-info",
+          "type": "patientBlock",
+          "title": "ENCOUNTER",
+          "content": [
+            { "slot": "static", "id": "encounter-type", "text": "Individual Psychotherapy (regimen/therapy)", "targetPath": "header.encounter.type" },
+            { "slot": "static", "id": "note-type", "text": "SOAP Note", "targetPath": "header.encounter.noteType" },
+            { "slot": "lookup", "id": "provider-name", "targetPath": "header.encounter.provider", "lookup": "provider.fullName" },
+            { "slot": "lookup", "id": "enc-date", "targetPath": "header.encounter.date", "lookup": "encounter.date" },
+            {
+              "slot": "computed",
+              "id": "enc-time-range",
+              "description": "Readable session time range",
+              "formula": "'Time: ' + new Date(encounter.start).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) + ' - ' + new Date(encounter.end).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })",
+              "targetPath": "header.encounter.timeRange"
+            },
+            {
+              "slot": "computed",
+              "id": "enc-cpt",
+              "description": "Readable CPT code",
+              "formula": "'CPT: ' + encounter.cptCode",
+              "targetPath": "header.encounter.cptDisplay"
+            },
+            { "slot": "lookup", "id": "enc-status", "targetPath": "encounter.signatureStatus", "lookup": "encounter.signatureStatus" },
+            { "slot": "lookup", "id": "enc-appointment", "targetPath": "encounter.appointment", "lookup": "encounter.appointment" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "subjective",
+      "type": "section",
+      "title": "SUBJECTIVE",
+      "content": [
+        {
+          "slot": "ai",
+          "id": "subjective-narrative",
+          "description": "Session narrative synthesizing observation, highlights, symptom snapshot, and recent wins",
+          "outputPath": "subjective.narrative",
+          "aiDeps": ["patient", "session", "plan", "assessment", "previousNote"],
+          "guidance": [
+            "Summarize the client's subjective report in 5-7 sentences covering presenting concerns, triggers, coping efforts, and motivation.",
+            "Integrate relevant details from session.subjectiveHighlights, recentWins, symptomSnapshot, and observation text.",
+            "Use cohesive clinical prose; do not repeat uppercase labels (e.g., ATTITUDE)."
+          ],
+          "constraints": { "minSentences": 4, "maxSentences": 7 }
+        }
+      ],
+      "children": [
+        {
+          "id": "subjective-highlights",
+          "type": "list",
+          "title": "SESSION HIGHLIGHTS:",
+          "props": { "ordered": false },
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "subjective-highlights-items",
+              "targetPath": "session.subjectiveHighlights[]",
+              "lookup": "session.subjectiveHighlights[]",
+              "listItems": [
+                { "slot": "lookup", "id": "subjective-highlight", "targetPath": "session.subjectiveHighlights[]", "lookup": "session.subjectiveHighlights[]" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "subjective-recent-wins",
+          "type": "list",
+          "title": "RECENT WINS:",
+          "props": { "ordered": false },
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "subjective-recent-wins-items",
+              "targetPath": "session.recentWins[]",
+              "lookup": "session.recentWins[]",
+              "listItems": [
+                { "slot": "lookup", "id": "recent-win", "targetPath": "session.recentWins[]", "lookup": "session.recentWins[]" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "objective",
+      "type": "section",
+      "title": "OBJECTIVE",
+      "content": [
+        {
+          "slot": "ai",
+          "id": "objective-narrative",
+          "description": "Mental status and in-session observations synthesized into a polished paragraph",
+          "outputPath": "objective.narrative",
+          "aiDeps": ["session.mse", "session.observation", "session.interventionsUsed", "patient", "previousNote"],
+          "guidance": [
+            "Summarize mental status domains (appearance, behavior, mood/affect, speech, thought, cognition, insight/judgment) using a professional tone.",
+            "Reference interventions practiced in session when relevant to objective findings.",
+            "Keep to 4-6 sentences and avoid repeating raw checkbox text."
+          ],
+          "constraints": { "minSentences": 4, "maxSentences": 6 }
+        }
+      ],
+      "children": [
+        {
+          "id": "objective-interventions",
+          "type": "list",
+          "title": "INTERVENTIONS UTILIZED:",
+          "props": { "ordered": false },
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "objective-interventions-items",
+              "targetPath": "session.interventionsUsed[]",
+              "lookup": "session.interventionsUsed[]",
+              "listItems": [
+                { "slot": "lookup", "id": "intervention-item", "targetPath": "session.interventionsUsed[]", "lookup": "session.interventionsUsed[]" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+        {
+          "id": "assessment",
+          "type": "section",
+          "title": "ASSESSMENT",
+          "children": [
+            {
+              "id": "assessment-meta",
+              "type": "section",
+              "content": [
+                {
+                  "slot": "computed",
+                  "id": "assessment-timing",
+                  "description": "One-line timing summary",
+                  "formula": "'Session timing: ' + session.times.start + ' – ' + session.times.end + ' (' + session.times.durationMinutes + ' minutes)'",
+                  "targetPath": "assessment.timingSummary"
+                },
+                {
+                  "slot": "computed",
+                  "id": "assessment-cpt",
+                  "description": "Formatted CPT code line",
+                  "formula": "'CPT Code: ' + session.times.cptCode",
+                  "targetPath": "assessment.cptDisplay"
+                },
+                { "slot": "lookup", "id": "risk-txt", "targetPath": "assessment.riskAssessment", "lookup": "assessment.riskAssessment" }
+              ]
+            },
+            {
+              "id": "assessment-summary",
+              "type": "paragraph",
+              "title": "CLINICAL SUMMARY:",
+              "content": [
+                {
+                  "slot": "ai",
+                  "id": "assessment-summary-ai",
+                  "description": "Integrative assessment summary",
+                  "outputPath": "assessment.summary",
+                  "aiDeps": ["assessment", "session", "plan", "previousNote"],
+                  "guidance": [
+                    "Provide a 4-6 sentence assessment summarizing risk, symptom trajectory, functional impact, and response to interventions.",
+                    "Reference progress since prior session when present.",
+                    "Maintain professional tone and avoid bullet formatting."
+                  ],
+                  "constraints": { "minSentences": 4, "maxSentences": 6 }
+                }
+              ]
+            },
+        {
+          "id": "symptom-summary",
+          "type": "list",
+          "title": "SYMPTOM SNAPSHOT:",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "symptom-anxiety", "targetPath": "assessment.symptomSummary.anxiety", "lookup": "assessment.symptomSummary.anxiety" },
+            { "slot": "lookup", "id": "symptom-trauma", "targetPath": "assessment.symptomSummary.trauma", "lookup": "assessment.symptomSummary.trauma" },
+            { "slot": "lookup", "id": "symptom-mood", "targetPath": "assessment.symptomSummary.mood", "lookup": "assessment.symptomSummary.mood" },
+            { "slot": "lookup", "id": "symptom-adhd", "targetPath": "assessment.symptomSummary.adhd", "lookup": "assessment.symptomSummary.adhd" }
+          ]
+        },
+            {
+              "id": "diagnoses-attached",
+              "type": "table",
+              "title": "DIAGNOSES ATTACHED TO ENCOUNTER",
+              "props": { "columns": ["ICD-10", "DSM-5 Code", "Description"], "colWidths": ["18%", "18%", "64%"] },
+          "content": [
+            {
+              "slot": "ai",
+              "id": "diag-table",
+              "outputPath": "assessment.diagnoses[]",
+              "tableMap": [
+                { "slot": "lookup", "id": "dx-icd10", "lookup": "session.diagnoses[].icd10", "targetPath": "assessment.diagnoses[].icd10", "styleHints": { "tableCell": { "columnIndex": 0, "italic": true } } },
+                { "slot": "lookup", "id": "dx-dsm5", "lookup": "session.diagnoses[].dsm5", "targetPath": "assessment.diagnoses[].dsm5", "styleHints": { "tableCell": { "columnIndex": 1, "bold": true } } },
+                { "slot": "lookup", "id": "dx-desc", "lookup": "session.diagnoses[].description", "targetPath": "assessment.diagnoses[].description", "styleHints": { "tableCell": { "columnIndex": 2, "emphasis": "strong" } } }
+              ],
+              "aiDeps": ["session.diagnoses"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "plan",
+      "type": "section",
+      "title": "PLAN",
+      "children": [
+        {
+          "id": "treatment-plan",
+          "type": "section",
+          "title": "TREATMENT PLAN",
+          "content": [
+            {
+              "slot": "computed",
+              "id": "treatment-plan-updates",
+              "description": "Last and next update line",
+              "formula": "'Update ' + plan.treatmentPlan.lastUpdate + ' | Next Update ' + plan.treatmentPlan.nextUpdate",
+              "targetPath": "plan.treatmentPlan.updateSummary"
+            },
+            {
+              "slot": "computed",
+              "id": "treatment-plan-frequency",
+              "description": "Frequency line",
+              "formula": "'Frequency of Tx: ' + plan.treatmentPlan.frequency",
+              "targetPath": "plan.treatmentPlan.frequencySummary"
+            }
+          ],
+          "children": [
+        {
+          "id": "treatment-plan-goals",
+          "type": "list",
+          "title": "GOALS:",
+          "props": { "ordered": false },
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "treatment-plan-goal-items",
+              "targetPath": "plan.treatmentPlan.goals[].summary",
+              "lookup": "plan.treatmentPlan.goals[].summary",
+              "listItems": [
+                { "slot": "lookup", "id": "treatment-plan-goal", "targetPath": "plan.treatmentPlan.goals[].summary", "lookup": "plan.treatmentPlan.goals[].summary" }
+              ]
+            }
+          ]
+        },
+            {
+              "id": "treatment-plan-prognosis",
+              "type": "paragraph",
+              "title": "OVERALL PROGNOSIS:",
+              "content": [
+                { "slot": "lookup", "id": "treatment-plan-prognosis-text", "targetPath": "plan.treatmentPlan.prognosis", "lookup": "plan.treatmentPlan.prognosis" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "modalities",
+          "type": "list",
+          "title": "THERAPY MODALITIES USED:",
+          "props": { "ordered": false },
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "modalities-items",
+              "targetPath": "plan.modalities[]",
+              "lookup": "plan.modalities[]",
+              "listItems": [
+                { "slot": "lookup", "id": "mod-item", "targetPath": "plan.modalities[]", "lookup": "plan.modalities[]" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "follow-up",
+          "type": "section",
+          "content": [
+            { "slot": "lookup", "id": "frequency", "targetPath": "plan.frequency", "lookup": "plan.frequency" },
+            { "slot": "lookup", "id": "next-update", "targetPath": "plan.nextUpdate", "lookup": "plan.nextUpdate" }
+          ]
+        },
+        {
+          "id": "upcoming-focus",
+          "type": "list",
+          "title": "UPCOMING FOCUS AREAS:",
+          "props": { "ordered": false },
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "upcoming-focus-items",
+              "targetPath": "plan.upcomingFocus[]",
+              "lookup": "plan.upcomingFocus[]",
+              "listItems": [
+                { "slot": "lookup", "id": "focus-item", "targetPath": "plan.upcomingFocus[]", "lookup": "plan.upcomingFocus[]" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "homework",
+          "type": "list",
+          "title": "HOMEWORK:",
+          "props": { "ordered": false },
+          "content": [
+            {
+              "slot": "lookup",
+              "id": "homework-items",
+              "targetPath": "plan.homework[]",
+              "lookup": "plan.homework[]",
+              "listItems": [
+                { "slot": "lookup", "id": "homework-item", "targetPath": "plan.homework[]", "lookup": "plan.homework[]" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "signature",
+      "type": "signatureBlock",
+      "content": [
+        { "slot": "lookup", "id": "rendered-by", "targetPath": "signature.renderedBy", "lookup": "signature.renderedBy" },
+        { "slot": "lookup", "id": "supervised-by", "targetPath": "signature.supervisedBy", "lookup": "signature.supervisedBy" },
+        { "slot": "lookup", "id": "attestation", "targetPath": "signature.attestation", "lookup": "signature.attestation" },
+        { "slot": "lookup", "id": "previous-note", "targetPath": "previousNote", "lookup": "previousNote" }
+      ]
+    }
+  ]
+}

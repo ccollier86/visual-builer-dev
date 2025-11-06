@@ -1,0 +1,18 @@
+/*
+ * Print CSS - tokens_reference v1.0.0
+ * Hash: faa76edd56
+ * Generated: 2025-11-06T17:29:11.894Z
+ */
+
+@page { size: Letter; margin: 0.75in; }
+
+@media print {
+  body.note-body { padding: 0; }
+  .note { color: var(--note-text); }
+  .note a { color: inherit; text-decoration: none; }
+  .note table { page-break-inside: avoid; }
+  .note h1, .note h2, .note h3 { break-after: avoid; }
+  .note p { orphans: 2; widows: 2; }
+  
+  
+}

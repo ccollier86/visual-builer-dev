@@ -22,15 +22,25 @@ export const HEADER_CARD_CONFIG: Record<string, HeaderCardConfig> = {
     },
   },
   'facility-info': {
-    defaultMode: 'text',
+    defaultMode: 'label-value',
+    fields: {
+      name: { label: 'FACILITY' },
+      phone: { label: 'PHONE' },
+      address: { mode: 'text' },
+      location: { mode: 'text' },
+    },
   },
   'encounter-info': {
-    defaultMode: 'text',
+    defaultMode: 'label-value',
     fields: {
-      provider: { label: 'SEEN BY', mode: 'label-value' },
-      date: { label: 'DATE', mode: 'label-value' },
+      provider: { label: 'SEEN BY' },
+      date: { label: 'DATE' },
+      timeRange: { label: 'TIME' },
+      cptDisplay: { label: 'CPT' },
+      signatureStatus: { label: 'STATUS' },
       type: { mode: 'text' },
       signature: { mode: 'text' },
+      appointment: { mode: 'text' },
     },
   },
 };
