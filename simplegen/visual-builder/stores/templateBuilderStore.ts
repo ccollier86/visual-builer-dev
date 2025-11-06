@@ -20,20 +20,21 @@ const EMPTY_TEMPLATE: Template = {
   theme: DEFAULT_THEME
 };
 
-export const templateBuilderStore = createStore(
-  // Initial state
-  {
+export const templateBuilderStore = createStore({
+  // Initial context
+  context: {
     template: EMPTY_TEMPLATE,
-    selectedBlockId: null,
+    selectedBlockId: null as string | null,
     isBlockEditorOpen: false,
     isDragging: false
   },
 
-  // Actions
-  {
+  // Transitions
+  on: {
     // ===== TEMPLATE ACTIONS =====
 
     setTemplate: (ctx, event: { template: Template }) => ({
+      ...ctx,
       template: event.template,
       selectedBlockId: null,
       isBlockEditorOpen: false
