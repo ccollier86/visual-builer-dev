@@ -189,21 +189,6 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       }
 
       pipelineWarnings.template = templateLint.warnings;
-
-      if (options.verbose) {
-        console.warn(`Template lint warnings (${templateLint.warnings.length}):`);
-        templateLint.warnings.forEach(warning => {
-          const details: string[] = [];
-          if (warning.componentId) {
-            details.push(`component=${warning.componentId}`);
-          }
-          if (warning.slotId) {
-            details.push(`slot=${warning.slotId}`);
-          }
-          const suffix = details.length > 0 ? ` (${details.join(', ')})` : '';
-          console.warn(`  [${warning.code}] ${warning.message}${suffix}`);
-        });
-      }
     }
 
     // Step 2: Derive AIS schema (AI Structured Output)

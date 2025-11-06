@@ -1,18 +1,28 @@
+/**
+ * Template Linting - Rule Orchestrator
+ *
+ * Domain: validation/lint
+ * Responsibility: Analyse note templates for authoring mistakes that JSON Schema cannot express.
+ *
+ * SOR: Single entry point for template lint results.
+ * SOD: Delegates to targeted rule helpers (AI deps, tables, style hints).
+ * DI: Pure functions with no side effects; callers supply the template to analyse.
+ */
+
 import type { NoteTemplate, Component, ContentItem } from '../../derivation/types';
 import type {
   TemplateLintIssue,
   TemplateLintResult,
   LintSeverity,
 } from '../types';
+import { KNOWN_STYLE_HINT_KEYS, LintContext } from './shared';
 
-const KNOWN_STYLE_HINT_KEYS = new Set(['tone', 'tableCell']);
-
-interface LintContext {
-  componentPath: string;
-  componentId: string;
-  tableColumns?: string[];
-}
-
+/**
+ * Produce lint findings for the supplied template.
+ *
+ * @param template - Author-defined note template already validated against the schema.
+ * @returns Aggregate lint result including blocking errors and advisory warnings.
+ */
 export function lintNoteTemplate(template: NoteTemplate): TemplateLintResult {
   const issues: TemplateLintIssue[] = [];
 
@@ -49,6 +59,9 @@ export function lintNoteTemplate(template: NoteTemplate): TemplateLintResult {
   return { issues, errors, warnings };
 }
 
+/**
+ * Validate table metadata for column definitions and column widths.
+ */
 function lintTableComponent(
   component: Component,
   context: LintContext,
@@ -75,6 +88,9 @@ function lintTableComponent(
   context.tableColumns = columns;
 }
 
+/**
+ * Apply lint rules to an individual content item.
+ */
 function lintContentItem(
   item: ContentItem,
   component: Component,
@@ -98,6 +114,9 @@ function lintContentItem(
   }
 }
 
+/**
+ * Ensure AI slots carry sufficient dependency metadata for downstream composition.
+ */
 function lintAiSlot(
   item: ContentItem,
   component: Component,
@@ -161,6 +180,9 @@ function lintAiSlot(
   }
 }
 
+/**
+ * Validate style hint vocabulary and table cell metadata.
+ */
 function lintStyleHints(
   styleHints: Record<string, unknown>,
   context: LintContext,
@@ -207,6 +229,9 @@ function lintStyleHints(
   });
 }
 
+/**
+ * Validate table cell mappings relative to column definitions.
+ */
 function lintTableMap(
   tableMap: ContentItem[] | Record<string, ContentItem>,
   component: Component,
@@ -229,6 +254,9 @@ function lintTableMap(
   cells.forEach(cell => lintContentItem(cell, component, context, report));
 }
 
+/**
+ * Helper for recording lint issues with consistent metadata.
+ */
 function reportIssue(
   report: (issue: TemplateLintIssue) => void,
   code: string,
