@@ -1,41 +1,41 @@
 {
   "patient": "Michael Rodriguez",
-  "timestamp": "2025-11-06T13-05-30-608Z",
+  "timestamp": "2025-11-06T13-29-44-426Z",
   "aiOutput": {
     "chiefComplaint": "\"Everything fell apart after my divorce. I'm drinking too much, can't sleep, angry all the time. My daughters deserve a better dad than what I've been lately.\"",
     "subjective": {
-      "hpi": "Michael Rodriguez, a 35-year-old male, reports that his symptoms began approximately a year ago following a contentious divorce. His primary concerns include severe depression, PTSD symptoms, and substance use issues. He experiences significant difficulty with sleep, averaging only 3-4 hours per night due to racing thoughts about his divorce and his daughters. His depression has severely impacted his work, causing him to miss several days and worry about job security. Socially, he feels isolated, having pushed away friends and argued more frequently with his sister. His coping mechanisms, such as drinking and smoking, have exacerbated his symptoms, leading to further deterioration of his mental health.",
-      "pastPsychiatricHistory": "Michael has a history of major depressive disorder and PTSD, stemming from childhood trauma and recent life events. He previously attempted treatment with Zoloft, which he discontinued after six months due to perceived ineffectiveness. He also trialed Trazodone for sleep but stopped due to morning grogginess. He has not had any hospitalizations or consistent psychiatric care prior to this intake. Michael completed DUI classes following a legal incident but has not engaged in formal substance use disorder treatment.",
-      "currentMedications": "Lisinopril (for high blood pressure), Ibuprofen (for chronic back pain)",
-      "familyPsychiatricHistory": "Michael's family history reveals significant mental health and substance use issues. His father suffered from depression and alcoholism, ultimately dying from liver disease. His mother has anxiety, and his brother has PTSD from military service. These familial patterns suggest a genetic predisposition to mental health and substance use disorders, potentially influencing Michael's current struggles.",
-      "medicalHistory": "Michael has several chronic medical conditions, including hypertension, chronic back pain from a work injury, and pre-diabetes, all of which require ongoing management. He is allergic to Penicillin, which causes hives, and Codeine, which induces nausea. These conditions, alongside his mental health issues, complicate his overall health status and treatment adherence, as physical discomfort can exacerbate his depressive symptoms.",
-      "socialHistory": "Michael currently lives alone in an apartment and is divorced, finalized eight months ago. He has two daughters, ages 8 and 11, whom he sees every other weekend. His primary support comes from his sister, but he feels isolated otherwise. Financial stress due to child support and legal fees is high, negatively affecting his mental health. He works full-time as a warehouse supervisor but struggles with job performance due to his symptoms. Despite these challenges, he exhibits resilience and a strong work ethic, motivated by the desire to improve for his daughters.",
-      "substanceUseHistory": "Michael's substance use includes daily alcohol consumption, with 4-6 drinks on weeknights and 8-10 on weekends. He began drinking heavily in his early 20s, with usage escalating during his marriage. A DUI 14 months ago marked a significant consequence of his drinking. He also smokes about half a pack of cigarettes daily and uses marijuana occasionally. His AUDIT score of 28 indicates a severe alcohol use disorder, and he acknowledges the need for change, driven by the impact on his health and relationships."
+      "hpi": "Mr. Rodriguez's symptoms began worsening over the past year, triggered by his divorce and subsequent life stressors. He reports severe depression with daily anhedonia, sleep disturbances, and fatigue, impacting his work and relationships significantly. The PHQ-9 score of 21 confirms severe depression, with passive suicidal ideation noted. His anxiety, marked by a GAD-7 score of 14, manifests as irritability and constant worry, complicating his ability to relax. These symptoms have led to eight sick days in three months, strained family ties, and poor self-care, exacerbated by daily alcohol use as a coping mechanism.",
+      "pastPsychiatricHistory": "Mr. Rodriguez has a history of attempting psychiatric treatment, including a six-month trial of Zoloft, which he discontinued due to perceived ineffectiveness. He also tried Trazodone for sleep, which was stopped due to morning grogginess. Despite attending DUI classes, he has not engaged in formal substance use disorder treatment. He has no history of psychiatric hospitalizations but acknowledges the need for comprehensive treatment now.",
+      "currentMedications": "Lisinopril for high blood pressure, Ibuprofen for chronic back pain.",
+      "familyPsychiatricHistory": "His father had depression and alcoholism, which led to liver disease-related death at 58. His mother suffers from anxiety, and his brother has PTSD from military service. These familial patterns suggest a genetic predisposition to mental health and substance use issues, exacerbating Mr. Rodriguez's current struggles.",
+      "medicalHistory": "Mr. Rodriguez has hypertension, chronic back pain from a 2018 work injury, and diet-controlled pre-diabetes. He is allergic to Penicillin, causing hives, and Codeine, which induces nausea. His chronic pain and hypertension may interplay with his mental health issues, complicating his emotional well-being and stress management.",
+      "socialHistory": "Living alone post-divorce, Mr. Rodriguez works full-time as a warehouse supervisor but faces severe work-related stress, missing multiple days due to his symptoms. He sees his daughters bi-weekly, highlighting his motivation for improvement. Financial stress from child support and legal fees adds pressure. His sister offers significant support, though his social network remains limited due to isolation.",
+      "substanceUseHistory": "Mr. Rodriguez consumes alcohol daily, with a pattern of binge drinking on weekends, as confirmed by an AUDIT score of 28. He also smokes half a pack of cigarettes daily and uses marijuana occasionally. Past cocaine use ceased following a DUI. His substance use has led to legal and relational consequences, and he is motivated to change for his daughters' sake."
     },
     "objective": {
-      "functionalAssessment": "Michael's symptoms significantly impair his functioning across all domains. He has missed eight days of work in the past three months, and his concentration and irritability affect job performance, putting his employment at risk. His relationships are strained, particularly after his divorce, limiting contact with his daughters and leading to isolation. Self-care is poor, with irregular meals, disrupted sleep, and a cluttered living space. Socially, he has withdrawn from activities he once enjoyed, such as coaching soccer and playing guitar. Despite these challenges, he shows insight and motivation to change, especially driven by his love for his daughters."
+      "functionalAssessment": "Mr. Rodriguez's functioning is severely impaired across multiple domains. At work, he has called in sick eight times in three months and struggles with concentration and irritability, risking job security. Relationship-wise, his divorce and limited time with his daughters weigh heavily, leading to isolation and strained family interactions. He neglects self-care, with irregular eating, poor sleep, and a cluttered living environment. Socially, he is isolated, having lost friendships during his marriage and divorce. Despite these challenges, he remains a hard worker and is motivated by his responsibility to his daughters and support from his sister."
     },
     "assessment": {
-      "clinicalFormulation": "Michael presents with a complex interplay of severe depression, PTSD, and alcohol use disorder. His high ACE score of 6 reflects significant childhood adversity, contributing to his current mental health challenges. The PTSD symptoms, including hypervigilance and intrusive memories, are exacerbated by recent divorce stressors. His severe depression, confirmed by a PHQ-9 score of 21, manifests in pervasive anhedonia and suicidal ideation. The severe alcohol use disorder, with an AUDIT score of 28, complicates his mental health further, serving as a maladaptive coping mechanism. However, his insight, motivation, and strong familial ties, particularly with his daughters, are protective factors in his treatment journey.",
-      "riskAssessment": "Michael's risk profile includes past passive suicidal ideation, though he denies current thoughts or plans. His severe depression and high alcohol use pose significant relapse and safety risks, particularly given his recent DUI. The support from his sister and his commitment to his daughters are critical protective factors. He acknowledges his substance use issues and demonstrates a willingness to engage in safety planning and treatment. The need for close monitoring is evident, with emphasis on building a comprehensive crisis plan and enhancing support system engagement.",
-      "prognosis": "Michael's prognosis is cautiously optimistic, given his motivation level of 8 and strong desire to improve for his daughters. His insight into the impact of his childhood trauma on current symptoms is a positive indicator for therapy engagement. However, the severity of his depression and alcohol use disorder, coupled with financial stress and housing instability, presents significant challenges. His past non-adherence to medication highlights the need for careful monitoring and support in treatment adherence. With integrated care and structured support, meaningful progress is possible.",
+      "clinicalFormulation": "Mr. Rodriguez presents with a complex clinical picture characterized by severe depression, PTSD from childhood and adult traumas, and a severe alcohol use disorder. His PHQ-9 score of 21 indicates significant depressive symptoms, exacerbated by family stress and high ACE score of 6. PTSD symptoms, including hypervigilance and flashbacks, are intertwined with his anxiety, scored at 14 on the GAD-7. His severe alcohol use, verified by an AUDIT score of 28, serves as a maladaptive coping strategy, further complicating his mental health. Protective factors include his insight, motivation to change for his daughters, and his sister's support, although immediate risks such as potential job loss and health deterioration from alcohol use are present.",
+      "riskAssessment": "Mr. Rodriguez denies current suicidal ideation but reported passive thoughts six months ago, linked to his divorce. His alcohol use poses significant relapse risks, with consequences including a DUI. He has a history of anger issues, although no homicidal ideation. Protective factors include his daughters and sister, who provide motivation and support. Regular monitoring and a crisis plan are essential, given his history and current stress level. Emergency contacts are established, and he is aware of crisis resources.",
+      "prognosis": "Mr. Rodriguez's prognosis is cautiously optimistic, contingent on addressing his severe symptoms and comorbidities. His high motivation score of 8/10 and insight into his condition are favorable. However, financial stress, housing stability, and employment pressures may impede treatment adherence. His support system, though limited, is a protective factor. The chronicity of his conditions and past treatment non-adherence are considerations for potential challenges in achieving lasting recovery.",
       "diagnosticImpressions": [
         {
           "icd10Code": "F33.2",
-          "criteria": "PHQ-9 score of 21 confirms severe depression with daily anhedonia and suicidal ideation."
+          "criteria": "Severe Major Depressive Disorder is evidenced by nearly daily anhedonia, insomnia, fatigue, feelings of worthlessness, and passive suicidal ideation. His PHQ-9 score of 21 supports these findings, indicating a critical need for intervention."
         },
         {
           "icd10Code": "F43.10",
-          "criteria": "PTSD symptoms include hypervigilance and intrusive memories, related to childhood trauma."
+          "criteria": "PTSD is supported by Criterion A, involving exposure to domestic violence in childhood, and Criterion B, with intrusive memories and flashbacks. His hypervigilance and emotional distress align with Criterion D, supported by the ACE score and clinical intake."
         },
         {
           "icd10Code": "F10.20",
-          "criteria": "AUDIT score of 28 indicates severe alcohol use disorder with significant daily consumption."
+          "criteria": "Alcohol Use Disorder, Severe, meets Criterion A with significant daily consumption and inability to control use, as highlighted by his AUDIT score of 28. Consequences include DUI and strained relationships, further indicating severe impact."
         }
       ]
     },
     "plan": {
-      "reasonsForLiving": "Michael finds purpose in his deep love for his daughters and desire to be a better father. His commitment to improving his mental health and rebuilding relationships serves as a strong motivator. The support from his sister and recognition of the need for change further reinforce his reasons for living."
+      "reasonsForLiving": "Mr. Rodriguez's primary reasons for living include his love for his daughters and the desire to be a stable, supportive father. He is motivated by the need to improve his life situation and appreciates the support of his sister, which strengthens his resolve to engage in treatment."
     }
   },
   "schemas": {
@@ -143,8 +143,10 @@
                   },
                   "criteria": {
                     "type": "string",
-                    "x-minWords": 5,
-                    "x-maxWords": 50
+                    "x-minWords": 40,
+                    "x-maxWords": 140,
+                    "x-minSentences": 2,
+                    "x-maxSentences": 4
                   }
                 },
                 "required": [
@@ -572,8 +574,10 @@
                   },
                   "criteria": {
                     "type": "string",
-                    "x-minWords": 5,
-                    "x-maxWords": 50
+                    "x-minWords": 40,
+                    "x-maxWords": 140,
+                    "x-minSentences": 2,
+                    "x-maxSentences": 4
                   }
                 },
                 "required": [
@@ -738,9 +742,9 @@
     }
   },
   "usage": {
-    "promptTokens": 12865,
-    "completionTokens": 1312,
-    "totalTokens": 14177
+    "promptTokens": 12989,
+    "completionTokens": 1290,
+    "totalTokens": 14279
   },
   "model": "gpt-4o-2024-08-06"
 }
