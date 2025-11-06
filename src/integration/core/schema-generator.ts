@@ -27,6 +27,8 @@ import { DEFAULT_OPTIONS } from '../types';
  * @returns Generation result with validated AI output and usage metrics
  * @throws {Error} If API call fails or output validation fails
  */
+const MAX_EMPTY_OUTPUT_ATTEMPTS = 2;
+
 export async function generateWithSchema(
   client: OpenAI,
   bundle: PromptBundle,
@@ -60,23 +62,40 @@ export async function generateWithSchema(
     requestBody.temperature = finalOptions.temperature;
   }
 
-  const completion = await withRetry<Response>(
-    async () => {
-      return (await client.responses.create(requestBody)) as Response;
-    },
-    { maxRetries: finalOptions.retries }
-  );
+  let completion: Response | null = null;
+  let messageContent: string | null = null;
 
-  validateResponseStatus(completion);
-  const refusalMessage = extractRefusal(completion);
-  if (refusalMessage) {
-    throw new Error(`OpenAI refused to complete the request: ${refusalMessage}`);
+  for (let attempt = 0; attempt < MAX_EMPTY_OUTPUT_ATTEMPTS; attempt++) {
+    const current = await withRetry<Response>(
+      async () => {
+        return (await client.responses.create(requestBody)) as Response;
+      },
+      { maxRetries: finalOptions.retries }
+    );
+
+    validateResponseStatus(current);
+    const refusalMessage = extractRefusal(current);
+    if (refusalMessage) {
+      throw new Error(`OpenAI refused to complete the request: ${refusalMessage}`);
+    }
+
+    const extracted = extractFirstTextOutput(current);
+    if (extracted && extracted.trim().length > 0) {
+      completion = current;
+      messageContent = extracted;
+      break;
+    }
+
+    logMissingOutputAttempt(attempt, current, finalOptions.model);
+
+    if (attempt === MAX_EMPTY_OUTPUT_ATTEMPTS - 1) {
+      throw new Error(
+        'OpenAI response missing message content after retry. Check previous logs for raw completion preview.'
+      );
+    }
   }
 
-  
-  // Extract AI output
-  const messageContent = extractFirstTextOutput(completion);
-  if (!messageContent) {
+  if (!completion || !messageContent) {
     throw new Error('OpenAI response missing message content');
   }
 
@@ -221,6 +240,31 @@ function extractFirstTextOutput(response: Response): string | null {
   }
 
   return null;
+}
+
+function logMissingOutputAttempt(attempt: number, response: Response, model?: string): void {
+  const attemptNumber = attempt + 1;
+  const meta = {
+    attempt: attemptNumber,
+    status: response.status,
+    model,
+    responseId: typeof response.id === 'string' ? response.id : undefined,
+    promptId: response.prompt?.id ?? undefined,
+  };
+
+  let rawPreview: string;
+  try {
+    const serialised = JSON.stringify(response, null, 2);
+    rawPreview =
+      serialised.length > 4000 ? `${serialised.slice(0, 4000)}… (truncated)` : serialised;
+  } catch {
+    rawPreview = '[unserialisable response payload]';
+  }
+
+  console.warn(
+    `[Integration] OpenAI response missing output_text (attempt ${attemptNumber}). Metadata: ${JSON.stringify(meta)}`
+  );
+  console.warn(`[Integration] Raw completion preview:\n${rawPreview}`);
 }
 
 function shouldSendTemperature(model?: string, temperature?: number): boolean {
