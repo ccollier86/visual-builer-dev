@@ -145,23 +145,27 @@ export const templateBuilderStore = createStore({
     // ===== UI STATE ACTIONS =====
 
     selectBlock: (ctx, event: { blockId: string | null }) => ({
+      ...ctx,
       selectedBlockId: event.blockId
     }),
 
     openBlockEditor: (ctx, event?: { blockId: string }) => ({
+      ...ctx,
       selectedBlockId: event?.blockId || ctx.selectedBlockId,
       isBlockEditorOpen: true
     }),
 
     closeBlockEditor: (ctx) => ({
+      ...ctx,
       isBlockEditorOpen: false
     }),
 
     setDragging: (ctx, event: { isDragging: boolean }) => ({
+      ...ctx,
       isDragging: event.isDragging
     })
   }
-);
+});
 
 // Helper functions for common operations
 export function getBlockById(state: TemplateBuilderState, blockId: string): Block | undefined {
