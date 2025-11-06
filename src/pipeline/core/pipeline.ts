@@ -9,6 +9,7 @@
  * DI: Receives all dependencies via imports, pure functional composition
  */
 
+import { randomUUID } from 'node:crypto';
 import { deriveAIS, deriveNAS, mergeToRPS } from '../../derivation';
 import { validateNoteTemplate, validateAIS, getAIOutputValidator } from '../../validation';
 import { composePrompt } from '../../composition';
@@ -20,7 +21,11 @@ import type { PipelineInput, PipelineOutput, PipelineOptions, PipelineError, Pip
 import type { DesignTokens, Layout } from '../../tokens';
 import type { TemplateStyle } from '../../derivation/types';
 import type { FactPack } from '../../types/payloads';
+import { createNoopPipelineLogger } from '../logging';
+import type { PipelineLogger } from '../logging';
 import defaultTokensRaw from '../../tokens/defaults/default-tokens.json';
+
+const DEFAULT_CAPTURE_PROMPT_METADATA = true;
 
 function cloneTokens(tokens: DesignTokens): DesignTokens {
   return JSON.parse(JSON.stringify(tokens)) as DesignTokens;
@@ -143,8 +148,31 @@ function mergeDesignTokens(base: DesignTokens, override?: DesignTokens): DesignT
  * @throws {PipelineError} If any step fails
  */
 export async function runPipeline(input: PipelineInput): Promise<PipelineOutput> {
-  const options = input.options ?? {};
+  const options: PipelineOptions = input.options ? { ...input.options } : {};
   const validate = options.validateSteps ?? true;
+
+  const logger: PipelineLogger = options.logger ?? createNoopPipelineLogger();
+  const requestId = options.requestId ?? generateRequestId();
+  const capturePromptMetadata = options.capturePromptMetadata ?? DEFAULT_CAPTURE_PROMPT_METADATA;
+  if (!options.requestId) {
+    options.requestId = requestId;
+  }
+  if (options.capturePromptMetadata === undefined) {
+    options.capturePromptMetadata = capturePromptMetadata;
+  }
+
+  const baseContext: BaseLogContext = {
+    requestId,
+    templateId: input.template.id,
+    templateName: input.template.name,
+    templateVersion: input.template.version,
+  };
+
+  const emit = createEventEmitter(logger, baseContext);
+  const startTime = Date.now();
+
+  const sanitizedOptions = sanitizeOptionsForLogging(options);
+  emit('onStart', { options: sanitizedOptions });
 
   try {
     const pipelineWarnings: PipelineWarnings = {};
@@ -189,6 +217,12 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       input.template.version
     );
 
+    emit('onSchemasDerived', {
+      aisSchema: ais,
+      nasSchema: nas,
+      rpsSchema: rps,
+    });
+
     // Step 5: Resolve NAS data from source
     log(options, 'Step 5/8: Resolving NAS data from source...');
 
@@ -202,6 +236,8 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
     });
 
     const resolvedNasData = resolutionResult.nasData;
+
+    emit('onResolution', { resolution: resolutionResult });
 
     // Log warnings
     if (resolutionResult.warnings.length > 0) {
@@ -266,6 +302,11 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       }
     }
 
+    emit('onPromptComposed', {
+      prompt: promptBundle,
+      warnings: lintResult.warnings.length > 0 ? lintResult.warnings : undefined,
+    });
+
     // Step 7: Generate AI output via OpenAI
     log(options, 'Step 7/8: Generating AI output...');
 
@@ -276,6 +317,12 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
     }
 
     const aiOutputValidator = getAIOutputValidator(ais);
+
+    emit('onAIRequest', {
+      prompt: promptBundle,
+      model: options.generationOptions?.model,
+      generationOptions: options.generationOptions ? { ...options.generationOptions } : undefined,
+    });
 
     let generation;
     try {
@@ -297,6 +344,12 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
         }
       }
     }
+
+    const aiResultForLogging = capturePromptMetadata
+      ? generation
+      : { ...generation, promptId: undefined, responseId: undefined };
+
+    emit('onAIResponse', { result: aiResultForLogging });
 
     const aiWarnings = generation.warnings ?? [];
     if (aiWarnings.length > 0) {
@@ -328,9 +381,9 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
         );
       }
 
-       if (aisResult.warnings.length > 0 && !pipelineWarnings.validation) {
-         pipelineWarnings.validation = aisResult.warnings;
-       }
+      if (aisResult.warnings.length > 0 && !pipelineWarnings.validation) {
+        pipelineWarnings.validation = aisResult.warnings;
+      }
     }
 
     // Step 8: Merge AI output + NAS data
@@ -350,6 +403,12 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
     const baseTokens = cloneTokens(defaultTokensRaw as DesignTokens);
     applyTemplateStyle(baseTokens, input.template.style);
     const tokens = mergeDesignTokens(baseTokens, input.tokens);
+
+    emit('onMergeCompleted', {
+      finalPayload,
+      tokens,
+    });
+
     const css = compileCSS(tokens);
 
     // Render HTML
@@ -362,9 +421,19 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       },
     });
 
+    emit('onRender', {
+      htmlLength: html.length,
+      cssHash: css.hash,
+    });
+
     log(options, 'Pipeline complete!');
 
     const warnings = Object.keys(pipelineWarnings).length > 0 ? pipelineWarnings : undefined;
+
+    emit('onComplete', {
+      durationMs: Date.now() - startTime,
+      warnings,
+    });
 
     return {
       html,
@@ -373,22 +442,21 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
       schemas: { ais, nas, rps },
       usage: generation.usage,
       model: generation.model,
+      responseId: capturePromptMetadata ? generation.responseId : undefined,
+      promptId: capturePromptMetadata ? generation.promptId : undefined,
       warnings,
       payload: finalPayload,
       nasSnapshot: resolvedNasData,
     };
   } catch (error) {
-    // Re-throw PipelineErrors as-is
-    if (error && typeof error === 'object' && 'step' in error) {
-      throw error;
-    }
+    const pipelineError =
+      error && typeof error === 'object' && 'step' in error
+        ? (error as PipelineError)
+        : createError('Pipeline execution failed', 'unknown', error);
 
-    // Wrap other errors
-    throw createError(
-      'Pipeline execution failed',
-      'unknown',
-      error
-    );
+    emit('onError', { error: pipelineError });
+
+    throw pipelineError;
   }
 }
 
@@ -414,5 +482,58 @@ function createError(message: string, step: string, cause?: unknown): PipelineEr
 function log(options: PipelineOptions, message: string): void {
   if (options.verbose) {
     console.log(`[Pipeline] ${message}`);
+  }
+}
+
+function sanitizeOptionsForLogging(options: PipelineOptions): Omit<PipelineOptions, 'logger'> {
+  const { logger: _logger, ...rest } = options;
+  return rest;
+}
+
+function generateRequestId(): string {
+  try {
+    return randomUUID();
+  } catch {
+    return `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+  }
+}
+
+interface BaseLogContext {
+  requestId: string;
+  templateId: string;
+  templateName: string;
+  templateVersion: string;
+}
+
+function createEventEmitter(logger: PipelineLogger, context: BaseLogContext) {
+  return function emit(method: keyof PipelineLogger, data: Record<string, unknown>): void {
+    emitLoggerEvent(logger, context, method, data);
+  };
+}
+
+function emitLoggerEvent(
+  logger: PipelineLogger,
+  context: BaseLogContext,
+  method: keyof PipelineLogger,
+  data: Record<string, unknown>
+): void {
+  const handler = logger[method];
+  if (typeof handler !== 'function') {
+    return;
+  }
+
+  try {
+    const event = {
+      requestId: context.requestId,
+      templateId: context.templateId,
+      templateName: context.templateName,
+      templateVersion: context.templateVersion,
+      timestamp: new Date().toISOString(),
+      ...data,
+    } as Record<string, unknown>;
+
+    (handler as unknown as (event: Record<string, unknown>) => void)(event);
+  } catch (error) {
+    console.warn(`[Pipeline] logger.${String(method)} handler threw`, error);
   }
 }

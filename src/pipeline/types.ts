@@ -11,6 +11,7 @@ import type { ResolutionWarning, SourceData } from '../resolution';
 import type { LintIssue } from '../composition';
 import type { AIPayload, NasSnapshot, RenderPayload } from '../types/payloads';
 import type { ValidationIssue } from '../validation';
+import type { PipelineLogger } from './logging';
 
 /**
  * Input configuration for the complete pipeline
@@ -50,6 +51,15 @@ export interface PipelineOptions {
 
   /** Guardrail behaviour for warnings surfaced by pipeline stages */
   guards?: PipelineGuardOptions;
+
+  /** Optional structured logger implementation */
+  logger?: PipelineLogger;
+
+  /** Provide a request identifier; generated automatically if omitted */
+  requestId?: string;
+
+  /** Capture OpenAI prompt metadata (ids, etc.) for audit logging */
+  capturePromptMetadata?: boolean;
 }
 
 /**
@@ -97,6 +107,12 @@ export interface PipelineOutput {
 
   /** Generation model used */
   model: string;
+
+  /** Identifier of the OpenAI response when available */
+  responseId?: string;
+
+  /** Identifier of the prompt template recorded by OpenAI */
+  promptId?: string;
 
   /** Collected non-fatal warnings surfaced during execution */
   warnings?: PipelineWarnings;

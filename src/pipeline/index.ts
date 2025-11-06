@@ -32,4 +32,22 @@ export type {
   PipelineOptions,
   PipelineOutput,
   PipelineError,
+  PipelineWarnings,
 } from './types';
+
+// Logging
+export { createNoopPipelineLogger } from './logging';
+export type {
+  PipelineLogger,
+  PipelineBaseEvent,
+  PipelineStartEvent,
+  PipelineSchemasEvent,
+  PipelineResolutionEvent,
+  PipelinePromptEvent,
+  PipelineAIRequestEvent,
+  PipelineAIResponseEvent,
+  PipelineMergeEvent,
+  PipelineRenderEvent,
+  PipelineCompleteEvent,
+  PipelineErrorEvent,
+} from './logging';

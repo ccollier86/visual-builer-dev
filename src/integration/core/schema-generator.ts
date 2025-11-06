@@ -121,6 +121,8 @@ export async function generateWithSchema(
       totalTokens: usage.total_tokens,
     },
     model: completion.model,
+    responseId: typeof completion.id === 'string' ? completion.id : undefined,
+    promptId: completion.prompt?.id ?? undefined,
     warnings: validationWarnings.length > 0 ? validationWarnings : undefined,
   };
 }

@@ -28,6 +28,8 @@ export interface GenerationResult {
     totalTokens: number;
   };
   model: string;
+  responseId?: string;
+  promptId?: string;
   warnings?: ValidationIssue[];
 }
 
