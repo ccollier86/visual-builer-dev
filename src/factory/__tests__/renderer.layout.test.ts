@@ -137,4 +137,39 @@ describe('renderNoteHTML layout', () => {
     expect(html).toContain('I declare this record is accurate and complete.');
     expect(html).not.toContain('Clinician: ____________________');
   });
+
+  it('injects inline and linked styles when provided', () => {
+    const template: NoteTemplate = {
+      id: 'style-test',
+      name: 'Style Injection Template',
+      version: '1.0.0',
+      prompt: {
+        system: 'N/A',
+        main: 'N/A',
+        rules: [],
+      },
+      layout: [],
+    };
+
+    const html = renderNoteHTML({
+      template,
+      payload: {} as RenderPayload,
+      tokens,
+      options: {
+        styles: {
+          screenHref: 'note.123.css',
+          printHref: 'note.print.123.css',
+          inlineScreen: 'body { color: green; }',
+          inlinePrint: '@page { margin: 1in; }',
+        },
+      },
+    });
+
+    expect(html).toContain('<link rel="stylesheet" href="note.123.css" media="screen">');
+    expect(html).toContain('<link rel="stylesheet" href="note.print.123.css" media="print">');
+    expect(html).toContain('<style data-note-style="screen" media="screen">');
+    expect(html).toContain('body { color: green; }');
+    expect(html).toContain('<style data-note-style="print" media="print">');
+    expect(html).toContain('@page { margin: 1in; }');
+  });
 });

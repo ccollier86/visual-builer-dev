@@ -32,6 +32,14 @@ export interface RenderOptions {
 
   /** Prefix for element IDs to avoid collisions (default: "") */
   idPrefix?: string;
+
+  /** Stylesheet/link injection for rendered HTML */
+  styles?: {
+    inlineScreen?: string;
+    inlinePrint?: string;
+    screenHref?: string;
+    printHref?: string;
+  };
 }
 
 /** Verbatim content with optional provenance reference */

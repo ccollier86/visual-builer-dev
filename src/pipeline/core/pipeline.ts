@@ -15,10 +15,7 @@ import { deriveAIS, deriveNAS, mergeToRPS } from '../../derivation';
 import type { TemplateStyle } from '../../derivation/types';
 import { renderNoteHTML } from '../../factory';
 import { generateWithSchema } from '../../integration';
-import type {
-	GenerationResult,
-	IntegrationDiagnosticsLogger,
-} from '../../integration/types';
+import type { GenerationResult, IntegrationDiagnosticsLogger } from '../../integration/types';
 import type { DesignTokens, Layout } from '../../tokens';
 import { compileCSS } from '../../tokens';
 import defaultTokensRaw from '../../tokens/defaults/default-tokens.json';
@@ -569,6 +566,10 @@ export async function runPipeline(input: PipelineInput): Promise<PipelineOutput>
 				tokens,
 				options: {
 					provenance: options.provenance,
+					styles: {
+						inlineScreen: css.screen,
+						inlinePrint: css.print,
+					},
 				},
 			})
 		);
