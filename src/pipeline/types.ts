@@ -171,6 +171,7 @@ export interface PipelineOutput {
 	payload?: RenderPayload;
 	/** Optional NAS snapshot returned for debugging */
 	nasSnapshot?: NasSnapshot;
+
 }
 
 /**

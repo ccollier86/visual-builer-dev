@@ -1,0 +1,492 @@
+{
+  "id": "tmpl_tcm_strengths_needs_v1",
+  "name": "TCM Comprehensive Strengths & Needs Assessment",
+  "version": "1.0.0",
+  "style": {
+    "font": "Inter, system-ui, sans-serif",
+    "color": "#0f172a",
+    "muted": "#475569",
+    "accent": "#0ea5e9",
+    "spacing": 10,
+    "tableDensity": "normal",
+    "print": {
+      "size": "Letter",
+      "margin": "0.75in",
+      "header": true,
+      "footer": true
+    }
+  },
+  "prompt": {
+    "system": "You are a targeted case manager documenting a comprehensive strengths and needs assessment. Present each domain with objective observations, bullet strengths, and bullet needs.",
+    "main": "Summarize the NAS data for each domain (housing, income, social, health, etc.), emphasizing strengths before needs and keeping tone neutral.",
+    "rules": [
+      "Do not invent data beyond the provided context",
+      "Use concise sentences for list entries"
+    ],
+    "jsonOnly": true
+  },
+  "layout": [
+    {
+      "id": "header",
+      "type": "header",
+      "children": [
+        {
+          "id": "patient-info",
+          "type": "patientBlock",
+          "title": "PATIENT",
+          "content": [
+            { "slot": "lookup", "id": "patient-name", "lookup": "client.name", "targetPath": "header.patient.name" },
+            { "slot": "lookup", "id": "patient-dob", "lookup": "client.dob", "targetPath": "header.patient.dob" },
+            { "slot": "lookup", "id": "patient-age", "lookup": "client.age", "targetPath": "header.patient.age" },
+            { "slot": "lookup", "id": "patient-gender", "lookup": "client.gender", "targetPath": "header.patient.gender" }
+          ]
+        },
+        {
+          "id": "facility-info",
+          "type": "patientBlock",
+          "title": "FACILITY",
+          "content": [
+            { "slot": "lookup", "id": "facility-name", "lookup": "facility.name", "targetPath": "header.facility.name" },
+            { "slot": "lookup", "id": "facility-phone", "lookup": "facility.phone", "targetPath": "header.facility.phone" },
+            { "slot": "lookup", "id": "facility-address", "lookup": "facility.address", "targetPath": "header.facility.address" },
+            { "slot": "computed", "id": "facility-location", "formula": "facility.city + ', ' + facility.state + ' ' + facility.zip", "targetPath": "header.facility.location" }
+          ]
+        },
+        {
+          "id": "encounter-info",
+          "type": "patientBlock",
+          "title": "SERVICE",
+          "content": [
+            { "slot": "static", "id": "service-label", "text": "Comprehensive Strengths & Needs Assessment", "targetPath": "header.encounter.type" },
+            { "slot": "lookup", "id": "case-manager", "lookup": "caseManager.name", "targetPath": "header.encounter.provider" },
+            { "slot": "lookup", "id": "assessment-date", "lookup": "assessment.date", "targetPath": "header.encounter.date" },
+            { "slot": "computed", "id": "signature-line", "formula": "'Electronically signed by ' + caseManager.name + ' on ' + assessment.date", "targetPath": "header.encounter.signature" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_identifying",
+      "type": "section",
+      "title": "1. Identifying Information",
+      "children": [
+        {
+          "id": "identifying-details",
+          "type": "list",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "identifying-list", "lookup": "identifying.details[]", "targetPath": "identifying.details[]" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_documents",
+      "type": "section",
+      "title": "2. Identifying Documents",
+      "children": [
+        {
+          "id": "documents-on-hand",
+          "type": "list",
+          "title": "Documents on Hand",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "documents-items", "lookup": "documents.onHand[]", "targetPath": "documents.onHand[]" }
+          ]
+        },
+        {
+          "id": "documents-needs",
+          "type": "paragraph",
+          "title": "Needs / Barriers",
+          "content": [
+            { "slot": "lookup", "id": "documents-needs-text", "lookup": "documents.needsBarriers", "targetPath": "documents.needsBarriers" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_housing",
+      "type": "section",
+      "title": "3. Housing & Living Situation",
+      "children": [
+        {
+          "id": "housing-summary",
+          "type": "paragraph",
+          "title": "Current Situation",
+          "content": [
+            { "slot": "lookup", "id": "housing-current", "lookup": "housing.currentSituation", "targetPath": "housing.currentSituation" }
+          ]
+        },
+        {
+          "id": "housing-strengths",
+          "type": "list",
+          "title": "Strengths",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "housing-strength-items", "lookup": "housing.strengths[]", "targetPath": "housing.strengths[]" }
+          ]
+        },
+        {
+          "id": "housing-needs",
+          "type": "list",
+          "title": "Needs / Barriers",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "housing-need-items", "lookup": "housing.needs[]", "targetPath": "housing.needs[]" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_income",
+      "type": "section",
+      "title": "4. Income & Financial Status",
+      "children": [
+        {
+          "id": "income-sources",
+          "type": "list",
+          "title": "Income Sources",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "income-source-items", "lookup": "income.sources[]", "targetPath": "income.sources[]" }
+          ]
+        },
+        {
+          "id": "budgeting-skills",
+          "type": "list",
+          "title": "Budgeting / Financial Skills",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "budgeting-items", "lookup": "income.budgetingSkills[]", "targetPath": "income.budgetingSkills[]" }
+          ]
+        },
+        {
+          "id": "income-strengths",
+          "type": "list",
+          "title": "Strengths",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "income-strength-items", "lookup": "income.strengths[]", "targetPath": "income.strengths[]" }
+          ]
+        },
+        {
+          "id": "income-needs",
+          "type": "list",
+          "title": "Needs / Barriers",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "income-need-items", "lookup": "income.needs[]", "targetPath": "income.needs[]" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_social",
+      "type": "section",
+      "title": "5. Social & Family Support",
+      "children": [
+        {
+          "id": "social-supports",
+          "type": "list",
+          "title": "Primary Supports",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "social-support-items", "lookup": "social.supportSystem[]", "targetPath": "social.supportSystem[]" }
+          ]
+        },
+        {
+          "id": "social-strengths",
+          "type": "list",
+          "title": "Strengths",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "social-strength-items", "lookup": "social.strengths[]", "targetPath": "social.strengths[]" }
+          ]
+        },
+        {
+          "id": "social-needs",
+          "type": "list",
+          "title": "Needs / Barriers",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "social-need-items", "lookup": "social.needs[]", "targetPath": "social.needs[]" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_physical",
+      "type": "section",
+      "title": "6. Physical Health",
+      "children": [
+        {
+          "id": "physical-summary",
+          "type": "paragraph",
+          "title": "Overall Health",
+          "content": [
+            { "slot": "lookup", "id": "physical-summary-text", "lookup": "physical.overallStatus", "targetPath": "physical.overallStatus" }
+          ]
+        },
+        {
+          "id": "physical-strengths",
+          "type": "list",
+          "title": "Strengths",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "physical-strength-items", "lookup": "physical.strengths[]", "targetPath": "physical.strengths[]" }
+          ]
+        },
+        {
+          "id": "physical-needs",
+          "type": "list",
+          "title": "Needs / Barriers",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "physical-need-items", "lookup": "physical.needs[]", "targetPath": "physical.needs[]" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_mental",
+      "type": "section",
+      "title": "7. Mental Health",
+      "children": [
+        {
+          "id": "mental-summary",
+          "type": "paragraph",
+          "title": "Diagnosis",
+          "content": [
+            { "slot": "lookup", "id": "mental-dx", "lookup": "mental.diagnosis", "targetPath": "mental.diagnosis" }
+          ]
+        },
+        {
+          "id": "mental-strengths",
+          "type": "list",
+          "title": "Strengths",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "mental-strength-items", "lookup": "mental.strengths[]", "targetPath": "mental.strengths[]" }
+          ]
+        },
+        {
+          "id": "mental-needs",
+          "type": "list",
+          "title": "Needs / Barriers",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "mental-need-items", "lookup": "mental.needs[]", "targetPath": "mental.needs[]" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_substance",
+      "type": "section",
+      "title": "8. Substance Use",
+      "children": [
+        {
+          "id": "substance-summary",
+          "type": "paragraph",
+          "title": "Current Use",
+          "content": [
+            { "slot": "lookup", "id": "substance-summary-text", "lookup": "substance.summary", "targetPath": "substance.summary" }
+          ]
+        },
+        {
+          "id": "substance-strengths",
+          "type": "list",
+          "title": "Strengths",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "substance-strength-items", "lookup": "substance.strengths[]", "targetPath": "substance.strengths[]" }
+          ]
+        },
+        {
+          "id": "substance-needs",
+          "type": "list",
+          "title": "Needs / Barriers",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "substance-need-items", "lookup": "substance.needs[]", "targetPath": "substance.needs[]" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_education",
+      "type": "section",
+      "title": "9. Education & Employment",
+      "children": [
+        {
+          "id": "education-summary",
+          "type": "paragraph",
+          "title": "Current Status",
+          "content": [
+            { "slot": "lookup", "id": "education-status", "lookup": "education.statusSummary", "targetPath": "education.statusSummary" }
+          ]
+        },
+        {
+          "id": "education-strengths",
+          "type": "list",
+          "title": "Strengths",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "education-strength-items", "lookup": "education.strengths[]", "targetPath": "education.strengths[]" }
+          ]
+        },
+        {
+          "id": "education-needs",
+          "type": "list",
+          "title": "Needs / Barriers",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "education-need-items", "lookup": "education.needs[]", "targetPath": "education.needs[]" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_legal",
+      "type": "section",
+      "title": "10. Legal Involvement",
+      "children": [
+        {
+          "id": "legal-summary",
+          "type": "paragraph",
+          "title": "Current Status",
+          "content": [
+            { "slot": "lookup", "id": "legal-status", "lookup": "legal.status", "targetPath": "legal.status" }
+          ]
+        },
+        {
+          "id": "legal-strengths",
+          "type": "list",
+          "title": "Strengths",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "legal-strength-items", "lookup": "legal.strengths[]", "targetPath": "legal.strengths[]" }
+          ]
+        },
+        {
+          "id": "legal-needs",
+          "type": "list",
+          "title": "Needs / Barriers",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "legal-need-items", "lookup": "legal.needs[]", "targetPath": "legal.needs[]" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_cultural",
+      "type": "section",
+      "title": "11. Cultural & Spiritual Factors",
+      "children": [
+        {
+          "id": "cultural-summary",
+          "type": "paragraph",
+          "title": "Considerations",
+          "content": [
+            { "slot": "lookup", "id": "cultural-considerations", "lookup": "cultural.considerations", "targetPath": "cultural.considerations" }
+          ]
+        },
+        {
+          "id": "cultural-strengths",
+          "type": "list",
+          "title": "Strengths",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "cultural-strength-items", "lookup": "cultural.strengths[]", "targetPath": "cultural.strengths[]" }
+          ]
+        },
+        {
+          "id": "cultural-needs",
+          "type": "list",
+          "title": "Needs / Barriers",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "cultural-need-items", "lookup": "cultural.needs[]", "targetPath": "cultural.needs[]" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_summary",
+      "type": "section",
+      "title": "12. Summary of Strengths & Needs",
+      "children": [
+        {
+          "id": "overall-strengths",
+          "type": "list",
+          "title": "Overall Strengths",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "overall-strength-items", "lookup": "summary.strengths[]", "targetPath": "summary.strengths[]" }
+          ]
+        },
+        {
+          "id": "priority-needs",
+          "type": "list",
+          "title": "Priority Needs",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "priority-need-items", "lookup": "summary.priorityNeeds[]", "targetPath": "summary.priorityNeeds[]" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_disclaimer",
+      "type": "section",
+      "title": "Confidentiality Notice",
+      "children": [
+        {
+          "id": "disclaimer",
+          "type": "paragraph",
+          "content": [
+            { "slot": "lookup", "id": "disclaimer-text", "lookup": "note.disclaimer", "targetPath": "note.disclaimer" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "section_signatures",
+      "type": "signatureBlock",
+      "title": "Signatures",
+      "content": [
+        { "slot": "lookup", "id": "assessor-name", "lookup": "signatures.assessorName", "targetPath": "signatures.assessorName" },
+        { "slot": "lookup", "id": "assessor-date", "lookup": "signatures.assessmentDate", "targetPath": "signatures.assessmentDate" },
+        { "slot": "lookup", "id": "supervisor-name", "lookup": "signatures.supervisorName", "targetPath": "signatures.supervisorName" },
+        { "slot": "lookup", "id": "supervisor-date", "lookup": "signatures.supervisorDate", "targetPath": "signatures.supervisorDate" },
+        {
+          "slot": "static",
+          "id": "supervisor-statement",
+          "text": "I have staffed this case and agree with the treatment plan, goals, and diagnosis presented. I have reviewed and approved this documentation.",
+          "targetPath": "signatures.supervisorStatement"
+        },
+        {
+          "slot": "computed",
+          "id": "supervisor-attestation",
+          "formula": "'I, ' + signatures.supervisorName + ', ' + signatures.supervisorCredentials + ', License #' + signatures.supervisorLicense + ', declare this information to be accurate and complete.'",
+          "targetPath": "signatures.attestation"
+        }
+      ]
+    }
+  ]
+}

@@ -64,7 +64,7 @@ describe('lintNoteTemplate', () => {
     };
 
     const result = lintNoteTemplate(template);
-    expect(result.errors.some(issue => issue.code === 'table.map.length')).toBe(true);
+    expect(result.errors.some(issue => issue.code === 'table.column.empty')).toBe(true);
   });
 
   it('warns on duplicate aiDeps entries', () => {

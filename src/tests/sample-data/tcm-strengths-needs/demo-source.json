@@ -1,0 +1,168 @@
+{
+  "client": {
+    "name": "Angela Petrey",
+    "dob": "09/15/1988",
+    "age": "36 years",
+    "gender": "Female"
+  },
+  "facility": {
+    "name": "Better Behavioral Health - Louisville",
+    "phone": "(502) 555-2200",
+    "address": "1102 Triplett Street, Suite 2300",
+    "city": "Louisville",
+    "state": "KY",
+    "zip": "40203"
+  },
+  "caseManager": {
+    "name": "Jordan Ellis, TCM"
+  },
+  "assessment": {
+    "date": "2025-02-03"
+  },
+  "identifying": {
+    "details": [
+      "Preferred name: Angela",
+      "Primary language: English / Spanish",
+      "Pronouns: she/her",
+      "Emergency Contact: Marisol Hamblin (sister) • (555) 555-5556"
+    ]
+  },
+  "documents": {
+    "onHand": [
+      "State ID / Driver's License",
+      "Social Security Card"
+    ],
+    "needsBarriers": "Needs replacement birth certificate; transportation to vital records office remains a barrier."
+  },
+  "housing": {
+    "currentSituation": "Staying with sister's family; stable temporary arrangement.",
+    "strengths": [
+      "Family support provides safe, substance-free environment",
+      "Repairs to current unit completed in January"
+    ],
+    "needs": [
+      "Identify affordable one-bedroom options near bus routes",
+      "Develop plan for independent lease within six months"
+    ]
+  },
+  "income": {
+    "sources": [
+      "Part-time employment (20 hrs/week)",
+      "SSI / SSDI (pending)"
+    ],
+    "budgetingSkills": [
+      "Uses paper ledger to track monthly expenses",
+      "Needs coaching to open checking account"
+    ],
+    "strengths": [
+      "Highly motivated to build savings",
+      "Consistent use of food bank resources"
+    ],
+    "needs": [
+      "Awaiting SSDI determination",
+      "Requires transportation assistance for benefits review"
+    ]
+  },
+  "social": {
+    "supportSystem": [
+      "Sister and extended family",
+      "Faith community volunteer group"
+    ],
+    "strengths": [
+      "Weekly engagement with church mentor",
+      "Active participation in peer support services"
+    ],
+    "needs": [
+      "Expand sober social outlets beyond faith community",
+      "Develop transition plan if sister relocates"
+    ]
+  },
+  "physical": {
+    "overallStatus": "Fair—manages Type II diabetes with medication adherence.",
+    "strengths": [
+      "Keeps regular PCP visits",
+      "Monitors glucose at home"
+    ],
+    "needs": [
+      "Schedule overdue dental appointment",
+      "Requires transportation voucher for specialty care"
+    ]
+  },
+  "mental": {
+    "diagnosis": "Generalized Anxiety Disorder; history of major depressive disorder in remission.",
+    "strengths": [
+      "Engaged in weekly CBT",
+      "Completed Mental Health Advance Directive"
+    ],
+    "needs": [
+      "Interested in mindfulness group",
+      "Anxiety around SSDI decision"
+    ]
+  },
+  "substance": {
+    "summary": "No current substance use; alcohol use disorder in sustained remission (6 months).",
+    "strengths": [
+      "Sponsor support and SMART Recovery attendance",
+      "Relapse prevention plan reviewed monthly"
+    ],
+    "needs": [
+      "Backup transportation to evening meetings",
+      "Explore COD-focused recovery groups"
+    ]
+  },
+  "education": {
+    "statusSummary": "Associate degree in medical assisting; part-time front desk role while seeking full-time employment.",
+    "strengths": [
+      "Strong customer service skills",
+      "Consistent attendance"
+    ],
+    "needs": [
+      "Childcare plan to pursue full-time work",
+      "Monitor housing waitlist to align employment hours"
+    ]
+  },
+  "legal": {
+    "status": "On probation through Dec 2025; compliant with reporting schedule.",
+    "strengths": [
+      "Completes community service hours early",
+      "Maintains communication with PO"
+    ],
+    "needs": [
+      "Reminder system for restitution payments",
+      "Plan for transportation to court if required"
+    ]
+  },
+  "cultural": {
+    "considerations": "Spanish spoken at home; prefers bilingual materials when available.",
+    "strengths": [
+      "Weekly choir participation provides cultural connection",
+      "Faith community offers practical support"
+    ],
+    "needs": [
+      "Interested in culturally-specific COD peer group"
+    ]
+  },
+  "summary": {
+    "strengths": [
+      "Strong family and faith-based supports",
+      "Engaged in behavioral health and recovery services",
+      "Motivated for independent housing"
+    ],
+    "priorityNeeds": [
+      "Stabilize income pending SSDI decision",
+      "Secure affordable housing",
+      "Expand sober social network"
+    ]
+  },
+  "note": {
+    "disclaimer": "This assessment is confidential and intended solely for treatment planning within the TCM program."
+  },
+  "signatures": {
+    "assessorName": "Jordan Ellis, TCM",
+    "assessmentDate": "2025-02-03",
+    "supervisorName": "Neil Jariwala, MD",
+    "supervisorCredentials": "Psychiatrist",
+    "supervisorLicense": "KY-53374",
+    "supervisorDate": "2025-02-03"
+  }
+}

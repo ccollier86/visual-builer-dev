@@ -1,0 +1,376 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Comprehensive Biopsychosocial Intake Assessment</title><style data-note-style="screen" media="screen">
+/*
+ * Screen CSS - tokens_reference v1.0.0
+ * Hash: faa76edd56
+ * Generated: 2025-11-12T03:48:47.199Z
+ */
+
+:root {
+  --note-font: 'Open Sans', Arial, sans-serif;
+  --note-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --note-text: #000000;
+  --note-muted: #555555;
+  --note-accent: #666666;
+  --note-border: #cccccc;
+  --note-bg: #ffffff;
+  --note-base: 14px;
+  --note-line: 1.6;
+  --sp-1: calc(12px * 0.5);
+  --sp-2: 12px;
+  --sp-3: calc(12px * 1.5);
+  --sp-4: calc(12px * 2);
+  --note-section-gap: 20px;
+  --note-paragraph-gap: 12px;
+  --note-page-padding: 40px;
+  --note-container-padding: 60px;
+  --note-container-max-width: 1000px;
+  --note-header-gap: 20px;
+  --note-header-padding-y: 20px;
+  --note-banner-margin: 60px;
+  --note-banner-padding-y: 8px;
+  --note-banner-padding-left: 75px;
+  --note-banner-border-width: 4px;
+  --surface-header-bg: #ffffff;
+  --surface-header-border: #cccccc;
+  --surface-banner-bg: #e8e8e8;
+  --surface-banner-border: #999999;
+  --surface-card-bg: #ffffff;
+  --surface-card-border: #e0e0e0;
+  --surface-alert-info-bg: #f5f5f5;
+  --surface-alert-info-border: #666666;
+  --surface-signature-border: #cccccc;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body.note-body {
+  margin: 0;
+  padding: var(--note-page-padding);
+  font-family: var(--note-font);
+  font-size: var(--note-base);
+  line-height: var(--note-line);
+  color: var(--note-text);
+  background: var(--note-bg);
+}
+
+.note-container {
+  max-width: var(--note-container-max-width);
+  margin: 0 auto;
+  background: var(--note-bg);
+  padding: 0 var(--note-container-padding);
+}
+
+.note {
+  display: block;
+  font-family: var(--note-font);
+  color: var(--note-text);
+  background: var(--note-bg);
+  font-size: var(--note-base);
+  line-height: var(--note-line);
+}
+
+.note a {
+  color: var(--note-accent);
+}
+
+.note h1,
+.note h2,
+.note h3,
+.note h4 {
+  font-family: inherit;
+  color: inherit;
+  margin: 0;
+}
+
+.note h1 { font-size: calc(var(--note-base) * 1.25 * 1.25); }
+.note h2 { font-size: calc(var(--note-base) * 1.25); }
+.note h3 { font-size: calc(var(--note-base) * 1.05); }
+.note h4 { font-size: calc(var(--note-base)); }
+
+.note-brand-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+}
+
+.note-brand-logo {
+  max-height: 48px;
+}
+
+.note-brand-footer {
+  margin-top: calc(var(--note-section-gap) * 2);
+  font-size: calc(var(--note-base) * 0.85);
+  color: var(--note-muted);
+  text-align: center;
+}
+
+.note-header {
+  margin: 0 calc(var(--note-container-padding) * -1);
+  padding: var(--note-header-padding-y) var(--note-container-padding);
+  background: var(--surface-header-bg);
+  border-bottom: 2px solid var(--surface-header-border);
+}
+
+.note-header-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--note-header-gap);
+}
+
+.note-header-card {
+  background: var(--surface-card-bg);
+  border-left: 3px solid var(--surface-card-border);
+  padding-left: var(--sp-2);
+}
+
+.note-header-title {
+  font-size: calc(var(--note-base) * 0.9);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--sp-1);
+  color: var(--note-muted);
+}
+
+.note-header-meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--sp-1);
+  row-gap: 4px;
+  margin: 0;
+}
+
+.note-header-meta dt {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: calc(var(--note-base) * 0.75);
+  letter-spacing: 0.04em;
+  color: var(--note-muted);
+}
+
+.note-header-meta dd {
+  margin: 0;
+  font-size: calc(var(--note-base) * 0.95);
+  color: var(--note-text);
+}
+
+.note-header-meta dd.note-header-text {
+  grid-column: 1 / -1;
+  font-size: calc(var(--note-base) * 0.9);
+  color: var(--note-muted);
+}
+
+.note-section {
+  margin: var(--note-section-gap) 0;
+}
+
+.note-section-banner {
+  display: block;
+  background: var(--surface-banner-bg);
+  border-left: var(--note-banner-border-width) solid var(--surface-banner-border);
+  margin: var(--note-banner-margin) calc(var(--note-container-padding) * -1) var(--sp-3);
+  padding: var(--note-banner-padding-y) var(--note-container-padding) var(--note-banner-padding-y) var(--note-banner-padding-left);
+  font-size: calc(var(--note-base) * 1.4);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--note-text);
+}
+
+.note-section-banner:first-of-type {
+  margin-top: 0;
+}
+
+.note-subsection-title {
+  margin: var(--sp-3) 0 var(--sp-2);
+  font-size: calc(var(--note-base) * 1.15);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid var(--note-border);
+  padding-bottom: var(--sp-1);
+  color: var(--note-text);
+}
+
+.note p {
+  margin: var(--note-paragraph-gap) 0;
+  text-align: left;
+  color: var(--note-text);
+  font-size: calc(var(--note-base) * 1.0);
+}
+
+.note em {
+  color: var(--note-muted);
+}
+
+.note ul {
+  list-style: disc;
+  margin: var(--sp-2) 0 var(--sp-2) var(--sp-4);
+  padding: 0;
+}
+
+.note ol {
+  list-style: decimal;
+  margin: var(--sp-2) 0 var(--sp-2) var(--sp-4);
+  padding: 0;
+}
+
+.note li {
+  margin-bottom: var(--sp-1);
+  line-height: var(--note-line);
+}
+
+.note table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--sp-3) 0;
+}
+
+.note th,
+.note td {
+  border-bottom: 1px solid var(--surface-card-border);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.note th {
+  color: var(--note-text);
+  font-weight: 700;
+}
+
+.note thead th {
+  border-bottom: 2px solid var(--note-accent);
+}
+
+.note-table-stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--sp-1) * 0.5);
+}
+
+.note-table-primary {
+  display: block;
+}
+
+.note-table-support {
+  display: block;
+  font-size: calc(var(--note-base) * 0.92);
+  color: var(--note-muted);
+  font-style: italic;
+  margin-top: calc(var(--sp-1) * 0.5);
+}
+
+.note-table-italic {
+  font-style: italic;
+}
+
+.note-table-bold {
+  font-weight: 600;
+}
+
+.note-table-strong {
+  font-weight: 700;
+}
+
+.note-table-muted {
+  color: var(--note-muted);
+}
+
+
+
+.note-alert-title {
+  margin: 0 0 var(--sp-2);
+  font-size: calc(var(--note-base) * 1.0);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--note-text);
+}
+
+.note-alert {
+  background: var(--surface-alert-info-bg);
+  border-left: 4px solid var(--surface-alert-info-border);
+  padding: var(--sp-3);
+  margin: var(--note-section-gap) 0;
+}
+
+.note-alert > p:first-of-type {
+  margin-top: 0;
+}
+
+.note-alert > p:last-of-type {
+  margin-bottom: 0;
+}
+
+.note-signature {
+  margin-top: calc(var(--note-section-gap) * 1.5);
+  border-top: 1px solid var(--surface-signature-border);
+  padding-top: var(--sp-3);
+  font-size: calc(var(--note-base) * 0.95);
+}
+
+.note-signature-heading {
+  font-size: calc(var(--note-base) * 1.1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0 0 var(--sp-2);
+}
+
+.note-signature-line {
+  margin: 0 0 var(--sp-1);
+}
+
+.note-signature-attestation {
+  margin: var(--sp-2) 0 0;
+  font-style: italic;
+  color: var(--note-muted);
+}
+
+.note-provenance {
+  margin-top: calc(var(--note-section-gap) * 2);
+  border-top: 1px solid var(--note-border);
+  padding-top: var(--sp-3);
+}
+
+.note-provenance h3 {
+  font-size: calc(var(--note-base) * 1.05);
+  margin-bottom: var(--sp-2);
+}
+
+.note-provenance ol {
+  margin: 0;
+  padding-left: var(--sp-4);
+}
+
+.note-provenance li {
+  margin-bottom: var(--sp-1);
+}
+</style><style data-note-style="print" media="print">
+/*
+ * Print CSS - tokens_reference v1.0.0
+ * Hash: faa76edd56
+ * Generated: 2025-11-12T03:48:47.199Z
+ */
+
+@page { size: Letter; margin: 0.75in; }
+
+@media print {
+  body.note-body { padding: 0; }
+  .note { color: var(--note-text); }
+  .note a { color: inherit; text-decoration: none; }
+  .note table { page-break-inside: avoid; }
+  .note h1, .note h2, .note h3 { break-after: avoid; }
+  .note p { orphans: 2; widows: 2; }
+  
+  
+}
+</style>  <link rel="stylesheet" href="biopsych-2025-11-12T03-48-47-204Z.screen.css" media="screen">
+  <link rel="stylesheet" href="biopsych-2025-11-12T03-48-47-204Z.print.css" media="print">
+</head><body class="note-body"><div class="note-container"><article class="note"><header class="note-header" id="header"><div class="note-header-grid"><section class="note-header-card note-header-card--patient-info" id="patient-info"><div class="note-header-title">PATIENT</div><dl class="note-header-meta"><dt>NAME</dt><dd>Michael Rodriguez</dd><dt>DOB</dt><dd>1989-07-15</dd><dt>SEX</dt><dd>male</dd></dl></section><section class="note-header-card note-header-card--facility-info" id="facility-info"><div class="note-header-title">FACILITY</div><dl class="note-header-meta"><dd class="note-header-text">Owensboro</dd><dt>PHONE</dt><dd>(270) 215-4454</dd><dd class="note-header-text">1102 Triplett Street, Suite 2300</dd><dd class="note-header-text">Owensboro, KY, 42303</dd></dl></section><section class="note-header-card note-header-card--encounter-info" id="encounter-info"><div class="note-header-title">ENCOUNTER</div><dl class="note-header-meta"><dd class="note-header-text">Comprehensive Biopsychosocial Intake</dd><dt>SEEN BY</dt><dd>Anna Wakeland LPCC</dd><dt>DATE</dt><dd>2025-11-04</dd><dd class="note-header-text">Electronically signed by Anna Wakeland LPCC at 2025-11-04 14:30</dd></dl></section></div></header><section class="note-section note-section--alert" id="chief-complaint"><div class="note-alert note-alert--info"><h3 class="note-alert-title">Chief Complaint</h3><p>"Everything fell apart after my divorce. I'm drinking too much, can't sleep, angry all the time. My daughters deserve a better dad than what I've been lately."</p></div></section><section class="note-section note-section--top" id="subjective"><h2 class="note-section-banner">SUBJECTIVE</h2><section class="note-section note-section--paragraph" id="hpi"><h3 class="note-subsection-title">HISTORY OF PRESENT ILLNESS:</h3><p>Michael Rodriguez, a 35-year-old male, presents with severe depression, anxiety, and substance use concerns that began approximately one year ago following his divorce. The symptoms have significantly impacted his work, resulting in missed days and decreased performance. His relationships have deteriorated, notably with friends and family, due to increased irritability and isolation. Michael reports using alcohol as a coping mechanism, which has exacerbated his depressive symptoms, including insomnia and feelings of worthlessness. He expresses a strong desire to improve his mental health for the sake of his daughters, whom he sees every other weekend.</p></section><section class="note-section note-section--paragraph" id="past-psych-history"><h3 class="note-subsection-title">PAST PSYCHIATRIC HISTORY:</h3><p>Michael has a history of attempting psychiatric treatment, having been prescribed Zoloft for six months, which he discontinued due to perceived ineffectiveness. He also tried Trazodone for sleep but stopped because of morning grogginess. Despite completing DUI classes, he has not engaged in formal substance use disorder treatment. Currently, he is not receiving any psychiatric care. He acknowledges previous passive suicidal ideation during his divorce but denies any hospitalizations or prior therapy.</p></section><section class="note-section note-section--paragraph" id="previous-medications"><h3 class="note-subsection-title">PREVIOUSLY TRIALED MEDICATIONS:</h3><p>Zoloft 50mg 6 months (stopped on own, felt ineffective), Trazodone 50mg 3 months (morning grogginess)</p></section><section class="note-section note-section--paragraph" id="current-medications"><h3 class="note-subsection-title">CURRENT MEDICATIONS:</h3><p>Lisinopril, prescribed for hypertension; Ibuprofen, prescribed for chronic back pain.</p></section><section class="note-section note-section--paragraph" id="family-psych-history"><h3 class="note-subsection-title">FAMILY PSYCHIATRIC HISTORY:</h3><p>Michael's father had depression and alcoholism, which led to his death from liver disease. His mother suffers from anxiety, and his brother has PTSD from military service. This family history suggests a genetic predisposition to mental health disorders, particularly in the context of substance use and trauma-related conditions.</p></section><section class="note-section note-section--paragraph" id="medical-history"><h3 class="note-subsection-title">MEDICAL HISTORY:</h3><p>Michael's medical history includes hypertension, chronic back pain from a work-related injury in 2018, and pre-diabetes controlled by diet. He has allergies to Penicillin, causing hives, and Codeine, causing nausea. These medical issues, especially chronic pain, may contribute to his psychiatric symptoms and substance use patterns.</p></section><section class="note-section note-section--paragraph" id="social-history"><h3 class="note-subsection-title">SOCIAL HISTORY:</h3><p>Living alone in an apartment, Michael experiences significant financial stress due to child support and medical bills. He works full-time as a warehouse supervisor but fears job loss due to his performance issues. His primary support comes from his sister, with whom his relationship is strained. Michael's primary motivation is to improve for his daughters, highlighting his deep love for them as a strength.</p></section><section class="note-section note-section--paragraph" id="substance-use-history"><h3 class="note-subsection-title">SUBSTANCE USE HISTORY:</h3><p>Michael drinks alcohol daily, with increased consumption on weekends, and acknowledges the negative impact on his life, including a past DUI. He occasionally uses marijuana but has stopped using cocaine. Despite understanding the severity of his alcohol use, as evidenced by a high AUDIT score, he struggles to reduce intake. Michael's insight into the need for change and motivation to be a better father are positive indicators for treatment engagement.</p></section></section><section class="note-section note-section--top" id="objective"><h2 class="note-section-banner">OBJECTIVE</h2><section class="note-section note-section--paragraph" id="mse"><h3 class="note-subsection-title">MENTAL STATUS EXAMINATION:</h3><p>Casually dressed in work clothes, appears older than age, poor grooming, fatigued</p><p>Cooperative but guarded, fidgeting, poor eye contact, tearful discussing daughters</p><p>Normal rate and volume, monotone, occasional long pauses</p><p>Depressed, angry, exhausted</p><p>Constricted and dysphoric, briefly tearful, flattened with occasional irritability</p><p>Linear and goal-directed, occasionally tangential with trauma</p><p>Denies current SI, past passive thoughts 6mo ago, no HI, anger control issues, significant guilt, rumination</p><p>No hallucinations, intrusive memories/flashbacks of childhood DV and work injury, hypervigilance</p><p>Alert and oriented x4, attention impaired by depression/sleep deprivation, memory intact, concentration impaired</p><p>Fair to good - recognizes need for help, acknowledges drinking problem, understands trauma connection</p><p>Currently fair - seeking treatment positive, but impaired by substance use, understands risks</p></section><section class="note-section note-section--paragraph" id="functional-assessment"><h3 class="note-subsection-title">FUNCTIONAL ASSESSMENT:</h3><p>Michael's work performance is severely impaired, as indicated by his use of eight sick days in the past three months and complaints from coworkers about his irritability. His relationships are strained, particularly with his sister and former spouse, leading to isolation and loneliness. Self-care is neglected; he reports poor hygiene, a cluttered living environment, and irregular eating habits. Michael's social life is nonexistent, as he no longer engages in hobbies or social activities. Despite these challenges, his love for his daughters and his motivation to improve are strengths. Financial stress further complicates his situation, impacting his ability to address these issues effectively.</p></section><section class="note-section note-section--paragraph" id="standardized-scores"><h3 class="note-subsection-title">STANDARDIZED ASSESSMENT SCORES:</h3></section></section><section class="note-section note-section--top" id="assessment"><h2 class="note-section-banner">ASSESSMENT</h2><section class="note-section note-section--paragraph" id="clinical-formulation"><h3 class="note-subsection-title">CLINICAL FORMULATION:</h3><p>Michael Rodriguez presents with severe depression, PTSD, and a severe alcohol use disorder, all of which are deeply interconnected. His high ACE score reflects significant childhood trauma, including domestic violence exposure, that likely contributes to his PTSD and subsequent alcohol use as a maladaptive coping mechanism. The PHQ-9 score of 21 indicates severe depression with symptoms such as anhedonia, insomnia, and passive suicidal ideation. His GAD-7 score of 14 suggests moderate anxiety, potentially linked to PTSD hypervigilance. These conditions exacerbate his substance use, as evidenced by his AUDIT score of 28. Protective factors include his insight, motivation to change for his daughters, and support from his sister.</p></section><section class="note-section note-section--paragraph" id="risk-assessment"><h3 class="note-subsection-title">RISK ASSESSMENT:</h3><p>Michael denies current suicidal ideation but reported passive thoughts of self-harm during his divorce. He has no current homicidal thoughts but struggles with anger management. His severe alcohol use, confirmed by his AUDIT score, increases his risk for relapse. Protective factors include his motivation to improve for his daughters and his sister's support. He has a safety plan in place and identifies his sister as an emergency contact. Immediate risks involve potential job loss and deteriorating physical health due to alcohol use. Ongoing monitoring and structured support are recommended to mitigate these risks.</p></section><section class="note-section note-section--paragraph" id="prognosis"><h3 class="note-subsection-title">PROGNOSIS:</h3><p>Michael's prognosis is cautiously optimistic given his motivation for change, strong desire to improve for his daughters, and insight into his conditions. Despite severe symptoms of depression and PTSD, his realization of the need for help and willingness to engage in treatment are positive indicators. Financial stress and housing stability pose challenges, but his employment and supportive sister offer stability. Previous treatment non-adherence is a concern but may improve with integrated treatment addressing both mental health and substance use.</p></section><section class="note-section note-section--table" id="diagnostic-impressions"><h3 class="note-subsection-title">DIAGNOSTIC IMPRESSIONS:</h3><table class="table" aria-label="DIAGNOSTIC IMPRESSIONS:"><colgroup><col style="width:10%"><col style="width:12%"><col style="width:78%"></colgroup><thead><tr><th scope="col">ICD-10</th><th scope="col">DSM-5 Code</th><th scope="col">Description</th></tr></thead><tbody><tr><td><span class="note-table-primary note-table-italic note-table-muted">F33.2</span></td><td><span class="note-table-primary note-table-italic note-table-bold">F33.2</span></td><td><div class="note-table-stack"><span class="note-table-primary note-table-strong">Major Depressive Disorder, Severe</span><span class="note-table-support note-table-italic note-table-muted">Michael meets criteria for Major Depressive Disorder, Severe, as evidenced by nearly daily depressed mood, significant anhedonia, insomnia, fatigue, and passive suicidal thoughts. His PHQ-9 score of 21 supports the severity of his depressive symptoms.</span></div></td></tr><tr><td><span class="note-table-primary note-table-italic note-table-muted">F43.10</span></td><td><span class="note-table-primary note-table-italic note-table-bold">F43.10</span></td><td><div class="note-table-stack"><span class="note-table-primary note-table-strong">Post-Traumatic Stress Disorder</span><span class="note-table-support note-table-italic note-table-muted">Michael's PTSD symptoms include intrusive memories, hypervigilance, and emotional distress linked to past trauma, satisfying DSM-5 criteria A, B, and C. His ACE score and trauma history support this diagnosis.</span></div></td></tr><tr><td><span class="note-table-primary note-table-italic note-table-muted">F10.20</span></td><td><span class="note-table-primary note-table-italic note-table-bold">F10.20</span></td><td><div class="note-table-stack"><span class="note-table-primary note-table-strong">Alcohol Use Disorder, Severe</span><span class="note-table-support note-table-italic note-table-muted">The severity of Michael's Alcohol Use Disorder is evidenced by daily drinking, inability to stop, and significant negative consequences, meeting DSM-5 criteria for severe substance use disorder. His AUDIT score of 28 confirms this severity.</span></div></td></tr></tbody></table></section></section><section class="note-section note-section--top" id="plan"><h2 class="note-section-banner">PLAN</h2><section class="note-section note-section--list" id="interventions-recommended"><h3 class="note-subsection-title">INTERVENTIONS RECOMMENDED:</h3><ol class="list"><li>Medical Management: Referral to primary care physician for medical conditions and psychiatric evaluation for potential pharmacological intervention for presenting symptoms.</li><li>Individual Psychotherapy: Regular individual therapy sessions to address identified issues. Treatment should incorporate appropriate evidence-based approaches.</li><li>Psychoeducation: Comprehensive education regarding diagnoses, substance use recovery, relapse prevention strategies, medication management, coping skills development, and healthy lifestyle choices.</li><li>Group Therapy: Participation in psychoeducation groups focusing on diagnosis understanding, medication management, coping skills, substance use education, mental health awareness, and recovery principles.</li><li>Case Management Services: Case management to assist with vocational rehabilitation, educational opportunities, stable housing maintenance, and transportation resources.</li><li>Peer Support Services: Connection with certified peer recovery specialists who can provide lived experience perspective and motivation for sustained recovery.</li></ol></section><section class="note-section note-section--paragraph" id="coordination-of-care-intro"><h3 class="note-subsection-title">COORDINATION OF CARE:</h3><p>I discussed the importance of integrated care with Michael Rodriguez and he agreed that coordinated services would be beneficial for his recovery. Contact PCP Dr. Sarah Chen at Owensboro Family Medicine ((270) 555-3200) with appropriate releases to align medical and psychiatric care. To ensure comprehensive treatment, coordination among the following services should be established:</p></section><section class="note-section note-section--list" id="coordination-of-care"><h3 class="note-subsection-title">COORDINATION ACTIVITIES:</h3><ul class="list"><li>Case Management Services: Engage case management for navigating social services, employment, and housing resources. Obtain ROI and establish communication protocols with assigned case manager.</li><li>Vocational Services: Refer to vocational rehabilitation and explore local transportation assistance programs. Obtain ROI and establish communication protocols with vocational counselor to address employment barriers.</li></ul></section><section class="note-section note-section--list" id="follow-up-plan"><h3 class="note-subsection-title">FOLLOW-UP PLAN:</h3><ol class="list"><li>Outpatient Therapy: Regular outpatient follow-up with clinician for individual psychotherapy and psychoeducation.</li><li>Peer Support Services: Regular attendance at peer support services for recovery support and social connection.</li><li>Case Management: Regular case management sessions for resource coordination and barrier resolution.</li><li>Psychiatric Services: Psychiatric appointment for medication evaluation and ongoing medication management as indicated.</li><li>Group Therapy: Group therapy attendance for psychoeducation focusing on diagnosis understanding, medication management, coping skills, substance use education, mental health awareness, and recovery principles.</li><li>Safety Monitoring: Periodic monitoring call for safety check and PHQ-9 administration to track symptom progression.</li><li>Drug Screening: Recommend drug screening given current diagnosis and continued drug testing to be determined by medical provider.</li><li>Treatment Plan Review: Comprehensive treatment planning to be completed every 90 days with multidisciplinary team input.</li><li>Progress Monitoring: Standardized testing to be performed quarterly to monitor patient progress and adjust interventions accordingly.</li></ol></section><section class="note-section note-section--list" id="crisis-safety-plan"><h3 class="note-subsection-title">CRISIS SAFETY PLAN:</h3><ol class="list"><li>Warning Signs Recognition: Increased irritability, social withdrawal, expressions of hopelessness, renewed substance use urges, significant changes in sleep or appetite, isolation from support systems.</li><li>Internal Coping Strategies: Engage in healthy activities, practice mindfulness and grounding exercises, utilize breathing techniques, journal thoughts and feelings, connect with sober peers, review recovery materials.</li><li>Social Support Contacts: Contact supportive peers or family, notify designated support persons, utilize peer support networks.</li><li>Professional Support: Contact treating therapist, reach out to case manager, contact prescribing clinician for medication concerns.</li><li>Crisis Resources: National Suicide &amp; Crisis Lifeline: 988 (24/7), local crisis intervention team, emergency department if immediate safety concern, mobile crisis response team.</li><li>Safety Environment: Remove access to means of self-harm, avoid high-risk situations or triggers, utilize structured living/supports.</li></ol></section><section class="note-section note-section--paragraph" id="crisis-plan-note"><h3 class="note-subsection-title">CRISIS PLAN NOTE:</h3><p>Note: Michael Rodriguez has agreed to this crisis safety plan as stated. This plan should be regularly monitored, reviewed, and updated during individual therapy sessions to ensure its continued relevance and effectiveness.</p></section><section class="note-section note-section--paragraph" id="reasons-for-living"><h3 class="note-subsection-title">REASONS FOR LIVING:</h3><p>Michael's primary reasons for living include his deep love for his daughters and his desire to be a stable and healthy father for them. He values the support of his sister and recognizes the importance of maintaining his employment to provide for his family.</p></section></section><section class="note-signature" id="signature"><p class="note-signature-line"><strong>Rendering clinician:</strong> Anna Wakeland LPCC</p><p class="note-signature-line"><strong>Supervising clinician:</strong> Neil Jariwala</p><p class="note-signature-attestation">I, Neil Jariwala, M.D., Psychiatrist, License #53374, declare this information to be accurate and complete.</p><p class="note-signature-line">The above information is a true and accurate representation to the best of my knowledge.</p></section></article></div></body></html>

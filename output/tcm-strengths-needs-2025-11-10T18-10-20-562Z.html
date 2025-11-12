@@ -1,0 +1,376 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>TCM Comprehensive Strengths &amp; Needs Assessment</title><style data-note-style="screen" media="screen">
+/*
+ * Screen CSS - tokens_reference v1.0.0
+ * Hash: faa76edd56
+ * Generated: 2025-11-10T18:10:20.560Z
+ */
+
+:root {
+  --note-font: Inter, system-ui, sans-serif;
+  --note-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --note-text: #0f172a;
+  --note-muted: #475569;
+  --note-accent: #0ea5e9;
+  --note-border: #cccccc;
+  --note-bg: #ffffff;
+  --note-base: 14px;
+  --note-line: 1.6;
+  --sp-1: calc(10px * 0.5);
+  --sp-2: 10px;
+  --sp-3: calc(10px * 1.5);
+  --sp-4: calc(10px * 2);
+  --note-section-gap: 20px;
+  --note-paragraph-gap: 12px;
+  --note-page-padding: 40px;
+  --note-container-padding: 60px;
+  --note-container-max-width: 1000px;
+  --note-header-gap: 20px;
+  --note-header-padding-y: 20px;
+  --note-banner-margin: 60px;
+  --note-banner-padding-y: 8px;
+  --note-banner-padding-left: 75px;
+  --note-banner-border-width: 4px;
+  --surface-header-bg: #ffffff;
+  --surface-header-border: #cccccc;
+  --surface-banner-bg: #e8e8e8;
+  --surface-banner-border: #999999;
+  --surface-card-bg: #ffffff;
+  --surface-card-border: #e0e0e0;
+  --surface-alert-info-bg: #f5f5f5;
+  --surface-alert-info-border: #666666;
+  --surface-signature-border: #cccccc;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body.note-body {
+  margin: 0;
+  padding: var(--note-page-padding);
+  font-family: var(--note-font);
+  font-size: var(--note-base);
+  line-height: var(--note-line);
+  color: var(--note-text);
+  background: var(--note-bg);
+}
+
+.note-container {
+  max-width: var(--note-container-max-width);
+  margin: 0 auto;
+  background: var(--note-bg);
+  padding: 0 var(--note-container-padding);
+}
+
+.note {
+  display: block;
+  font-family: var(--note-font);
+  color: var(--note-text);
+  background: var(--note-bg);
+  font-size: var(--note-base);
+  line-height: var(--note-line);
+}
+
+.note a {
+  color: var(--note-accent);
+}
+
+.note h1,
+.note h2,
+.note h3,
+.note h4 {
+  font-family: inherit;
+  color: inherit;
+  margin: 0;
+}
+
+.note h1 { font-size: calc(var(--note-base) * 1.25 * 1.25); }
+.note h2 { font-size: calc(var(--note-base) * 1.25); }
+.note h3 { font-size: calc(var(--note-base) * 1.05); }
+.note h4 { font-size: calc(var(--note-base)); }
+
+.note-brand-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+}
+
+.note-brand-logo {
+  max-height: 48px;
+}
+
+.note-brand-footer {
+  margin-top: calc(var(--note-section-gap) * 2);
+  font-size: calc(var(--note-base) * 0.85);
+  color: var(--note-muted);
+  text-align: center;
+}
+
+.note-header {
+  margin: 0 calc(var(--note-container-padding) * -1);
+  padding: var(--note-header-padding-y) var(--note-container-padding);
+  background: var(--surface-header-bg);
+  border-bottom: 2px solid var(--surface-header-border);
+}
+
+.note-header-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--note-header-gap);
+}
+
+.note-header-card {
+  background: var(--surface-card-bg);
+  border-left: 3px solid var(--surface-card-border);
+  padding-left: var(--sp-2);
+}
+
+.note-header-title {
+  font-size: calc(var(--note-base) * 0.9);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--sp-1);
+  color: var(--note-muted);
+}
+
+.note-header-meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--sp-1);
+  row-gap: 4px;
+  margin: 0;
+}
+
+.note-header-meta dt {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: calc(var(--note-base) * 0.75);
+  letter-spacing: 0.04em;
+  color: var(--note-muted);
+}
+
+.note-header-meta dd {
+  margin: 0;
+  font-size: calc(var(--note-base) * 0.95);
+  color: var(--note-text);
+}
+
+.note-header-meta dd.note-header-text {
+  grid-column: 1 / -1;
+  font-size: calc(var(--note-base) * 0.9);
+  color: var(--note-muted);
+}
+
+.note-section {
+  margin: var(--note-section-gap) 0;
+}
+
+.note-section-banner {
+  display: block;
+  background: var(--surface-banner-bg);
+  border-left: var(--note-banner-border-width) solid var(--surface-banner-border);
+  margin: var(--note-banner-margin) calc(var(--note-container-padding) * -1) var(--sp-3);
+  padding: var(--note-banner-padding-y) var(--note-container-padding) var(--note-banner-padding-y) var(--note-banner-padding-left);
+  font-size: calc(var(--note-base) * 1.4);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--note-text);
+}
+
+.note-section-banner:first-of-type {
+  margin-top: 0;
+}
+
+.note-subsection-title {
+  margin: var(--sp-3) 0 var(--sp-2);
+  font-size: calc(var(--note-base) * 1.15);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid var(--note-border);
+  padding-bottom: var(--sp-1);
+  color: var(--note-text);
+}
+
+.note p {
+  margin: var(--note-paragraph-gap) 0;
+  text-align: left;
+  color: var(--note-text);
+  font-size: calc(var(--note-base) * 1.0);
+}
+
+.note em {
+  color: var(--note-muted);
+}
+
+.note ul {
+  list-style: disc;
+  margin: var(--sp-2) 0 var(--sp-2) var(--sp-4);
+  padding: 0;
+}
+
+.note ol {
+  list-style: decimal;
+  margin: var(--sp-2) 0 var(--sp-2) var(--sp-4);
+  padding: 0;
+}
+
+.note li {
+  margin-bottom: var(--sp-1);
+  line-height: var(--note-line);
+}
+
+.note table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--sp-3) 0;
+}
+
+.note th,
+.note td {
+  border-bottom: 1px solid var(--surface-card-border);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.note th {
+  color: var(--note-text);
+  font-weight: 700;
+}
+
+.note thead th {
+  border-bottom: 2px solid var(--note-accent);
+}
+
+.note-table-stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--sp-1) * 0.5);
+}
+
+.note-table-primary {
+  display: block;
+}
+
+.note-table-support {
+  display: block;
+  font-size: calc(var(--note-base) * 0.92);
+  color: var(--note-muted);
+  font-style: italic;
+  margin-top: calc(var(--sp-1) * 0.5);
+}
+
+.note-table-italic {
+  font-style: italic;
+}
+
+.note-table-bold {
+  font-weight: 600;
+}
+
+.note-table-strong {
+  font-weight: 700;
+}
+
+.note-table-muted {
+  color: var(--note-muted);
+}
+
+
+
+.note-alert-title {
+  margin: 0 0 var(--sp-2);
+  font-size: calc(var(--note-base) * 1.0);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--note-text);
+}
+
+.note-alert {
+  background: var(--surface-alert-info-bg);
+  border-left: 4px solid var(--surface-alert-info-border);
+  padding: var(--sp-3);
+  margin: var(--note-section-gap) 0;
+}
+
+.note-alert > p:first-of-type {
+  margin-top: 0;
+}
+
+.note-alert > p:last-of-type {
+  margin-bottom: 0;
+}
+
+.note-signature {
+  margin-top: calc(var(--note-section-gap) * 1.5);
+  border-top: 1px solid var(--surface-signature-border);
+  padding-top: var(--sp-3);
+  font-size: calc(var(--note-base) * 0.95);
+}
+
+.note-signature-heading {
+  font-size: calc(var(--note-base) * 1.1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0 0 var(--sp-2);
+}
+
+.note-signature-line {
+  margin: 0 0 var(--sp-1);
+}
+
+.note-signature-attestation {
+  margin: var(--sp-2) 0 0;
+  font-style: italic;
+  color: var(--note-muted);
+}
+
+.note-provenance {
+  margin-top: calc(var(--note-section-gap) * 2);
+  border-top: 1px solid var(--note-border);
+  padding-top: var(--sp-3);
+}
+
+.note-provenance h3 {
+  font-size: calc(var(--note-base) * 1.05);
+  margin-bottom: var(--sp-2);
+}
+
+.note-provenance ol {
+  margin: 0;
+  padding-left: var(--sp-4);
+}
+
+.note-provenance li {
+  margin-bottom: var(--sp-1);
+}
+</style><style data-note-style="print" media="print">
+/*
+ * Print CSS - tokens_reference v1.0.0
+ * Hash: faa76edd56
+ * Generated: 2025-11-10T18:10:20.560Z
+ */
+
+@page { size: Letter; margin: 0.75in; }
+
+@media print {
+  body.note-body { padding: 0; }
+  .note { color: var(--note-text); }
+  .note a { color: inherit; text-decoration: none; }
+  .note table { page-break-inside: avoid; }
+  .note h1, .note h2, .note h3 { break-after: avoid; }
+  .note p { orphans: 2; widows: 2; }
+  
+  
+}
+</style>  <link rel="stylesheet" href="tcm-strengths-needs-2025-11-10T18-10-20-562Z.screen.css" media="screen">
+  <link rel="stylesheet" href="tcm-strengths-needs-2025-11-10T18-10-20-562Z.print.css" media="print">
+</head><body class="note-body"><div class="note-container"><article class="note"><header class="note-header" id="header"><div class="note-header-grid"><section class="note-header-card note-header-card--patient-info" id="patient-info"><div class="note-header-title">PATIENT</div><dl class="note-header-meta"><dt>NAME</dt><dd>Rose Stanton</dd><dt>DOB</dt><dd>04/18/1987</dd><dt>AGE</dt><dd>37 years</dd><dt>SEX</dt><dd>Female</dd></dl></section><section class="note-header-card note-header-card--facility-info" id="facility-info"><div class="note-header-title">FACILITY</div><dl class="note-header-meta"><dt>FACILITY</dt><dd>Better Behavioral Health - Louisville</dd><dt>PHONE</dt><dd>(502) 555-2200</dd><dd class="note-header-text">1102 Triplett Street, Suite 2300</dd><dd class="note-header-text">Louisville, KY 40203</dd></dl></section><section class="note-header-card note-header-card--encounter-info" id="encounter-info"><div class="note-header-title">SERVICE</div><dl class="note-header-meta"><dd class="note-header-text">Comprehensive Strengths & Needs Assessment</dd><dt>SEEN BY</dt><dd>Jordan Ellis, TCM</dd><dt>DATE</dt><dd>2025-02-03</dd><dd class="note-header-text">Electronically signed by Jordan Ellis, TCM on 2025-02-03 09:30 AM EST</dd></dl></section></div></header><section class="note-section note-section--top" id="section_identifying"><h2 class="note-section-banner">1. Identifying Information</h2><section class="note-section note-section--list" id="identifying_list"><h3 class="note-subsection-title">Client Details</h3><ul class="list"><li>Preferred name: Rose,Primary language: English / Spanish bilingual,Pronouns: she/her</li></ul></section></section><section class="note-section note-section--top" id="section_documents"><h2 class="note-section-banner">2. Identifying Documents</h2><section class="note-section note-section--list" id="documents_on_hand"><h3 class="note-subsection-title">Documents Available</h3><ul class="list"><li>State ID / Driver's License,Social Security Card</li></ul></section><section class="note-section note-section--paragraph" id="documents_needs"><h3 class="note-subsection-title">Document Needs / Barriers</h3><p>Needs replacement birth certificate; transportation to vital records office is a barrier.</p></section></section><section class="note-section note-section--top" id="section_housing"><h2 class="note-section-banner">3. Housing &amp; Living Situation</h2><section class="note-section note-section--paragraph" id="housing_status"><h3 class="note-subsection-title">Current Living Situation</h3><p>Staying with sister's family; stable through spring.</p></section><section class="note-section note-section--paragraph" id="housing_strengths"><h3 class="note-subsection-title">Housing Strengths</h3><p>Family support provides safe, substance-free environment.</p></section><section class="note-section note-section--paragraph" id="housing_needs"><h3 class="note-subsection-title">Housing Needs / Barriers</h3><p>Needs help identifying affordable one-bedroom units near bus lines.</p></section></section><section class="note-section note-section--top" id="section_income"><h2 class="note-section-banner">4. Income &amp; Financial Status</h2><section class="note-section note-section--list" id="income_sources"><h3 class="note-subsection-title">Income Sources</h3><ul class="list"><li>Part-time employment (20 hrs/week),SSI / SSDI</li></ul></section><section class="note-section note-section--list" id="budgeting_skills"><h3 class="note-subsection-title">Budgeting / Financial Skills</h3><ul class="list"><li>Uses paper ledger to track monthly expenses,Needs coaching to open checking account</li></ul></section><section class="note-section note-section--paragraph" id="income_strengths"><h3 class="note-subsection-title">Financial Strengths</h3><p>Highly motivated to build savings and track spending.</p></section><section class="note-section note-section--paragraph" id="income_needs"><h3 class="note-subsection-title">Financial Needs / Barriers</h3><p>Benefits review due May; requires assistance completing paperwork.</p></section></section><section class="note-section note-section--top" id="section_social"><h2 class="note-section-banner">5. Social &amp; Family Support</h2><section class="note-section note-section--list" id="social_supports"><h3 class="note-subsection-title">Primary Support System</h3><ul class="list"><li>Sister and extended family,Faith community volunteer group</li></ul></section><section class="note-section note-section--paragraph" id="social_strengths"><h3 class="note-subsection-title">Social Strengths</h3><p>Engaged weekly with supportive church mentor and sister.</p></section><section class="note-section note-section--paragraph" id="social_needs"><h3 class="note-subsection-title">Social Needs / Barriers</h3><p>Limited peer network outside faith community; seeking sober social outlets.</p></section></section><section class="note-section note-section--top" id="section_physical"><h2 class="note-section-banner">6. Physical Health</h2><section class="note-section note-section--paragraph" id="physical_overall"><h3 class="note-subsection-title">Overall Physical Health</h3><p>Fair—manages chronic conditions with medication adherence.</p></section><section class="note-section note-section--paragraph" id="physical_pcp"><h3 class="note-subsection-title">Primary Care Provider</h3><p>UofL Family Medicine (Dr. Riley)</p></section><section class="note-section note-section--paragraph" id="physical_chronic"><h3 class="note-subsection-title">Chronic Conditions / Disabilities</h3><p>Type II diabetes controlled with metformin.</p></section><section class="note-section note-section--list" id="physical_insurance"><h3 class="note-subsection-title">Health Insurance</h3><ul class="list"><li>Medicaid</li></ul></section><section class="note-section note-section--paragraph" id="physical_strengths"><h3 class="note-subsection-title">Physical Health Strengths</h3><p>Keeps regular PCP visits and monitors glucose at home.</p></section><section class="note-section note-section--paragraph" id="physical_needs"><h3 class="note-subsection-title">Physical Health Needs / Barriers</h3><p>Needs assistance scheduling overdue dental appointment.</p></section></section><section class="note-section note-section--top" id="section_mental"><h2 class="note-section-banner">7. Mental Health</h2><section class="note-section note-section--paragraph" id="mental_diagnosis"><h3 class="note-subsection-title">Current Diagnosis</h3><p>Generalized Anxiety Disorder; history of major depressive disorder in remission.</p></section><section class="note-section note-section--list" id="mental_treatment"><h3 class="note-subsection-title">Current Treatment</h3><ul class="list"><li>Weekly CBT-focused therapy,Monthly psychiatry follow-up</li></ul></section><section class="note-section note-section--paragraph" id="mental_hospitalizations"><h3 class="note-subsection-title">Previous Hospitalizations</h3><p>No psychiatric hospitalizations in past five years.</p></section><section class="note-section note-section--paragraph" id="mental_strengths"><h3 class="note-subsection-title">Mental Health Strengths</h3><p>Practices coping skills daily and actively participates in therapy.</p></section><section class="note-section note-section--paragraph" id="mental_needs"><h3 class="note-subsection-title">Mental Health Needs / Barriers</h3><p>Interested in low-cost mindfulness group to supplement therapy.</p></section></section><section class="note-section note-section--top" id="section_substance"><h2 class="note-section-banner">8. Substance Use</h2><section class="note-section note-section--list" id="substance_use"><h3 class="note-subsection-title">Current Use</h3><ul class="list"><li>Alcohol (in remission)</li></ul></section><section class="note-section note-section--list" id="substance_treatment"><h3 class="note-subsection-title">Treatment / Recovery History</h3><ul class="list"><li>Outpatient IOP (completed Aug 2024),Weekly SMART Recovery meetings</li></ul></section><section class="note-section note-section--paragraph" id="substance_strengths"><h3 class="note-subsection-title">Substance Use Strengths</h3><p>Six months sober with sponsor support and relapse prevention plan.</p></section><section class="note-section note-section--paragraph" id="substance_needs"><h3 class="note-subsection-title">Substance Use Needs / Barriers</h3><p>Needs backup transportation to meetings when family car unavailable.</p></section></section><section class="note-section note-section--top" id="section_education"><h2 class="note-section-banner">9. Education &amp; Employment</h2><section class="note-section note-section--paragraph" id="education_level"><h3 class="note-subsection-title">Education Level</h3><p>Some college (2 years toward medical assisting)</p></section><section class="note-section note-section--paragraph" id="employment_status"><h3 class="note-subsection-title">Current Employment Status</h3><p>Part-time front desk associate</p></section><section class="note-section note-section--paragraph" id="education_strengths"><h3 class="note-subsection-title">Work / School Strengths</h3><p>Strong customer service skills and reliable attendance.</p></section><section class="note-section note-section--paragraph" id="education_needs"><h3 class="note-subsection-title">Work / School Needs / Barriers</h3><p>Requires childcare plan to pursue full-time employment.</p></section></section><section class="note-section note-section--top" id="section_legal"><h2 class="note-section-banner">10. Legal Involvement</h2><section class="note-section note-section--paragraph" id="legal_status"><h3 class="note-subsection-title">Legal Status</h3><p>On probation through Dec 2025; compliant with reporting.</p></section><section class="note-section note-section--paragraph" id="legal_officer"><h3 class="note-subsection-title">Probation / Parole Officer</h3><p>PO Daniel Ortiz · (502) 555-7721</p></section><section class="note-section note-section--paragraph" id="legal_strengths"><h3 class="note-subsection-title">Legal Strengths</h3><p>Maintains contact with PO and completes community service hours early.</p></section><section class="note-section note-section--paragraph" id="legal_needs"><h3 class="note-subsection-title">Legal Needs / Barriers</h3><p>Needs reminder system for monthly restitution payments.</p></section></section><section class="note-section note-section--top" id="section_cultural"><h2 class="note-section-banner">11. Cultural &amp; Spiritual Factors</h2><section class="note-section note-section--paragraph" id="cultural_considerations"><h3 class="note-subsection-title">Cultural Considerations</h3><p>Spanish spoken at home; prefers bilingual materials when available.</p></section><section class="note-section note-section--list" id="spiritual_resources"><h3 class="note-subsection-title">Spiritual / Religious Resources</h3><ul class="list"><li>Weekly church choir,Interest in Latina women's recovery group</li></ul></section><section class="note-section note-section--paragraph" id="cultural_strengths"><h3 class="note-subsection-title">Strengths</h3><p>Finds meaning in faith-based music ministry and cultural traditions.</p></section><section class="note-section note-section--paragraph" id="cultural_needs"><h3 class="note-subsection-title">Needs / Barriers</h3><p>Seeking culturally-specific peer support options.</p></section></section><section class="note-section note-section--top" id="section_summary"><h2 class="note-section-banner">12. Summary of Strengths &amp; Needs</h2><section class="note-section note-section--list" id="overall_strengths"><h3 class="note-subsection-title">Overall Strengths</h3><ul class="list"><li>Strong family and faith-based support network,Engaged in behavioral health and recovery services,Motivated to achieve independent housing</li></ul></section><section class="note-section note-section--list" id="priority_needs"><h3 class="note-subsection-title">Priority Needs / Focus Areas</h3><ul class="list"><li>Stabilize income and budgeting supports,Secure vital documents and affordable housing,Expand sober social network</li></ul></section></section><section class="note-section note-section--top" id="section_disclaimer"><h2 class="note-section-banner">Confidentiality Notice</h2><section class="note-section note-section--paragraph" id="disclaimer_text"><p>This assessment is confidential and intended solely for care coordination within the TCM program.</p></section></section><section class="note-signature" id="section_signatures"><h2 class="note-signature-heading">Signatures</h2><p class="note-signature-line"><strong>ASSESSOR NAME:</strong> Jordan Ellis, TCM</p><p class="note-signature-line"><strong>ASSESSMENT DATE:</strong> 2025-02-03</p><p class="note-signature-line"><strong>SUPERVISOR NAME:</strong> Dr. Priya Nandakumar</p><p class="note-signature-attestation">I, Dr. Priya Nandakumar, Medical Director, License #KY-PSY-44122, certify that this assessment is accurate and complete.</p><p class="note-signature-line">The above information is a true and accurate representation to the best of my knowledge.</p></section></article></div></body></html>

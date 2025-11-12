@@ -156,7 +156,6 @@ export interface NoteTemplate {
   style?: TemplateStyle;
   layout: Component[];
   prompt?: TemplatePrompt;
-  intakeSchema?: ManualIntakeSchema;
 }
 
 /**
@@ -200,70 +199,10 @@ export interface Component {
   children?: Component[];
 }
 
-export interface ManualIntakeField {
-  slotId: string;
-  input?: InputDescriptor;
-  required?: boolean;
-  ui?: {
-    width?: 'full' | 'half' | 'third';
-    hint?: string;
-  };
-}
-
-export interface ManualIntakeStep {
-  id: string;
-  title: string;
-  description?: string;
-  fields: ManualIntakeField[];
-}
-
-export interface ManualIntakeSchema {
-  id: string;
-  version: string;
-  steps: ManualIntakeStep[];
-}
-
 /**
  * Arbitrary style metadata attached to content items to guide rendering.
  */
 export type StyleHints = Record<string, unknown>;
-
-export type InputControlType =
-  | 'text'
-  | 'textarea'
-  | 'number'
-  | 'date'
-  | 'select'
-  | 'multiselect'
-  | 'checkbox'
-  | 'custom';
-
-export interface InputDescriptorOption {
-  value: string;
-  label: string;
-  helper?: string;
-}
-
-export interface InputValidationRules {
-  minLength?: number;
-  maxLength?: number;
-  min?: number;
-  max?: number;
-  pattern?: string;
-}
-
-export interface InputDescriptor {
-  type: InputControlType;
-  label?: string;
-  placeholder?: string;
-  helpText?: string;
-  required?: boolean;
-  defaultValue?: string | number | boolean | string[];
-  options?: InputDescriptorOption[];
-  validation?: InputValidationRules;
-  repeatable?: boolean;
-  source?: 'lookup' | 'manual' | 'ai' | 'computed';
-}
 
 /**
  * Template content item; represents a single slot rendered in the note.
@@ -287,5 +226,4 @@ export interface ContentItem {
   format?: 'plain' | 'deltaScore' | 'percent';
   text?: string;
   verbatimRef?: string;
-  input?: InputDescriptor;
 }

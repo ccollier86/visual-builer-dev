@@ -1,0 +1,726 @@
+{
+  "timestamp": "2025-11-10T18-10-20-562Z",
+  "client": "Rose Stanton",
+  "schemas": {
+    "ais": {
+      "$id": "https://catalyst/generated/structured-output/tmpl_tcm_strengths_needs_v1@1.0.0.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Structured Output — TCM Comprehensive Strengths & Needs Assessment v1.0.0",
+      "description": "AI-generated fields for TCM Comprehensive Strengths & Needs Assessment",
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "nas": {
+      "$id": "https://catalyst/generated/non-ai-output/tmpl_tcm_strengths_needs_v1@1.0.0.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Non-AI Output — TCM Comprehensive Strengths & Needs Assessment v1.0.0",
+      "description": "Non-AI fields (lookup/computed/static/verbatim) for TCM Comprehensive Strengths & Needs Assessment",
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "object",
+          "properties": {
+            "patient": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "dob": {
+                  "type": "string"
+                },
+                "age": {
+                  "type": "string"
+                },
+                "gender": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "facility": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "address": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "encounter": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "provider": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                },
+                "signature": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "identifying": {
+          "type": "object",
+          "properties": {
+            "details": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "documents": {
+          "type": "object",
+          "properties": {
+            "onHand": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "needsBarriers": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "housing": {
+          "type": "object",
+          "properties": {
+            "currentSituation": {
+              "type": "string"
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "income": {
+          "type": "object",
+          "properties": {
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "budgetingSkills": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "social": {
+          "type": "object",
+          "properties": {
+            "supportSystem": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "physical": {
+          "type": "object",
+          "properties": {
+            "overallStatus": {
+              "type": "string"
+            },
+            "primaryCare": {
+              "type": "string"
+            },
+            "chronicConditions": {
+              "type": "string"
+            },
+            "insurance": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "mental": {
+          "type": "object",
+          "properties": {
+            "diagnosis": {
+              "type": "string"
+            },
+            "treatment": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "hospitalizations": {
+              "type": "string"
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "substance": {
+          "type": "object",
+          "properties": {
+            "substances": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "treatmentHistory": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "education": {
+          "type": "object",
+          "properties": {
+            "educationLevel": {
+              "type": "string"
+            },
+            "employmentStatus": {
+              "type": "string"
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "legal": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string"
+            },
+            "officerContact": {
+              "type": "string"
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "cultural": {
+          "type": "object",
+          "properties": {
+            "considerations": {
+              "type": "string"
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "strengths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "priorityNeeds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "object",
+          "properties": {
+            "disclaimer": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "signatures": {
+          "type": "object",
+          "properties": {
+            "assessorName": {
+              "type": "string"
+            },
+            "assessmentDate": {
+              "type": "string"
+            },
+            "supervisorName": {
+              "type": "string"
+            },
+            "attestation": {
+              "type": "string"
+            },
+            "accuracyStatement": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "rps": {
+      "$id": "https://catalyst/generated/render/tmpl_tcm_strengths_needs_v1@1.0.0.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Render Payload — TCM Comprehensive Strengths & Needs Assessment v1.0.0",
+      "description": "Final payload schema (AIS ∪ NAS) for TCM Comprehensive Strengths & Needs Assessment",
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "object",
+          "properties": {
+            "patient": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "dob": {
+                  "type": "string"
+                },
+                "age": {
+                  "type": "string"
+                },
+                "gender": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "facility": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "address": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "encounter": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "provider": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                },
+                "signature": {
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "identifying": {
+          "type": "object",
+          "properties": {
+            "details": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "documents": {
+          "type": "object",
+          "properties": {
+            "onHand": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "needsBarriers": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "housing": {
+          "type": "object",
+          "properties": {
+            "currentSituation": {
+              "type": "string"
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "income": {
+          "type": "object",
+          "properties": {
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "budgetingSkills": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "social": {
+          "type": "object",
+          "properties": {
+            "supportSystem": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "physical": {
+          "type": "object",
+          "properties": {
+            "overallStatus": {
+              "type": "string"
+            },
+            "primaryCare": {
+              "type": "string"
+            },
+            "chronicConditions": {
+              "type": "string"
+            },
+            "insurance": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "mental": {
+          "type": "object",
+          "properties": {
+            "diagnosis": {
+              "type": "string"
+            },
+            "treatment": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "hospitalizations": {
+              "type": "string"
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "substance": {
+          "type": "object",
+          "properties": {
+            "substances": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "treatmentHistory": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "education": {
+          "type": "object",
+          "properties": {
+            "educationLevel": {
+              "type": "string"
+            },
+            "employmentStatus": {
+              "type": "string"
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "legal": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string"
+            },
+            "officerContact": {
+              "type": "string"
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "cultural": {
+          "type": "object",
+          "properties": {
+            "considerations": {
+              "type": "string"
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "strengths": {
+              "type": "string"
+            },
+            "needs": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "strengths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "priorityNeeds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "object",
+          "properties": {
+            "disclaimer": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "signatures": {
+          "type": "object",
+          "properties": {
+            "assessorName": {
+              "type": "string"
+            },
+            "assessmentDate": {
+              "type": "string"
+            },
+            "supervisorName": {
+              "type": "string"
+            },
+            "attestation": {
+              "type": "string"
+            },
+            "accuracyStatement": {
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "usage": {
+    "promptTokens": 1465,
+    "completionTokens": 2,
+    "totalTokens": 1467
+  },
+  "aiOutput": {}
+}

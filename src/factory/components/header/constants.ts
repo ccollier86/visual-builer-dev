@@ -24,7 +24,7 @@ export const HEADER_CARD_CONFIG: Record<string, HeaderCardConfig> = {
   'facility-info': {
     defaultMode: 'label-value',
     fields: {
-      name: { label: 'FACILITY' },
+      name: { mode: 'text' },
       phone: { label: 'PHONE' },
       address: { mode: 'text' },
       location: { mode: 'text' },

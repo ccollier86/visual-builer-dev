@@ -1,0 +1,53 @@
+{
+  "client": {
+    "name": "Angela Petrey",
+    "dob": "09/15/1988",
+    "age": "36 years",
+    "gender": "Female"
+  },
+  "facility": {
+    "name": "Better Behavioral Health - Louisville",
+    "phone": "(502) 555-2200",
+    "address": "1102 Triplett Street, Suite 2300",
+    "city": "Louisville",
+    "state": "KY",
+    "zip": "40203"
+  },
+  "caseManager": {
+    "name": "Casey Collier, TCM M.Ed."
+  },
+  "note": {
+    "monthYear": "July 2025",
+    "programName": "TCM for Complex Co-Occurring Conditions",
+    "requirements": "Minimum 5 contacts this month (2 face-to-face, 3 collateral).",
+    "submittedDate": "2025-07-31",
+    "additionalNotes": "Angela continues to demonstrate improved housing stability and engagement with peer support services. Financial stability remains dependent on SSDI decision."
+  },
+  "contacts": {
+    "direct": [
+      "Contact 1 — Date: July 1, 2025 | Type: Face-to-face | Duration: 30 min | Location: Doxy | Summary: Discussed progress across housing, financial, and mental health domains. Angela expressed relief after housing repairs and anxiety around pending SSDI. | Progress: Housing repairs complete; utilizing food bank resources; connected to peer support and completed MH advance directive. | Next Steps: Monitor housing stability, prepare for SSDI decision, expand community connections, assess readiness for transition.",
+      "Contact 2 — Date: July 15, 2025 | Type: Face-to-face | Duration: 25 min | Location: Doxy | Summary: Reviewed ongoing progress, anxiety remains focused on SSDI decision. Reports improved sleep and continued peer support participation. | Progress: Housing stable, financial status pending SSDI, mental health supported via peer services. | Next Steps: Await SSDI decision, continue peer support, explore additional resources, plan for transition."
+    ],
+    "collateral": [
+      "Collateral 1 — Date: July 8, 2025 | Kentucky Community Mental Health Center | Type: Phone (10 min) | Summary: Confirmed Angela's participation in peer support services; noted consistent attendance aligning with MH goals.",
+      "Collateral 2 — Date: July 22, 2025 | Local Food Bank | Type: Email (8 min) | Summary: Confirmed regular utilization of food bank resources supporting financial stability while awaiting SSDI.",
+      "Collateral 3 — Date: July 29, 2025 | Housing Assistance Program | Type: Phone (15 min) | Summary: Verified housing repairs completed and no new issues reported; supports housing stability goal."
+    ]
+  },
+  "plan": {
+    "nextSteps": [
+      "Continue monitoring housing stability and maintenance needs.",
+      "Assist Angela in preparing for SSDI determination outcomes.",
+      "Maintain peer support involvement and explore additional COD-focused groups.",
+      "Assess readiness for service transition contingent on benefits outcomes."
+    ]
+  },
+  "signatures": {
+    "renderedBy": "Casey Collier, TCM M.Ed.",
+    "renderedDate": "07/31/2025",
+    "supervisorName": "Neil Jariwala, MD",
+    "supervisorCredentials": "Psychiatrist",
+    "supervisorLicense": "KY-53374",
+    "supervisorDate": "07/31/2025"
+  }
+}

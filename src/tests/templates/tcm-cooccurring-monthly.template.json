@@ -1,0 +1,167 @@
+{
+  "id": "tmpl_tcm_cooccurring_monthly_v1",
+  "name": "TCM Monthly Note – Co-Occurring Disorders",
+  "version": "1.0.0",
+  "style": {
+    "font": "Inter, system-ui, sans-serif",
+    "color": "#0f172a",
+    "muted": "#475569",
+    "accent": "#0ea5e9",
+    "spacing": 10,
+    "tableDensity": "normal",
+    "print": {
+      "size": "Letter",
+      "margin": "0.75in",
+      "header": true,
+      "footer": true
+    }
+  },
+  "prompt": {
+    "system": "You are a targeted case manager documenting monthly services for members with co-occurring mental health and substance use conditions. Record objective summaries of direct and collateral contacts, progress toward goals, and plans for next month while maintaining a supportive, clinical tone.",
+    "main": "Summarize each direct and collateral contact for the reporting month, emphasizing goal progress (housing, financial, mental health support, recovery) and clearly stating next steps.",
+    "rules": [
+      "Use bulleted sentences when listing progress or next steps",
+      "Do not invent contacts beyond those provided",
+      "Keep tone professional, strengths-informed, and concise"
+    ],
+    "jsonOnly": true
+  },
+  "layout": [
+    {
+      "id": "header",
+      "type": "header",
+      "children": [
+        {
+          "id": "patient-info",
+          "type": "patientBlock",
+          "title": "PATIENT",
+          "content": [
+            { "slot": "lookup", "id": "client_name", "lookup": "client.name", "targetPath": "header.patient.name" },
+            { "slot": "lookup", "id": "client_dob", "lookup": "client.dob", "targetPath": "header.patient.dob" },
+            { "slot": "lookup", "id": "client_age", "lookup": "client.age", "targetPath": "header.patient.age" },
+            { "slot": "lookup", "id": "client_gender", "lookup": "client.gender", "targetPath": "header.patient.gender" }
+          ]
+        },
+        {
+          "id": "facility-info",
+          "type": "patientBlock",
+          "title": "FACILITY",
+          "content": [
+            { "slot": "lookup", "id": "facility_name", "lookup": "facility.name", "targetPath": "header.facility.name" },
+            { "slot": "lookup", "id": "facility_phone", "lookup": "facility.phone", "targetPath": "header.facility.phone" },
+            { "slot": "lookup", "id": "facility_address", "lookup": "facility.address", "targetPath": "header.facility.address" },
+            { "slot": "computed", "id": "facility_location", "formula": "facility.city + ', ' + facility.state + ' ' + facility.zip", "targetPath": "header.facility.location" }
+          ]
+        },
+        {
+          "id": "encounter-info",
+          "type": "patientBlock",
+          "title": "SERVICE",
+          "content": [
+            { "slot": "static", "id": "service_label", "text": "TCM Monthly Note – COD", "targetPath": "header.encounter.type" },
+            { "slot": "lookup", "id": "case_manager", "lookup": "caseManager.name", "targetPath": "header.encounter.provider" },
+            { "slot": "lookup", "id": "month_year", "lookup": "note.monthYear", "targetPath": "header.encounter.date" },
+            { "slot": "computed", "id": "signature_line", "formula": "'Electronically signed by ' + caseManager.name + ' on ' + note.submittedDate", "targetPath": "header.encounter.signature" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section_overview",
+      "type": "section",
+      "title": "Monthly Service Overview",
+      "children": [
+        {
+          "id": "service_requirements",
+          "type": "paragraph",
+          "content": [
+            { "slot": "lookup", "id": "program_name", "lookup": "note.programName", "targetPath": "overview.programName" },
+            { "slot": "lookup", "id": "requirements", "lookup": "note.requirements", "targetPath": "overview.requirements" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section_direct_contacts",
+      "type": "section",
+      "title": "Direct Client Contacts",
+      "children": [
+        {
+          "id": "direct_contacts_list",
+          "type": "list",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "direct_contacts", "lookup": "contacts.direct[]", "targetPath": "contacts.direct[]" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section_collateral_contacts",
+      "type": "section",
+      "title": "Collateral Contacts",
+      "children": [
+        {
+          "id": "collateral_contacts_list",
+          "type": "list",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "collateral_contacts", "lookup": "contacts.collateral[]", "targetPath": "contacts.collateral[]" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section_plan",
+      "type": "section",
+      "title": "Plan for Next Month",
+      "children": [
+        {
+          "id": "plan_items",
+          "type": "list",
+          "props": { "ordered": false },
+          "content": [
+            { "slot": "lookup", "id": "plan_list", "lookup": "plan.nextSteps[]", "targetPath": "plan.nextSteps[]" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section_notes",
+      "type": "section",
+      "title": "Additional Notes / Concerns",
+      "children": [
+        {
+          "id": "notes_paragraph",
+          "type": "paragraph",
+          "content": [
+            { "slot": "lookup", "id": "additional_notes", "lookup": "note.additionalNotes", "targetPath": "note.additionalNotes" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section_signatures",
+      "type": "signatureBlock",
+      "title": "Signatures",
+      "content": [
+        { "slot": "lookup", "id": "case_manager_signature", "lookup": "signatures.renderedBy", "targetPath": "signatures.renderedBy" },
+        { "slot": "lookup", "id": "case_manager_date", "lookup": "signatures.renderedDate", "targetPath": "signatures.renderedDate" },
+        { "slot": "lookup", "id": "supervisor_signature", "lookup": "signatures.supervisorName", "targetPath": "signatures.supervisorName" },
+        { "slot": "lookup", "id": "supervisor_date", "lookup": "signatures.supervisorDate", "targetPath": "signatures.supervisorDate" },
+        {
+          "slot": "static",
+          "id": "supervisor_statement",
+          "text": "I have staffed this case with the therapist and agree with the interventions, progress, and approach presented. I have reviewed and approved this documentation.",
+          "targetPath": "signatures.supervisorStatement"
+        },
+        {
+          "slot": "computed",
+          "id": "supervisor_attestation",
+          "formula": "'I, ' + signatures.supervisorName + ', ' + signatures.supervisorCredentials + ', License #' + signatures.supervisorLicense + ', declare this information to be accurate and complete.'",
+          "targetPath": "signatures.attestation"
+        }
+      ]
+    }
+  ]
+}

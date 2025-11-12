@@ -1,0 +1,52 @@
+{
+  "client": {
+    "name": "Devin Hunt",
+    "dob": "02/11/1991",
+    "age": "34 years",
+    "gender": "Male"
+  },
+  "facility": {
+    "name": "Better Behavioral Health - Frankfort",
+    "phone": "(502) 555-1188",
+    "address": "215 Capital Plaza Tower, Suite 900",
+    "city": "Frankfort",
+    "state": "KY",
+    "zip": "40601"
+  },
+  "caseManager": {
+    "name": "Casey Collier, TCM M.Ed."
+  },
+  "note": {
+    "monthYear": "June 2025",
+    "programName": "TCM for SUD and SMI",
+    "requirements": "Minimum four contacts: two direct face-to-face and two collateral engagements.",
+    "submittedDate": "2025-06-30",
+    "additionalNotes": "Devin shows strong follow-through on DUI education and improved mood as financial supports expand."
+  },
+  "contacts": {
+    "direct": [
+      "Direct Contact 1 — Date: 06/05/2025 | Type: Face-to-face | Location: Doxy | Duration: 30 min | Summary: Reviewed CIS approval and impact on finances. Devin expressed relief about supplemental income starting July 1. Discussed DUI education progress (6/8 modules complete) and ongoing cancer support group participation. Housing application still pending. | Goal Relevance: Financial stability improving via CIS; social support enhanced via cancer group participation.",
+      "Direct Contact 2 — Date: 06/19/2025 | Type: Face-to-face | Location: Doxy | Duration: 25 min | Summary: Confirmed DUI course completion (score 88%). Discussed next steps for license reinstatement and continued support group engagement. Housing application still pending; Devin saving for vehicle post-license reinstatement. | Goal Relevance: Legal compliance (DUI course complete), financial planning (vehicle savings), social support maintained."
+    ],
+    "collateral": [
+      "Collateral Contact 1 — Date: 06/12/2025 | Grandparents (phone, 20 min) | Summary: Family reports Devin is positive after CIS approval, compliant with medical care, and motivated for housing independence. They remain supportive and ready to assist with moving expenses when housing is secured.",
+      "Collateral Contact 2 — Date: 06/27/2025 | Cancer Support Group Facilitator (secure email, 10 min) | Summary: Facilitator confirms Devin attended all four sessions in June with active participation, offers support to peers, and benefits from connections with other young adult survivors."
+    ]
+  },
+  "plan": {
+    "nextSteps": [
+      "Assist with DMV/license reinstatement paperwork and court filings after DUI course completion.",
+      "Monitor housing application timeline and prepare for move logistics (budgeting, furnishings, utilities).",
+      "Ensure CIS payments begin July 1 and integrate into monthly budget.",
+      "Encourage continued participation in cancer support group and explore additional young adult survivor resources."
+    ]
+  },
+  "signatures": {
+    "renderedBy": "Casey Collier, TCM M.Ed.",
+    "renderedDate": "06/30/2025",
+    "supervisorName": "Neil Jariwala, MD",
+    "supervisorCredentials": "Psychiatrist",
+    "supervisorLicense": "KY-53374",
+    "supervisorDate": "06/30/2025"
+  }
+}
