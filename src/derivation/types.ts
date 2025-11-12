@@ -156,6 +156,7 @@ export interface NoteTemplate {
   style?: TemplateStyle;
   layout: Component[];
   prompt?: TemplatePrompt;
+  inputCollections?: FormCollection[];
 }
 
 /**
@@ -203,6 +204,101 @@ export interface Component {
  * Arbitrary style metadata attached to content items to guide rendering.
  */
 export type StyleHints = Record<string, unknown>;
+
+export interface FormCollection {
+  id: string;
+  label: string;
+  version: string;
+  audience: 'public' | 'user';
+  roles?: string[];
+  mode: 'async' | 'in-session' | 'scheduled';
+  delivery: ('web' | 'mobile' | 'kiosk' | 'api')[];
+  autoSave?: boolean;
+  multiStep?: boolean;
+  allowUpdates?: boolean;
+  storage: FormStorageConfig;
+  steps: FormStep[];
+}
+
+export interface FormStorageConfig {
+  table: string;
+  primaryKey?: string;
+  foreignKey?: string;
+  recordIdField?: string;
+}
+
+export interface FormStep {
+  id: string;
+  title: string;
+  description?: string;
+  notes?: FormNote[];
+  sections?: FormSection[];
+  groups?: FormGroup[];
+  fields?: FormField[];
+}
+
+export interface FormSection {
+  id?: string;
+  title: string;
+  description?: string;
+  layout?: FormLayoutHints;
+  notes?: FormNote[];
+  fields?: FormField[];
+}
+
+export interface FormGroup {
+  id: string;
+  title: string;
+  repeatable?: boolean;
+  minItems?: number;
+  maxItems?: number;
+  layout?: FormLayoutHints;
+  notes?: FormNote[];
+  fields: FormField[];
+}
+
+export interface FormLayoutHints {
+  columns?: number;
+  columnGap?: string;
+}
+
+export interface FormField {
+  id: string;
+  label: string;
+  description?: string;
+  control: FormControl;
+  targetPath?: string;
+  validation?: FormFieldValidation;
+  defaults?: FormFieldDefaults;
+  repeatable?: boolean;
+  width?: 'full' | 'half' | 'third' | 'quarter';
+}
+
+export interface FormControl {
+  type: 'text' | 'textarea' | 'number' | 'date' | 'select' | 'multiselect' | 'checkbox' | 'custom';
+  componentId?: string;
+  props?: Record<string, unknown>;
+}
+
+export interface FormFieldValidation {
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+  min?: number;
+  max?: number;
+}
+
+export interface FormFieldDefaults {
+  initialValue?: unknown;
+  prefillFrom?: string;
+}
+
+export interface FormNote {
+  id?: string;
+  text: string;
+  variant?: 'info' | 'warning' | 'success' | 'neutral';
+}
 
 /**
  * Template content item; represents a single slot rendered in the note.

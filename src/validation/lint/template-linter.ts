@@ -15,6 +15,7 @@ import { LintContext } from './shared';
 import { lintAiSlot } from './rules/ai-slot';
 import { lintStyleHints } from './rules/style-hints';
 import { lintTableComponent, lintTableMap } from './rules/table';
+import { lintFormCollections } from './rules/forms';
 
 /**
  * Produce lint findings for the supplied template.
@@ -62,6 +63,8 @@ export function lintNoteTemplate(template: NoteTemplate): TemplateLintResult {
 	};
 
 	template.layout.forEach(component => visitComponent(component, []));
+
+	lintFormCollections(template, report);
 
 	const errors = issues.filter(issue => issue.severity === 'error');
 	const warnings = issues.filter(issue => issue.severity !== 'error');
