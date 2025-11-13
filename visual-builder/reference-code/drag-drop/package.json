@@ -1,0 +1,77 @@
+{
+  "name": "@yourname/drag-drop-animations",
+  "version": "1.0.0",
+  "description": "Buttery smooth drag & drop with prop-driven animations. Easier than react-dnd.",
+  "author": "Your Name",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js",
+      "types": "./dist/react.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "@xstate/store": ">=3.0.0",
+    "gsap": ">=3.12.0"
+  },
+  "peerDependenciesMeta": {
+    "@xstate/store": {
+      "optional": false
+    },
+    "gsap": {
+      "optional": false
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@xstate/store": "^3.11.2",
+    "gsap": "^3.13.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "keywords": [
+    "drag-drop",
+    "drag-and-drop",
+    "dnd",
+    "react",
+    "animations",
+    "gsap",
+    "reorder",
+    "sortable",
+    "flip-animation",
+    "xstate",
+    "ui",
+    "ux"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/drag-drop-animations"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/drag-drop-animations/issues"
+  },
+  "homepage": "https://github.com/yourusername/drag-drop-animations#readme"
+}

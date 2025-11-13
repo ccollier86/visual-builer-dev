@@ -1,0 +1,62 @@
+## Visual Builder Implementation Prompt (OpenAI Best Practices)
+
+You are an expert front-end engineer tasked with building the Visual Builder described in:
+- `visual-builder/specs/RENDER_BUILDER_PLAN.md`
+- `visual-builder/specs/INTERFACE_BREAKDOWN.md`
+- Reference packet under `visual-builder/specs/reference/` (note-template specs, design tokens, structured outputs, prompt specs, limitations)
+- Drag/drop reference implementation `visual-builder/reference-code/drag-drop`
+- Form/single submission architecture in repo (Form Factory SDK, schema validators, lint rules)
+
+### Goal
+Deliver an MVP of the Visual Builder that lets authors create/render note templates aligned with `note-template.schema.json`, using Mantine v8 for UI and the in-house GSAP-powered drag/drop library. Work in atomic components first, then assemble into larger modules/pages.
+
+### Approach (Step-by-Step)
+1. **Foundations**
+   - Bootstrap Mantine v8 app shell (theme provider mapping to design tokens).
+   - Set up global store (builder state, history, preview datasets, dictionary cache).
+   - Integrate schema + lint validators (AJV + existing lint modules).
+
+2. **Atomic Components**
+   - `FormCollectionsList` (Mantine `Card` + `ScrollArea` + context menu) with attach modal.
+   - `PalettePanel` sections (search, primitives, snippets, data suggestions).
+   - `CanvasColumn`, `CanvasNode`, overlay toolbar, insertion rails.
+   - `InspectorAccordions` (document settings, form settings, content/data/behavior/design accordions) using Mantine `Accordion`, `Tabs`, `ColorPicker`, `CodeHighlight`, etc.
+   - `AI Rule Chip Stack`, `FormulaBuilder`, `BindingPicker`, `ConditionBuilder`, `DesignOverrides`, `ValidatorList` components per INTERFACE_BREAKDOWN appendix.
+   - `BottomStatusBar`, `Toolbar` with mode switch, preview dataset chooser, lint indicator, JSON drawer.
+
+3. **Composite Modules**
+   - `Sidebar` = `FormCollectionsList` + `PalettePanel` inside Mantine `Stack`.
+   - `CanvasWorkspace` = outline tree + canvas grid (render preview) + instrumentation.
+   - `InspectorPanel` using Mantine `Accordion` + `ScrollArea` with dynamic sections.
+   - `RawJsonDrawer` w/ CodeMirror (schema validation + diff view).
+
+4. **Drag & Drop Integration**
+   - Wrap columns/outline lists with `useBlockReorder` from `visual-builder/reference-code/drag-drop` (GSAP + xstate).
+   - Implement palette-to-canvas drop by extending library with insertion rails.
+   - Ensure undo/redo flows through `@xstate/store` history or equivalent.
+
+5. **Rendering & Preview**
+   - Use existing renderer (`src/factory/core/renderer.ts`) to render layout inside iframe/div with injected design tokens.
+   - Mock data provider referencing sample JSON + faker heuristics for AI slots and computed fields.
+
+6. **Validation & Export**
+   - Run schema + lint checks on every mutation; surface via Mantine notifications and inline badges.
+   - Export flow packages template JSON + metadata, following plan’s Section 11.
+
+7. **Manual JSON Editing**
+   - Implement `View JSON` drawer with read-only Prism view; add “Unlock editing” flow per plan Section 16.
+   - Debounced validation pipeline ensures manual edits must pass schema/lint before saving.
+
+8. **Testing & QA**
+   - Component tests for key modules (FormCollectionsList, Inspector accordions, drag/drop hooks).
+   - Integration tests simulating palette drop + schema validation.
+   - Visual regression or Chromatic snapshots for canvas preview states.
+
+### Best Practices
+- Keep components atomic, typed, and styled via Mantine `sx` or theme tokens.
+- Align every control with schema fields; no hidden config.
+- Maintain accessibility: keyboard drag/drop, focus outlines, aria labels.
+- Abstract data dictionary interactions through dedicated service.
+- Instrument actions for undo/redo and telemetry hooks.
+
+Deliverables should follow this roadmap and reference the cited files to remain spec-compliant.
