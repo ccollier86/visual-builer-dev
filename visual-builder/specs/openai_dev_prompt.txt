@@ -6,6 +6,15 @@ You are an expert front-end engineer tasked with building the Visual Builder des
 - Reference packet under `visual-builder/specs/reference/` (note-template specs, design tokens, structured outputs, prompt specs, limitations)
 - Drag/drop reference implementation `visual-builder/reference-code/drag-drop`
 - Form/single submission architecture in repo (Form Factory SDK, schema validators, lint rules)
+- Baseline biopsych intake template `src/tests/biopsych-intake-template.schema.json` (the builder must be able to recreate/export artifacts like this)
+- Primary design tokens `src/tokens/defaults/default-tokens.json` (source of truth for Mantine theme + renderer parity)
+
+### Workspace Guardrails
+- Treat `visual-builder/` as the only writable workspace for this effort. All new code, config, migrations, and assets live under this folder; do not modify files outside of it.
+- You may open/read files elsewhere in the repo for reference (schemas, renderer internals, etc.) when the provided packet is insufficient, but those files must remain untouched.
+- Initialize/upgrade the Visual Builder as a standalone Next.js app (latest stable release) under `visual-builder/`. Install any additional packages needed for development, testing, or demo pages *inside this folder only*.
+- Ship at least one demo page/route inside the Visual Builder project that exercises drag/drop, rendering, and validation so the environment stays testable end-to-end.
+- Engineer every addition to minimize future tech debt: respect modular boundaries (state/drag/render/validation), keep shared utilities typed and documented, add smoke/unit tests for new primitives, and avoid “just for demo” hacks that would need rewrites during hardening.
 
 ### Goal
 Deliver an MVP of the Visual Builder that lets authors create/render note templates aligned with `note-template.schema.json`, using Mantine v8 for UI and the in-house GSAP-powered drag/drop library. Work in atomic components first, then assemble into larger modules/pages.
